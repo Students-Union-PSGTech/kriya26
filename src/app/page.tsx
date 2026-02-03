@@ -4,12 +4,14 @@ import About from "@/components/About";
 import Features from "@/components/Features";
 import Story from "@/components/Story";
 import Footer from "@/components/Footer";
+import CountDown from "@/components/Countdown";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen w-full">
       <Navbar />
       <Hero />
+      <CountDown />
       <About />
       <Features />
       <Story />
