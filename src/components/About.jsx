@@ -9,6 +9,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   useGSAP(() => {
+    // Initial fade-in animation for the prize pool text
+    gsap.from(".prize-pool-text", {
+      opacity: 0,
+      duration: 1.5,
+      delay: 0.5,
+      ease: "power2.out",
+    });
+
     const clipAnimation = gsap.timeline({
       scrollTrigger: {
         trigger: "#clip",
