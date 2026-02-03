@@ -6,7 +6,7 @@ const CountdownTimer = () => {
   const [isClient, setIsClient] = useState(false);
 
   const calculateTimeLeft = () => {
-    const targetDate = new Date('2025-03-14T00:00:00');
+    const targetDate = new Date('2026-03-13T00:00:00');
     const now = new Date();
     const difference = targetDate - now;
 

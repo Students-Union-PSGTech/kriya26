@@ -131,13 +131,13 @@ const Hero = () => {
         </h1>
 
         <div className="absolute-center z-20 w-full text-center font-general">
-          <h1 className="special-font hero-heading !text-6xl !md:text-6xl text-[#dfdff2] mb-4">
+          <h1 className="special-font hero-heading text-lg md:text-lg text-[#dfdff2] mb-4">
             the gl<b>o</b>bal cl<b>a</b>sh <b>o</b>f
           </h1>
-          <h2 className="special-font hero-heading !text-6xl !md:text-7xl bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent mb-6">
+          <h2 className="special-font hero-heading text-lg md:text-lg bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent mb-6">
             te<b>c</b>h<b>n</b>o t<b>a</b>lents
           </h2>
-          <p className="mb-8 font-robert-regular text-lg tracking-wide text-white/70 md:text-xl">
+          <p className="mb-8 font-robert-regular text-xl tracking-wide text-white/70 md:text-xl">
             MARCH 13-15, 2026 | PSG TECH, COIMBATORE
           </p>
           <div className="flex-center mt-4 gap-4">

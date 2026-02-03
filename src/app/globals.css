@@ -90,7 +90,7 @@ body {
 
 @layer utilities {
   .hero-heading {
-    @apply uppercase font-zentry font-thin text-5xl sm:right-10 sm:text-7xl md:text-9xl lg:text-[10rem];
+    @apply uppercase font-zentry font-thin text-3xl sm:right-10 sm:text-7xl md:text-7xl lg:text-[10rem];
   }
 
   .about-subtext {
