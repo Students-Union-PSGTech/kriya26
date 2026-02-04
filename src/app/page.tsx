@@ -1,8 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Features from "@/components/Features";
-import Story from "@/components/Story";
+import PrizePool from "@/components/About";
+import Events from "@/components/Features";
+import Flagship from "@/components/Story";
 import Footer from "@/components/Footer";
 import CountDown from "@/components/Countdown";
 
@@ -12,9 +12,9 @@ export default function Home() {
       <Navbar />
       <Hero />
       <CountDown />
-      <About />
-      <Features />
-      <Story />
+      <PrizePool />
+      <Flagship/>
+      <Events />
       <Footer />
     </main>
   );
