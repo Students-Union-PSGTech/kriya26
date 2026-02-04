@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -51,13 +50,13 @@ const PaperPresentationItemDesktop = ({
             : data.eventName.length > 30
               ? "text-lg"
               : "text-xl"
-          } text-white bottom-0 left-0 translate-x-6 -translate-y-6`
+          } text-white bottom-0 left-0 translate-x-6 -translate-y-6 lg:-translate-y-10`
           : `-rotate-90 whitespace-nowrap ${data.eventName.length > 50
             ? "text-xs md:text-2xs"
             : data.eventName.length > 30
               ? "text-sm"
               : "text-2xl"
-          } text-white/60 bottom-0 right-4 translate-x-[calc(35vw/6)]`
+          } text-white/60 bottom-0 right-4 lg:right-10 translate-x-[calc(35vw/6)]`
           } uppercase drop-shadow-lg`}
       >
         {data.eventName}
