@@ -4,6 +4,7 @@ import PrizePool from "@/components/About";
 import Events from "@/components/Features";
 import Flagship from "@/components/Story";
 import PaperPresentation from "@/components/PaperPresentation";
+import Workshops from "@/components/Workshop";
 import Footer from "@/components/Footer";
 import CountDown from "@/components/Countdown";
 import Faq from "@/components/Faq";
@@ -15,11 +16,12 @@ export default function Home() {
       <Hero />
       <CountDown />
       <PrizePool />
-      <Flagship/>
+      <Flagship />
       <Events />
+      <Workshops />
       <PaperPresentation />
       <Footer />
-      <Faq/>
+      <Faq />
     </main>
   );
 }
