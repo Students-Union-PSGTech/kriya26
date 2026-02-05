@@ -373,17 +373,42 @@ const FloatingImage = () => {
             </button>
           </div>
 
-          {/* Slide Indicators - Mobile only */}
-          <div className="flex md:hidden justify-center gap-3 mt-4">
-            {STORY_SLIDES.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => !isAnimating && setCurrentIndex(index)}
-                disabled={isAnimating}
-                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === currentIndex ? 'bg-white w-8' : 'bg-white/30 w-2 hover:bg-white/50'}`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
+          {/* Mobile Navigation Arrows */}
+          <div className="flex md:hidden justify-center items-center gap-6 mt-6">
+            <button
+              onClick={prevSlide}
+              disabled={isAnimating}
+              className="w-12 h-12 rounded-full bg-black/80 backdrop-blur-md flex items-center justify-center text-white border border-white/20 active:scale-95 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Previous slide"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+
+            {/* Slide Indicators */}
+            <div className="flex justify-center gap-3">
+              {STORY_SLIDES.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => !isAnimating && setCurrentIndex(index)}
+                  disabled={isAnimating}
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${index === currentIndex ? 'bg-white w-8' : 'bg-white/30 w-2 hover:bg-white/50'}`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextSlide}
+              disabled={isAnimating}
+              className="w-12 h-12 rounded-full bg-black/80 backdrop-blur-md flex items-center justify-center text-white border border-white/20 active:scale-95 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Next slide"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
           </div>
         </div>
 
