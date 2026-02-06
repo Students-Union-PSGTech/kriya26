@@ -113,12 +113,12 @@ const Features = () => {
                 <b>S</b>cience & <b>T</b>echnology
               </>
             }
-            description="Mechanical, Civil, and Electrical engineering events showcasing innovation and technical excellence."
+            description="Scientific research and technological innovations pushing the boundaries of knowledge."
             isComingSoon
           />
         </BentoTilt>
 
-        <div className="grid h-[50vh] w-full grid-cols-2 grid-rows-2 gap-7 md:h-[65vh]">
+        <div className="grid h-[50vh] w-full grid-cols-2 grid-rows-2 gap-7 md:h-[90vh]">
           {/* Left side - Science & Technology and Fashion Technology stacked */}
           <BentoTilt className="bento-tilt_1 row-span-1 md:col-span-1">
             <BentoCard
@@ -128,7 +128,7 @@ const Features = () => {
                   <b>C</b>oding
                 </>
               }
-              description="Scientific research and technological innovations pushing the boundaries of knowledge."
+              description="Coding challenges and hackathons to test your programming skills and creativity."
               isComingSoon
             />
           </BentoTilt>
@@ -156,7 +156,7 @@ const Features = () => {
                   <b>F</b>ashion <b>T</b>echnology
                 </>
               }
-              description="Robotics and automation challenges - build, program, and compete with intelligent machines."
+              description="Textile innovation and fashion-forward design meeting cutting-edge technology."
               isComingSoon
             />
           </BentoTilt>
@@ -171,7 +171,7 @@ const Features = () => {
                 <b>C</b>ore <b>E</b>ngineering
               </>
             }
-            description="Textile innovation and fashion-forward design meeting cutting-edge technology."
+            description="Mechanical, Civil, and Electrical engineering events showcasing innovation and technical excellence."
             isComingSoon
           />
         </BentoTilt>
