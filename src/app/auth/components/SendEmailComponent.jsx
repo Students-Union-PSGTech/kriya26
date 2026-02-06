@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
+import { TiLocationArrow } from "react-icons/ti";
+import Button from '@/components/Button';
 
 export default function SendEmailComponent() {
     const router = useRouter();
@@ -57,7 +59,7 @@ export default function SendEmailComponent() {
                 </div>
             )}
 
-            <span className="font-general">Enter your email to receive a verification link</span>
+            <span className="font-general block mb-6">Enter your email to receive a verification link</span>
             <input
                 type="email"
                 placeholder="Email"
@@ -68,15 +70,15 @@ export default function SendEmailComponent() {
                 className="font-general"
             />
 
-            <button
+            <Button
+                title={loading ? 'Sending...' : 'Send Verification Email'}
+                onClick={handleSubmit}
                 type="submit"
                 disabled={loading}
-                className="bg-blue-400 hover:bg-purple-700 flex-center gap-2 px-6 py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                <span className="font-semibold text-xs">
-                    {loading ? 'Sending...' : 'Send Verification Email'}
-                </span>
-            </button>
+                containerClass="bg-blue-400 flex-center gap-2 !px-6 !py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full mt-4"
+                titleClass="font-semibold !text-xs"
+                leftIcon={<TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />}
+            />
 
             <p className="mt-4 font-general text-sm">
                 <span

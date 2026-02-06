@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
+import { TiLocationArrow } from "react-icons/ti";
+import Button from '@/components/Button';
 
 export default function ForgotPasswordComponent() {
     const router = useRouter();
@@ -29,74 +31,70 @@ export default function ForgotPasswordComponent() {
 
     if (success) {
         return (
-            <div className="w-full max-w-md">
-                <div className="bg-black/80 backdrop-blur-md border border-white/10 shadow-xl rounded-lg p-8 text-center">
-                    <div className="mb-4">
-                        <svg className="mx-auto h-12 w-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h2 className="text-2xl font-bold font-general text-[#dfdff2] mb-2">Check Your Email</h2>
-                    <p className="text-gray-400 mb-4">
-                        We've sent a reset link to <strong className="text-[#dfdff2]">{email}</strong>
-                    </p>
-                    <button
-                        onClick={() => router.push('/auth?type=login')}
-                        className="bg-[#dfdff2] text-black rounded-full hover:bg-white font-general text-xs uppercase py-2 px-4"
-                    >
-                        Back to Login
-                    </button>
+            <form>
+                <h1 className="font-zentry uppercase text-4xl mb-4">Check Email</h1>
+
+                <div className="mb-4 flex justify-center">
+                    <svg className="h-12 w-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                 </div>
-            </div>
+
+                <span className="font-general block mb-6 text-center">
+                    We've sent a reset link to <strong className="text-white">{email}</strong>
+                </span>
+
+                <Button
+                    title="Back to Login"
+                    onClick={() => router.push('/auth?type=login')}
+                    containerClass="bg-blue-400 flex-center gap-2 !px-6 !py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full mt-4"
+                    titleClass="font-semibold !text-xs"
+                    leftIcon={<TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />}
+                />
+            </form>
         );
     }
 
     return (
-        <div className="w-full max-w-md">
-            <div className="bg-black/80 backdrop-blur-md border border-white/10 shadow-xl rounded-lg p-8">
-                <h2 className="text-2xl font-bold font-general text-center text-[#dfdff2] mb-6">Forgot Password</h2>
+        <form onSubmit={handleSubmit}>
+            <h1 className="font-zentry uppercase text-4xl mb-4">Forgot Password</h1>
 
-                {error && (
-                    <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-3 rounded mb-4">
-                        {error}
-                    </div>
-                )}
+            {error && (
+                <div className="error-message">
+                    {error}
+                </div>
+            )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 bg-white/10 border border-white/20 text-[#dfdff2] placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#edff66]"
-                            placeholder="Enter your email"
-                            required
-                        />
-                    </div>
+            <span className="font-general block mb-6">Enter your email to receive a reset link</span>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-[#dfdff2] text-black rounded-full hover:bg-white font-general text-xs uppercase py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#edff66] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? 'Sending...' : 'Send Reset Link'}
-                    </button>
-                </form>
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+                className="font-general"
+            />
 
-                <p className="mt-6 text-center text-sm">
-                    <span className="text-gray-400">Remember your password?{' '}</span>
-                    <button
-                        onClick={() => router.push('/auth?type=login')}
-                        className="text-[#edff66] hover:text-white font-medium"
-                    >
-                        Back to Login
-                    </button>
-                </p>
-            </div>
-        </div>
+            <Button
+                title={loading ? 'Sending...' : 'Send Reset Link'}
+                type="submit"
+                disabled={loading}
+                containerClass="bg-blue-400 flex-center gap-2 !px-6 !py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full mt-4"
+                titleClass="font-semibold !text-xs"
+                leftIcon={<TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />}
+            />
+
+            <p className="mt-4 font-general text-sm">
+                Remember your password?{' '}
+                <span
+                    className="text-[#512da8] font-bold cursor-pointer hover:underline"
+                    onClick={() => router.push('/auth?type=login')}
+                >
+                    Back to Login
+                </span>
+            </p>
+        </form>
     );
 }

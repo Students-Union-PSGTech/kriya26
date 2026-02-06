@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
+import { TiLocationArrow } from "react-icons/ti";
+import Button from '@/components/Button';
 
 export default function ResetPasswordComponent() {
     const router = useRouter();
@@ -58,40 +60,56 @@ export default function ResetPasswordComponent() {
 
     if (success) {
         return (
-            <div className="w-full max-w-md">
-                <div className="bg-black/80 backdrop-blur-md border border-white/10 shadow-xl rounded-lg p-8 text-center">
-                    <div className="mb-4">
-                        <svg className="mx-auto h-12 w-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+            <div className="w-full max-w-3xl relative z-10 bg-black/85 border border-white/10 shadow-2xl rounded-none p-8 my-8">
+                <div className="text-center">
+                    <div className="mb-6 flex justify-center">
+                        <div className="w-20 h-20 border-2 border-green-500 flex items-center justify-center">
+                            <svg className="h-10 w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
                     </div>
-                    <h2 className="text-2xl font-bold font-general text-[#dfdff2] mb-2">Password Reset</h2>
-                    <p className="text-gray-400 mb-4">Your password has been successfully reset.</p>
-                    <button
+                    <h1 className="text-xl font-zentry font-thin text-white mb-4 uppercase tracking-wider">
+                        Password R<b>e</b>s<b>e</b>t
+                    </h1>
+                    <p className="text-gray-400 text-sm font-general mb-8">Your password has been successfully reset.</p>
+                    <Button
+                        title="Go to Login"
                         onClick={() => router.push('/auth?type=login')}
-                        className="bg-[#dfdff2] text-black rounded-full hover:bg-white font-general text-xs uppercase py-2 px-4"
-                    >
-                        Go to Login
-                    </button>
+                        containerClass="bg-blue-400 flex-center gap-2 !px-6 !py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full"
+                        titleClass="font-semibold !text-xs"
+                        leftIcon={<TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />}
+                    />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="w-full max-w-md">
-            <div className="bg-black/80 backdrop-blur-md border border-white/10 shadow-xl rounded-lg p-8">
-                <h2 className="text-2xl font-bold font-general text-center text-[#dfdff2] mb-6">Reset Password</h2>
+        <div className="w-full max-w-3xl relative z-10 bg-black/85 border border-white/10 shadow-2xl rounded-none p-8 my-8">
+            <div className="mb-4 text-center">
+                <h1 className="text-xl font-zentry font-thin text-white mb-1 uppercase tracking-wider">
+                    Reset P<b>a</b>ssw<b>o</b>rd
+                </h1>
+                <p className="text-gray-400 text-[10px] font-general tracking-[0.2em] uppercase">
+                    CREATE_NEW_PASSWORD
+                </p>
+            </div>
 
-                {error && (
-                    <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-3 rounded mb-4">
-                        {error}
-                    </div>
-                )}
+            {error && (
+                <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-3 rounded mb-6">
+                    {error}
+                </div>
+            )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit}>
+                {/* Email Display */}
+                <div className="mb-8">
+                    <h2 className="text-sm font-zentry font-thin text-white/60 mb-6 uppercase tracking-widest border-b border-white/10 pb-4">
+                        Account Email
+                    </h2>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-1">
+                        <label htmlFor="email" className="block text-[10px] font-bold text-white/40 mb-2 uppercase tracking-[0.2em] font-general">
                             Email Address
                         </label>
                         <input
@@ -99,79 +117,86 @@ export default function ResetPasswordComponent() {
                             id="email"
                             value={email}
                             readOnly
-                            className="w-full px-3 py-2 bg-white/10 border border-white/20 text-gray-400 rounded-md cursor-not-allowed"
+                            className="w-full h-12 px-4 py-3 bg-white/5 border border-white/10 text-white/30 cursor-not-allowed rounded-none outline-none font-general"
                         />
                     </div>
+                </div>
 
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-400 mb-1">
-                            New Password
-                        </label>
-                        <div className="relative">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-3 py-2 bg-white/10 border border-white/20 text-[#dfdff2] placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#edff66]"
-                                placeholder="Min. 6 characters"
-                                required
-                                minLength={6}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-[#dfdff2]"
-                            >
-                                {showPassword ? 'Hide' : 'Show'}
-                            </button>
+                {/* Password Fields */}
+                <div className="mb-8">
+                    <h2 className="text-sm font-zentry font-thin text-white/60 mb-6 uppercase tracking-widest border-b border-white/10 pb-4">
+                        New Password
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label htmlFor="password" className="block text-[10px] font-bold text-white/40 mb-2 uppercase tracking-[0.2em] font-general">
+                                New Password
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="Min. 6 characters"
+                                    required
+                                    minLength={6}
+                                    className="w-full h-12 px-4 py-3 bg-white/5 border border-white/20 text-white rounded-none outline-none focus:border-blue-400 transition-colors font-general placeholder:text-[10px]"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs uppercase font-general"
+                                >
+                                    {showPassword ? 'Hide' : 'Show'}
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-[10px] font-bold text-white/40 mb-2 uppercase tracking-[0.2em] font-general">
+                                Confirm Password
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    id="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="Re-enter password"
+                                    required
+                                    minLength={6}
+                                    className="w-full h-12 px-4 py-3 bg-white/5 border border-white/20 text-white rounded-none outline-none focus:border-blue-400 transition-colors font-general placeholder:text-[10px]"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs uppercase font-general"
+                                >
+                                    {showConfirmPassword ? 'Hide' : 'Show'}
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-400 mb-1">
-                            Confirm Password
-                        </label>
-                        <div className="relative">
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                id="confirmPassword"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full px-3 py-2 bg-white/10 border border-white/20 text-[#dfdff2] placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#edff66]"
-                                placeholder="Re-enter password"
-                                required
-                                minLength={6}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute right-3 top-2.5 text-gray-400 hover:text-[#dfdff2]"
-                            >
-                                {showConfirmPassword ? 'Hide' : 'Show'}
-                            </button>
-                        </div>
-                    </div>
-
+                <div className="flex flex-col sm:flex-row items-center gap-4 mt-8">
                     <button
+                        type="button"
+                        onClick={() => router.push('/auth?type=login')}
+                        className="w-full sm:w-auto px-10 py-3 border border-white/20 text-white uppercase tracking-widest hover:bg-white/10 transition-colors rounded-full font-zentry text-xs"
+                    >
+                        Cancel
+                    </button>
+                    <Button
+                        title={loading ? 'Resetting...' : 'Reset Password'}
                         type="submit"
                         disabled={loading || !token}
-                        className="w-full bg-[#dfdff2] text-black rounded-full hover:bg-white font-general text-xs uppercase py-2 px-4 focus:outline-none focus:ring-2 focus:ring-[#edff66] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? 'Resetting...' : 'Reset Password'}
-                    </button>
-                </form>
-
-                <p className="mt-6 text-center text-sm">
-                    <span className="text-gray-400">Remember your password?{' '}</span>
-                    <button
-                        onClick={() => router.push('/auth?type=login')}
-                        className="text-[#edff66] hover:text-white font-medium"
-                    >
-                        Back to Login
-                    </button>
-                </p>
-            </div>
+                        containerClass="bg-blue-400 flex-center gap-2 !px-6 !py-2 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full sm:flex-1"
+                        titleClass="font-semibold !text-xs"
+                        leftIcon={<TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />}
+                    />
+                </div>
+            </form>
         </div>
     );
 }
