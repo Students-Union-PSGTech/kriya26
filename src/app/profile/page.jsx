@@ -26,9 +26,8 @@ const transformEvent = (item, itemType) => ({
     id: item._id || item.eventId || item.workshopId || item.paperId,
     title: item.eventName || item.workshopName || item.name || 'Unnamed Event',
     category: item.category || (itemType === 'workshop' ? 'Workshop' : itemType === 'paper' ? 'Paper' : 'Event'),
-    date: item.date || 'TBA',
-    time: item.time || 'TBA',
-    venue: item.venue || 'TBA',
+    date: item.date ? new Date(item.date).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'TBA',
+    venue: item.hall || 'TBA',
     color: getCategoryColor(item.category, itemType),
     link: itemType === 'workshop'
         ? `/portal/workshop/${item.workshopId}`

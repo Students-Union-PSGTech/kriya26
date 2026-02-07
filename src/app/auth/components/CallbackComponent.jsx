@@ -36,11 +36,16 @@ export default function CallbackComponent() {
 
                 if (existingUser) {
                     await googleLogin({ email, googleId, existing_user: true });
-                    router.push('/profile');
+                    // Redirect to callback URL if present, otherwise to profile
+                    const callbackUrl = searchParams.get('callbackUrl');
+                    router.push(callbackUrl || '/profile');
                 } else {
                     localStorage.setItem('registration_email', email);
                     localStorage.setItem('registration_googleId', googleId);
-                    router.push('/auth?type=complete-registration&source=google');
+                    // Preserve callback URL through registration flow
+                    const callbackUrl = searchParams.get('callbackUrl');
+                    const callbackParam = callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : '';
+                    router.push(`/auth?type=complete-registration&source=google${callbackParam}`);
                 }
             } catch (err) {
                 console.error('Callback error:', err);

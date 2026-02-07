@@ -9,6 +9,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import Image from "next/image";
 import { SiGmail } from "react-icons/si";
 import EventDetailsModal from "@/components/EventDetailsModal";
+import { useAuth } from "@/context/AuthContext";
 
 const toTitleCase = (phrase) => {
   const wordsToIgnore = ["of", "in", "for", "and", "an", "or"];
@@ -31,42 +32,50 @@ const toTitleCase = (phrase) => {
 
 export default function Home({ params }) {
   const { id } = useParams(params); // Unwrap the Promise in Next.js 16
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
 
   const [showDetails, setShowDetails] = useState(false);
   const geeksForGeeksRef = useRef(null);
   const [showVideo, setShowVideo] = useState(false);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [generalPayment, setGeneralPayment] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
   const [userEventDetails, setUserEventDetails] = useState(null);
+  const [registrationLoading, setRegistrationLoading] = useState(true);
   const [eventDetail, setEventDetail] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
 
   const mail = "events.kriya@psgtech.ac.in";
 
+  // Set general payment status from auth context
   useEffect(() => {
-    const email = localStorage.getItem("email");
-    if (email) {
-      eventService.getUserByEmail(email).then((res) => {
-        const userData = res?.data?.user || res?.user || res;
-        setUserDetails(userData);
-        setIsLoggedIn(true);
-        setGeneralPayment(userData.isPaid);
-      }).catch(err => console.error("Error fetching user:", err));
+    if (user) {
+      setGeneralPayment(user.generalFeePaid || user.isPaid || false);
     }
-  }, []);
+  }, [user]);
 
+  // Fetch user's registered events
   useEffect(() => {
-    const email = localStorage.getItem("email");
-    if (email) {
-      eventService.getEventDetailsByEmail(email).then((res) => {
-        const eventData = res?.data || res;
+    if (isAuthenticated) {
+      setRegistrationLoading(true);
+      eventService.getUserEvents().then((res) => {
+        // Safe extraction - API may return {events: [...]} or array directly
+        let eventData = [];
+        if (Array.isArray(res)) {
+          eventData = res;
+        } else if (res?.events && Array.isArray(res.events)) {
+          eventData = res.events;
+        } else if (res?.data && Array.isArray(res.data)) {
+          eventData = res.data;
+        }
+        console.log('User events loaded:', eventData.map(e => e.eventId || e._id));
         setUserEventDetails(eventData);
-      }).catch(err => console.error("Error fetching user events:", err));
+      }).catch(err => console.error("Error fetching user events:", err))
+        .finally(() => setRegistrationLoading(false));
+    } else {
+      setRegistrationLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,9 +101,21 @@ export default function Home({ params }) {
   const toggleDetails = () => {
     setShowDetails((prev) => !prev);
   };
+
+  // Helper to check if user is registered for current event (handles different field names)
+  const isRegisteredForEvent = () => {
+    if (!userEventDetails || !Array.isArray(userEventDetails)) return false;
+    const registered = userEventDetails.some((e) =>
+      e.eventId === id || e.event_id === id || e._id === id
+    );
+    console.log('Checking registration for event:', id, 'User events:', userEventDetails.map(e => e.eventId || e._id), 'Registered:', registered);
+    return registered;
+  };
   const handleRegister = async () => {
-    if (!isLoggedIn) {
-      router.push("/auth?type=register");
+    if (!isAuthenticated) {
+      // Include callback URL so user returns to this event after auth
+      const callbackUrl = encodeURIComponent(`/portal/event/${id}`);
+      router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
     } else if (!generalPayment) {
       router.push("/auth/payment?type=GENERAL");
     } else {
@@ -158,18 +179,14 @@ export default function Home({ params }) {
         <div className="flex items-center gap-4 ">
           <button
             className="px-7 py-3 bg-black text-white font-bold uppercase tracking-wider text-xs md:text-base hover:bg-white hover:text-black border-2 border-black transition-all duration-300 w-fit shadow-lgr"
-            disabled={
-              (userEventDetails &&
-                userEventDetails.find((i) => i.eventId === id)) ||
-              eventDetail.closed
-            }
+            disabled={isRegisteredForEvent() || eventDetail.closed}
             onClick={() => {
               setIsModalOpen(true);
             }}
           >
             {userEventDetails && (
               <>
-                {userEventDetails.find((i) => i.eventId === id) ? (
+                {isRegisteredForEvent() ? (
                   "Registered"
                 ) : eventDetail.closed ? (
                   "Registrations Closed"

@@ -154,7 +154,9 @@ export default function RegisterComponent() {
             localStorage.removeItem('registration_googleId');
             localStorage.removeItem('club_referral_code');
 
-            router.push('/profile');
+            // Redirect to callback URL if present, otherwise to profile
+            const callbackUrl = searchParams.get('callbackUrl');
+            router.push(callbackUrl || '/profile');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
         } finally {
