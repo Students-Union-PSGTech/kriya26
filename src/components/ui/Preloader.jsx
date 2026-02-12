@@ -9,6 +9,19 @@ const Preloader = ({ onComplete, finished = false }) => {
     const contentRef = useRef(null);
     const timelineRef = useRef(null);
     const [percent, setPercent] = useState(0);
+    const [fontLoaded, setFontLoaded] = useState(false);
+
+    useEffect(() => {
+        if (typeof document !== 'undefined' && 'fonts' in document) {
+            document.fonts.load('1rem zentry').then(() => {
+                setFontLoaded(true);
+            }).catch(() => {
+                setFontLoaded(true);
+            });
+        } else {
+            setFontLoaded(true);
+        }
+    }, []);
 
     useEffect(() => {
         // Horizontal wave movement - always active
@@ -23,28 +36,30 @@ const Preloader = ({ onComplete, finished = false }) => {
         const tl = gsap.timeline();
         timelineRef.current = tl;
 
-        // 1. Text Reveal
-        tl.fromTo(contentRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
-        );
+        // 1. Instant Text Reveal & Start Fill
+        tl.to(contentRef.current, { opacity: 1, duration: 0.3 });
 
-        // 2. Initial Fill (Rise to ~80%)
-        tl.to(waveRef.current, {
-            y: "-80%",
-            duration: 3,
-            ease: "power1.inOut",
-            onUpdate: function () {
-                // Approximate percentage based on y position (-80% is 80% progress)
-                const currentY = parseFloat(gsap.getProperty(waveRef.current, "y"));
-                const p = Math.min(95, Math.abs(currentY));
-                setPercent(Math.round(p));
+        // 2. Initial Fill (Synchronized)
+        // Adjusting starting y to move wave into view sooner
+        tl.fromTo(waveRef.current,
+            { y: 30 }, // Start with wave slightly lower so peak is at bottom
+            {
+                y: "-100",
+                duration: 3,
+                ease: "power1.inOut",
+                onUpdate: function () {
+                    // Normalize percentage: y goes from 30 to -100 (range of 130)
+                    const currentY = gsap.getProperty(waveRef.current, "y");
+                    const progress = (30 - currentY) / 130;
+                    const p = Math.min(100, Math.max(0, progress * 100));
+                    setPercent(Math.round(p));
+                }
             }
-        });
+        );
 
         // 3. Continuous Vertical Oscillation (Floating state)
         tl.to(waveRef.current, {
-            y: "-65%",
+            y: "+=10",
             duration: 2,
             repeat: -1,
             yoyo: true,
@@ -98,7 +113,7 @@ const Preloader = ({ onComplete, finished = false }) => {
             ref={containerRef}
             className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white overflow-hidden shadow-2xl"
         >
-            <div ref={contentRef} className="relative flex flex-col items-center">
+            <div ref={contentRef} style={{ opacity: 0 }} className="relative flex flex-col items-center">
                 {/* SVG Text with Liquid Fill */}
                 <div className="relative mb-8 h-32 w-[300px] sm:w-[500px] flex items-center justify-center">
                     <svg

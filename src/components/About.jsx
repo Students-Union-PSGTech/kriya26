@@ -13,7 +13,6 @@ const About = () => {
   useGSAP(() => {
     const mm = ScrollTrigger.matchMedia();
 
-    // Desktop/tablet: keep the zoom (text scale) animation
     mm.add("(min-width: 768px)", () => {
       const clipAnimation = gsap.timeline({
         scrollTrigger: {
@@ -63,12 +62,10 @@ const About = () => {
         height: "100vh",
         borderRadius: 0,
       });
-
-      // Animate the prize pool text to grow as the image expands (added for mobile)
       clipAnimation.to(
         ".prize-pool-text",
         {
-          scale: 2.0, // Grow the text size
+          scale: 2, // Grow the text size
         },
         0 // Start at the same time as image expansion
       );
