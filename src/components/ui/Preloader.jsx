@@ -9,8 +9,25 @@ const Preloader = ({ onComplete, finished = false }) => {
     const contentRef = useRef(null);
     const timelineRef = useRef(null);
     const [percent, setPercent] = useState(0);
+    const [fontLoaded, setFontLoaded] = useState(false);
 
     useEffect(() => {
+        // Specifically wait for the zentry font to avoid font-swap flash
+        if (typeof document !== 'undefined' && 'fonts' in document) {
+            document.fonts.load('1rem zentry').then(() => {
+                setFontLoaded(true);
+            }).catch(() => {
+                // Fallback in case of error
+                setFontLoaded(true);
+            });
+        } else {
+            setFontLoaded(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!fontLoaded) return;
+
         // Horizontal wave movement - always active
         gsap.to(waveRef.current, {
             x: "-50%",
@@ -23,19 +40,18 @@ const Preloader = ({ onComplete, finished = false }) => {
         const tl = gsap.timeline();
         timelineRef.current = tl;
 
-        // 1. Text Reveal
+        // 1. Snappier Text Reveal
         tl.fromTo(contentRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+            { opacity: 0, y: 15 },
+            { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
         );
 
         // 2. Initial Fill (Rise to ~80%)
         tl.to(waveRef.current, {
             y: "-80%",
-            duration: 3,
+            duration: 2.5,
             ease: "power1.inOut",
             onUpdate: function () {
-                // Approximate percentage based on y position (-80% is 80% progress)
                 const currentY = parseFloat(gsap.getProperty(waveRef.current, "y"));
                 const p = Math.min(95, Math.abs(currentY));
                 setPercent(Math.round(p));
@@ -55,7 +71,7 @@ const Preloader = ({ onComplete, finished = false }) => {
             gsap.killTweensOf("*");
             if (timelineRef.current) timelineRef.current.kill();
         };
-    }, []);
+    }, [fontLoaded]);
 
     // Handle exit when finished prop becomes true
     useEffect(() => {
@@ -98,7 +114,7 @@ const Preloader = ({ onComplete, finished = false }) => {
             ref={containerRef}
             className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white overflow-hidden shadow-2xl"
         >
-            <div ref={contentRef} className="relative flex flex-col items-center">
+            <div ref={contentRef} style={{ opacity: 0 }} className="relative flex flex-col items-center">
                 {/* SVG Text with Liquid Fill */}
                 <div className="relative mb-8 h-32 w-[300px] sm:w-[500px] flex items-center justify-center">
                     <svg

@@ -402,7 +402,7 @@ const FloatingImage = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative z-10 flex size-full flex-col items-center py-10 pb-24">
+      <div className="relative z-10 h-fit md:h-screen flex size-full flex-col items-center py-10 pb-24">
         <div className="flex flex-col items-center justify-center text-center">
           <motion.p
             initial={{ opacity: 0, transform: "rotateX(-30deg) scale(0.9)" }}
@@ -506,7 +506,7 @@ const FloatingImage = () => {
           </div>
 
           {/* Mobile Navigation Arrows */}
-          <div className="flex md:hidden justify-center items-center gap-6 mt-6">
+          <div className="flex md:hidden justify-center items-center gap-6 mt-20">
             <button
               onClick={prevSlide}
               className="w-12 h-12 rounded-full bg-black/80 backdrop-blur-md flex items-center justify-center text-white border border-white/20 active:scale-95 transition-all duration-200"
