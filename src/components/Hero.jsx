@@ -11,7 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 
 import Button from "./Button";
 
-const Hero = () => {
+const Hero = ({ preloaderComplete = true }) => {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const vantaRef = useRef(null);
@@ -77,22 +77,34 @@ const Hero = () => {
   }, []);
 
   useGSAP(() => {
-    gsap.set("#hero-frame", {
-      clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
-      borderRadius: "0% 0% 40% 10%",
-    });
-    gsap.from("#hero-frame", {
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      borderRadius: "0% 0% 0% 0%",
-      ease: "power1.inOut",
-      scrollTrigger: {
-        trigger: "#hero-frame",
-        start: "center center",
-        end: "bottom center",
-        scrub: true,
-      },
-    });
-  });
+    // Only initialize GSAP animations after preloader completes
+    if (!preloaderComplete) return;
+
+    // Add a small delay to ensure DOM is fully ready
+    const timer = setTimeout(() => {
+      gsap.set("#hero-frame", {
+        clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
+        borderRadius: "0% 0% 40% 10%",
+      });
+
+      gsap.from("#hero-frame", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        borderRadius: "0% 0% 0% 0%",
+        ease: "power1.inOut",
+        scrollTrigger: {
+          trigger: "#hero-frame",
+          start: "center center",
+          end: "bottom center",
+          scrub: true,
+        },
+      });
+
+      // Refresh ScrollTrigger to recalculate positions
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [preloaderComplete]);
 
   return (
     <div id="hero-frame" className="relative h-dvh w-full overflow-x-hidden rounded-lg">
