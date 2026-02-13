@@ -119,11 +119,11 @@ const DepartmentCarousel = ({ departments }) => {
 const Team = () => {
     // First 5 core team members (keep as-is)
     const coreMembers = [
-        { img: "/img/gallery-1.webp", name: "Arjun Reddy", role: "Lead Organizer" },
-        { img: "/img/gallery-2.webp", name: "Priya Sharma", role: "Tech Head" },
-        { img: "/img/gallery-3.webp", name: "Vikram Singh", role: "Design Lead" },
-        { img: "/img/gallery-4.webp", name: "Ananya Patel", role: "Event Coordinator" },
-        { img: "/img/gallery-5.webp", name: "Rohan Kumar", role: "Marketing Head" },
+        { img: "/img/gallery-1.webp", name: "Sudharsan", role: "Chairperson" },
+        { img: "/img/gallery-2.webp", name: "Arun Raja", role: "Co-Chairperson" },
+        { img: "/img/gallery-3.webp", name: "Ravi Pravin", role: "Secretary (Men)" },
+        { img: "/img/gallery-4.webp", name: "Naveena", role: "Secretary (Women)" },
+        { img: "/img/gallery-5.webp", name: "Kavindra", role: "Secretary (Science)" },
     ];
 
     // Generate placeholder members for each department
