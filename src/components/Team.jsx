@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import AnimatedTitle from "./AnimatedTitle";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaUserCircle } from "react-icons/fa";
 
 
 
@@ -15,13 +16,17 @@ const SmallTeamCard = ({ img, name, role }) => {
             transition={{ duration: 0.3 }}
             className="flex flex-col items-center"
         >
-            {/* Image First */}
-            <div className="relative w-full aspect-square overflow-hidden rounded-lg border border-neutral-200 transition-all duration-300 hover:scale-105 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 mb-2">
-                <img
-                    src={img}
-                    alt={name}
-                    className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-                />
+            {/* Image/Icon First */}
+            <div className="relative w-full aspect-square overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 transition-all duration-300 hover:scale-105 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 mb-2 flex items-center justify-center">
+                {img ? (
+                    <img
+                        src={img}
+                        alt={name}
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                ) : (
+                    <FaUserCircle className="w-2/3 h-2/3 text-neutral-300 transition-colors duration-300 group-hover:text-blue-200" />
+                )}
             </div>
 
             {/* Name and Role Below - Fixed Height Container */}
@@ -129,7 +134,7 @@ const Team = () => {
     // Generate placeholder members for each department
     const generateMembers = (count, baseName) => {
         return Array.from({ length: count }, (_, i) => ({
-            img: `/img/gallery-${(i % 5) + 1}.webp`,
+            img: null, // Use icon instead
             name: `${baseName} ${i + 1}`,
             role: i < 3 ? (i === 0 ? "Team Lead" : "Co-Lead") : undefined // First 3 members have roles
         }));
@@ -140,9 +145,9 @@ const Team = () => {
         { title: "PR Team", members: generateMembers(25, "PR Member") },
         { title: "ERM Team", members: generateMembers(35, "ERM Member") },
         { title: "Design Team", members: generateMembers(28, "Design Member") },
-        { title: "Content Team", members: generateMembers(32, "Content Member") },
-        { title: "Operations Team", members: generateMembers(40, "Operations Member") },
-        { title: "Finance Team", members: generateMembers(20, "Finance Member") },
+        // { title: "Content Team", members: generateMembers(32, "Content Member") },
+        // { title: "Operations Team", members: generateMembers(40, "Operations Member") },
+        // { title: "Finance Team", members: generateMembers(20, "Finance Member") },
     ];
 
     return (
@@ -177,7 +182,7 @@ const Team = () => {
                 {/* Department Section Title */}
                 <div className="mb-12 text-center">
                     <h2 className="font-zentry text-4xl md:text-5xl uppercase text-black font-black leading-[0.9] animated-word-static">
-                        Our <span className="text-blue-500">Departments</span>
+                        Our <span className="text-blue-500">Verticals</span>
                     </h2>
 
                 </div>
