@@ -5,12 +5,25 @@ import clsx from "clsx";
 import gsap from "gsap";
 import { useWindowScroll } from "react-use";
 import { useEffect, useRef, useState } from "react";
-import { TiLocationArrow, TiHome } from "react-icons/ti";
+import { TiHome } from "react-icons/ti";
 import { usePathname } from "next/navigation";
 
 import Button from "./Button";
 
-const navItems = ["Accommodation", "Campus Map", "Contact"];
+const navItems = [
+  {
+    label: "Events",
+    link: "/portal/event"
+  },
+  {
+    label: "Campus Map",
+    link: "#campus_map"
+  },
+  {
+    label: "Contact",
+    link: "#contact"
+  }
+]
 
 // Section IDs and their header color preferences
 // true = white header, false = black header
@@ -104,7 +117,7 @@ const NavBar = () => {
     const timeoutId = setTimeout(() => {
       detectCurrentSection();
     }, 100);
-    
+
     // Throttle scroll events
     let ticking = false;
     const handleScroll = () => {
@@ -245,7 +258,7 @@ const NavBar = () => {
               {navItems.map((item, index) => (
                 <a
                   key={index}
-                  href={`#${item.toLowerCase()}`}
+                  href={`${item.link}`}
                   className="nav-hover-btn font-general text-xs font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
                   style={{
                     color: headerIsWhite ? '#000000' : '#ffffff',
@@ -257,7 +270,7 @@ const NavBar = () => {
                     e.target.style.color = headerIsWhite ? '#000000' : '#ffffff';
                   }}
                 >
-                  {item}
+                  {item.label}
                 </a>
               ))}
             </nav>

@@ -1,9 +1,9 @@
 "use client"
 import gsap from "gsap";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useInView } from "framer-motion";
 import { eventService } from "../services/eventservice";
-import { useExternalScript } from "@/hooks/useExternalScript";
 
 const STATIC_IMAGES = [
   "/img/flagship/fl1.png",
@@ -78,6 +78,7 @@ const placeNow = (el, slot, skew, totalCards) =>
   });
 
 const FloatingImage = () => {
+  const router = useRouter();
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const cardsRef = useRef([]);
@@ -99,6 +100,7 @@ const FloatingImage = () => {
       try {
         const eventPromises = FLAGSHIP_EVENT_IDS.map(id => eventService.getEventById(id));
         const responses = await Promise.all(eventPromises);
+        console.log("Flagship Event Details:", responses);
 
         // Extract and format event data
         const processedEvents = responses.map((res, index) => {
@@ -335,62 +337,60 @@ const FloatingImage = () => {
 
   // Vanta Trunk Background Effect
   const vantaRef = useRef(null);
-  const vantaEffectRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const p5Status = useExternalScript('https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js');
-  const vantaStatus = useExternalScript('https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.trunk.min.js');
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
+    let vantaEffect = null;
 
-    if (vantaRef.current) {
-      observer.observe(vantaRef.current);
-    }
+    const loadVanta = async () => {
+      if (typeof window !== 'undefined') {
+        // Load p5.js (required for TRUNK effect)
+        if (!window.p5) {
+          const p5Script = document.createElement('script');
+          p5Script.src = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js';
+          document.head.appendChild(p5Script);
+
+          await new Promise((resolve) => {
+            p5Script.onload = resolve;
+          });
+        }
+
+        // Load Vanta Trunk
+        if (!window.VANTA || !window.VANTA.TRUNK) {
+          const vantaScript = document.createElement('script');
+          vantaScript.src = 'https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.trunk.min.js';
+          document.head.appendChild(vantaScript);
+
+          await new Promise((resolve) => {
+            vantaScript.onload = resolve;
+          });
+        }
+
+        // Initialize Vanta effect
+        if (window.VANTA && window.VANTA.TRUNK && vantaRef.current) {
+          vantaEffect = window.VANTA.TRUNK({
+            el: vantaRef.current,
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1352c5,
+            backgroundColor: 0xffffff,
+            spacing: 10.00,
+            chaos: 3.00
+          });
+        }
+      }
+    };
+
+    loadVanta();
 
     return () => {
-      if (vantaRef.current) {
-        observer.unobserve(vantaRef.current);
-      }
+      if (vantaEffect) vantaEffect.destroy();
     };
   }, []);
-
-  useEffect(() => {
-    if (p5Status === 'ready' && vantaStatus === 'ready' && vantaRef.current) {
-      if (isVisible && !vantaEffectRef.current) {
-        vantaEffectRef.current = window.VANTA.TRUNK({
-          el: vantaRef.current,
-          p5: window.p5,
-          mouseControls: true,
-          touchControls: true,
-          gyroControls: false,
-          minHeight: 200.00,
-          minWidth: 200.00,
-          scale: 1.00,
-          scaleMobile: 1.00,
-          color: 0x1352c5,
-          backgroundColor: 0xffffff,
-          spacing: 10.00,
-          chaos: 3.00
-        });
-      } else if (!isVisible && vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
-        vantaEffectRef.current = null;
-      }
-    }
-
-    return () => {
-      if (vantaEffectRef.current) {
-        vantaEffectRef.current.destroy();
-        vantaEffectRef.current = null;
-      }
-    };
-  }, [p5Status, vantaStatus, isVisible]);
 
   // Get current front card for indicators
   const currentIndex = orderRef.current[0] || 0;
@@ -404,7 +404,7 @@ const FloatingImage = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative z-10 h-fit md:h-screen flex size-full flex-col items-center py-10 pb-24">
+      <div className="relative z-10 flex size-full flex-col items-center py-10 pb-24">
         <div className="flex flex-col items-center justify-center text-center">
           <motion.p
             initial={{ opacity: 0, transform: "rotateX(-30deg) scale(0.9)" }}
@@ -452,7 +452,7 @@ const FloatingImage = () => {
                     transform: `translate(-50%, -50%) translateX(${index * CARD_DISTANCE}px) translateY(${index * VERTICAL_DISTANCE}px) skewY(${SKEW_AMOUNT}deg)`,
                     zIndex: events.length - index
                   }}
-                  onClick={() => window.location.href = '#'}
+                  onClick={() => router.push(`/portal/event/${slide.id}`)}
                 >
                   {/* Top Image Section */}
                   <div className="h-[65%] w-full relative">
@@ -508,7 +508,7 @@ const FloatingImage = () => {
           </div>
 
           {/* Mobile Navigation Arrows */}
-          <div className="flex md:hidden justify-center items-center gap-6 mt-20">
+          <div className="flex md:hidden justify-center items-center gap-6 mt-6">
             <button
               onClick={prevSlide}
               className="w-12 h-12 rounded-full bg-black/80 backdrop-blur-md flex items-center justify-center text-white border border-white/20 active:scale-95 transition-all duration-200"
