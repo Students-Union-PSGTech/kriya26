@@ -238,16 +238,6 @@ const NavBarForMobile = () => {
                   />
                 </div>
 
-                <div>
-                  <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">Platinum Events</p>
-                  <GoldNav
-                    openState={[isOpen, setIsOpen]}
-                    isMobile
-                    noMargin
-                    goldEvents={platinumEvents}
-                  />
-                </div>
-
                 <div className="space-y-1">
                   <p className="px-4 py-1 text-xs font-bold text-white/90">Categories</p>
                   <div className="space-y-0.5">
@@ -261,6 +251,16 @@ const NavBarForMobile = () => {
                       />
                     ))}
                   </div>
+                </div>
+
+                <div>
+                  <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">Platinum Events</p>
+                  <GoldNav
+                    openState={[isOpen, setIsOpen]}
+                    isMobile
+                    noMargin
+                    goldEvents={platinumEvents}
+                  />
                 </div>
               </div>
             </div>

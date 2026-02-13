@@ -31,7 +31,6 @@ const EventList = () => {
         setLoading(true);
         const response = await eventService.getAllEvents();
 
-        // Handle different response formats
         let eventsData = [];
         if (Array.isArray(response)) {
           eventsData = response;
@@ -41,11 +40,9 @@ const EventList = () => {
           eventsData = response.events;
         }
 
-        // Map to the format needed for the UI
         const normalizeMongoDate = (d) => {
           if (!d) return null;
           if (typeof d === "string") return d;
-          // Handle Mongo-style date wrapper: { $date: "..." }
           if (typeof d === "object" && d.$date) return d.$date;
           return null;
         };
@@ -53,10 +50,8 @@ const EventList = () => {
         const mappedEvents = eventsData.map((event) => ({
           name: event.eventName || event.name,
           id: event.eventId || event.id,
-          // Keep ISO-like date string for consistent formatting in UI
           date: normalizeMongoDate(event.date) || "TBA",
           category: event.category,
-          // Prefer structured startTime if present; otherwise fall back to timing string
           time: event.startTime || event.timing || event.time || "TBA",
         })).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -113,14 +108,20 @@ const EventList = () => {
     loadEvents();
   }, []);
 
-  const filteredEvents = events.filter(
-    (event) =>
+  const allFeaturedIds = [...GOLD_EVENT_IDS, ...PLATINUM_EVENT_IDS];
+  const filteredEvents = events.filter((event) => {
+    // Exclude Gold and Platinum events from regular categories
+    if (allFeaturedIds.includes(event.id)) return false;
+
+    return (
       searchTerm === "" ||
       event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (event.category && event.category.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+      (event.category &&
+        event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
 
   const filteredPlatinumEvents = featuredPlatinumEvents.filter(
     (event) =>
@@ -204,7 +205,7 @@ const EventList = () => {
               className="px-4 py-3 border-2 border-white/30 shadow-lg w-full sm:w-3/4 lg:w-1/2 max-w-lg text-white bg-black/40 backdrop-blur-md placeholder:text-white/60 focus:outline-none focus:border-white/60 focus:bg-black/50 transition-all"
             />
           </div>
-          <section className="relative flex flex-col items-center w-full  px-6 pb-32 overflow-x-hidden h-fit lg:overflow-hidden font-poppins lg:px-8 lg:pb-40 lg:block">
+          <section className="relative flex flex-col items-center w-full pb-32 overflow-x-hidden h-fit lg:overflow-hidden font-poppins lg:pb-40 lg:block">
             {/* <div className="w-full my-8 lg:mt-0">
           <h1 className={`text-4xl lg:text-6xl text-white font-semibold font-poppins text-center py-2`}
             id="soon-text"
@@ -469,33 +470,15 @@ const EventsGrid = ({
   titleColor = "text-white",
   categoryOverride = "",
 }) => {
-  const toTitleCase = (phrase) => {
-    const wordsToIgnore = ["of", "in", "for", "and", "a", "an", "or"];
-    const wordsToCapitalize = ["it", "cad"];
-
-    return phrase
-      .toLowerCase()
-      .split(" ")
-      .map((word) => {
-        if (wordsToIgnore.includes(word)) {
-          return word;
-        }
-        if (wordsToCapitalize.includes(word)) {
-          return word.toUpperCase();
-        }
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(" ");
-  };
 
   const filteredEvents = obj.filter((i) => i.eventId !== "EVNT0043");
   return (
-    <div className="flex flex-wrap justify-center gap-8 py-12">
+    <div className="flex flex-wrap justify-center gap-8 py-12 ">
       {filteredEvents.length > 0 ? (
         filteredEvents.map((i, index) => (
           <EventGrid
             key={index}
-            title={toTitleCase(i.name)}
+            title={i.name}
             description={""}
             date={i.date}
             time={i.time}
