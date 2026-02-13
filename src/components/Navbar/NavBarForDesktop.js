@@ -205,16 +205,12 @@ const NavBarForDesktop = () => {
             </h3>
             <div className="space-y-4">
               <div>
-                <p className="px-4 py-1 text-xs font-bold text-[#D9972B]">
-                  Gold Events
-                </p>
-                <GoldNav noMargin goldEvents={goldEvents} />
+                <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">Platinum Events</p>
+                <GoldNav noMargin goldEvents={platinumEvents} />
               </div>
               <div>
-                <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">
-                  Platinum Events
-                </p>
-                <GoldNav noMargin goldEvents={platinumEvents} />
+                <p className="px-4 py-1 text-xs font-bold text-[#D9972B]">Gold Events</p>
+                <GoldNav noMargin goldEvents={goldEvents} />
               </div>
 
               <div className="space-y-1">

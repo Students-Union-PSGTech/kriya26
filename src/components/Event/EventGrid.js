@@ -56,7 +56,6 @@ const EventGrid = ({
     if (isTba(rawTime)) return null;
     const str = String(rawTime).trim();
 
-    // Match first time occurrence: "9:30", "09.30", "9:30 AM", "14:05", etc.
     const match = str.match(/(\d{1,2})(?:[:.](\d{2}))?\s*([AaPp]\.?\s*[Mm]\.?)?/);
     if (!match) return null;
 
@@ -66,7 +65,6 @@ const EventGrid = ({
 
     if (Number.isNaN(hour) || Number.isNaN(minute)) return null;
 
-    // If AM/PM not provided, infer from 24h time when possible
     if (!meridiem) {
       if (hour === 0) {
         meridiem = "am";
@@ -115,7 +113,7 @@ const EventGrid = ({
 
   return (
     <button
-      className="group relative transition-all hover:z-30 font-poppins w-full lg:w-84 text-left flex flex-col"
+      className="group relative transition-all hover:z-30 font-poppins w-full md:w-84 text-left flex flex-col"
       onClick={() => router.push(to)}
     >
       <div className="hidden lg:block absolute group-hover:shadow-lg opacity-0 -translate-y-20 group-hover:-translate-y-2 group-hover:opacity-100 left-0 top-full w-full group-hover:scale-[110%] bg-gray-200 px-4 pt-2 transition-all ease-in-out">
@@ -146,9 +144,9 @@ const EventGrid = ({
           />
         </div>
         <div
-          className={`absolute inset-0 flex items-center justify-center font-semibold ${titleColor} drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] tracking-wide text-center  px-4 ${title.length > 15
-            ? "text-2xl sm:text-3xl md:text-5xl lg:text-2xl"
-            : "text-3xl sm:text-4xl md:text-6xl lg:text-3xl"
+          className={`absolute inset-0 flex items-center justify-center font-semibold ${titleColor} drop-shadow-[0_0_8px_rgba(255,255,255,0.9)] tracking-wide text-center ${title.length > 15
+            ? "text-2xl sm:text-3xl md:text-2xl lg:text-2xl"
+            : "text-3xl sm:text-4xl md:text-2xl lg:text-3xl"
             }`}
           style={{ mixBlendMode: 'difference', filter: 'brightness(2) contrast(1.5) saturate(1.2)' }}
         >
