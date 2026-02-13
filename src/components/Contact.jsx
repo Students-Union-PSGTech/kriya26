@@ -47,33 +47,33 @@ const Contact = () => {
 
                     <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Chairperson</h5>
-                        <ContactItem name="Jithendra J" phone="+91 75300 28769" />
+                        <ContactItem name="Sudharsan Krishnan" phone="+91 93457 26869" />
 
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Co-Chairperson</h5>
-                        <ContactItem name="Akash U" phone="+91 89390 28008" />
+                        <ContactItem name="Arun Raja" phone="+91 79046 87153" />
                     </div>
 
                     <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Secretary (Men)</h5>
-                        <ContactItem name="Naren Siddharth M" phone="+91 99409 79069" />
+                        <ContactItem name="Ravi Pravin" phone="+91 99656 70704" />
 
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Secretary (Women)</h5>
-                        <ContactItem name="Fasila Begum A" phone="+91 74486 49714" />
+                        <ContactItem name="Naveena Vijayan" phone="+91 90258 39933" />
                     </div>
 
                     <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Secretary (Science)</h5>
-                        <ContactItem name="Ridhanya Senthil" phone="+91 90470 50025" />
+                        <ContactItem name="Kavindra" phone="+91 81389 81258" />
 
-                        <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Event Support</h5>
+                        {/* <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Event Support</h5>
                         <ContactItem
                             name="Arunaa S"
                             phone="+91 88258 51781"
                             className="mt-2 whitespace-nowrap"
-                        />
+                        /> */}
                     </div>
 
-                    <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
+                    {/* <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">
                             PR & Sponsorship Support
                         </h5>
@@ -83,8 +83,8 @@ const Contact = () => {
                             phone="+91 82483 03552"
                             className="mt-6 whitespace-nowrap"
                         />
-                    </div>
-
+                    </div> */}
+{/* 
                     <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Tech Support</h5>
                         <ContactItem name="Bragadeesh V" phone="+91 74188 52849" />
@@ -93,7 +93,7 @@ const Contact = () => {
                             phone="+91 99655 11133"
                             className="mt-6 whitespace-nowrap"
                         />
-                    </div>
+                    </div> */}
 
                 </div>
             </div>
