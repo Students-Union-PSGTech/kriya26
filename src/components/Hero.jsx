@@ -119,22 +119,61 @@ const Hero = ({ preloaderComplete = true }) => {
       />
 
       {/* Mobile Layout */}
-      <div className="absolute bg-black/50 inset-0 z-20 flex lg:hidden justify-center items-center px-4 py-8 pointer-events-none">
-        <div className="rounded-3xl p-6 mt-22 text-center w-full max-w-md mx-auto relative">
-          {/* <h1 className="special-font font-zentry text-4xl font-thin uppercase absolute top-4 right-4 z-40 text-white">
-            20<b>2</b>6
-          </h1> */}
+      <div className="absolute bg-black/50 inset-0 z-20 flex lg:hidden flex-col justify-center items-center px-4 py-8 pointer-events-none">
+        <div className="rounded-3xl p-6 text-center w-full max-w-md mx-auto relative flex flex-col items-center">
+
+          {/* Top Text */}
+          <div className="flex flex-col items-center justify-center gap-1 mb-4">
+            <h3 className="special-font text-white text-lg font-zentry tracking-wider">
+              <b>PSG COLLEGE OF TECHNOLOGY</b>
+            </h3>
+            <h3 className="special-font text-blue-400 text-lg font-zentry tracking-wider">
+              <b>STUDENTS UNION</b>
+            </h3>
+            <h3 className="special-font text-white text-lg font-zentry tracking-wider">
+              <b>PRESENTS</b>
+            </h3>
+          </div>
 
           <Image
             src="/Logo/kriya26white.png"
             alt="Kriya 2026 Logo"
             width={300}
             height={300}
-            className="h-35 w-auto mx-auto mb-6"
+            className="h-20 w-auto mx-auto mb-2"
           />
 
+          {/* Global Clash Title - Smaller */}
+          <div className="mb-4">
+            <h1 className="special-font text-center text-2xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
+              <span className="">the gl<b>o</b>bal</span>
+            </h1>
+            <h1 className="special-font text-center text-xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
+              <span className="">Cl<b>a</b>sh <b>of</b></span>
+            </h1>
+            <h2 className="special-font text-center text-xl font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
+              <span className="bg-black/50 text-blue-400 p-1 rounded-md">te<b>c</b>h<b>n</b>o t<b>a</b>lents</span>
+            </h2>
+          </div>
+
+          {/* Date - Bigger */}
+          <div className="mb-6">
+            <div className="flex items-center justify-center gap-2 text-5xl font-zentry bg-black/50 px-2 py-1 rounded-xl">
+              <h2 className="special-font font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
+                <span className="">Ma<b>r</b>c<b>h</b></span>
+              </h2>
+              <span className="text-white">13</span>
+              <span className="text-blue-400">,</span>
+              <span className="text-white">14</span>
+              <span className="text-blue-400">,</span>
+              <span className="text-white">15</span>
+              <span className="text-blue-400">,</span>
+              <span className="text-white">2026</span>
+            </div>
+          </div>
+
           {/* Social Links */}
-          <div className="flex justify-center gap-4 mb-8">
+          <div className="flex justify-center gap-4 mb-6">
             <a
               href="mailto:helpdesk.kriya@psgtech.ac.in"
               target="_blank"
@@ -161,33 +200,6 @@ const Hero = ({ preloaderComplete = true }) => {
             </a>
           </div>
 
-          {/* Global Clash Title */}
-          <div className="mb-10 mt-5">
-            <h1 className="special-font text-center text-6xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">the gl<b>o</b>bal</span>
-            </h1>
-            <h1 className="special-font text-center text-5xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">Cl<b>a</b>sh <b>of</b></span>
-            </h1>
-            <h2 className="special-font text-center text-5xl font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
-              <span className="bg-black/50 text-blue-400 p-2 rounded-xl">te<b>c</b>h<b>n</b>o t<b>a</b>lents</span>
-            </h2>
-          </div>
-
-          {/* Date */}
-          <div className="mb-6">
-            <div className="flex items-center justify-center gap-2 text-5xl text-white font-zentry bg-black/50 px-2 py-1 rounded-xl">
-              <h2 className="special-font font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
-                <span className="">Ma<b>r</b>c<b>h</b></span>
-              </h2>
-              <span className="text-blue-400 ">13</span>
-              <span className="text-purple-400">,</span>
-              <span className="text-blue-400">14</span>
-              <span className="text-purple-400">,</span>
-              <span className="text-blue-400">15</span>
-            </div>
-          </div>
-
           <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-stretch w-[80%] mx-auto">
             <Button
               title={isAuthenticated ? "MY PROFILE" : "REGISTER NOW"}
@@ -206,86 +218,106 @@ const Hero = ({ preloaderComplete = true }) => {
       </div>
 
       {/* Desktop Layout */}
-      <div className="absolute inset-0 z-20 p-20 bg-black/50 hidden lg:flex flex-row justify-center items-center gap-10 pointer-events-none">
+      <div className="absolute inset-0 z-20 p-10 bg-black/50 hidden lg:flex flex-col justify-center items-center gap-8 pointer-events-none">
 
-        {/* <h1 className="special-font font-zentry text-[3rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-10xl 2xl:text-[7rem] font-zentry font-thin uppercase absolute bottom-5 right-5 z-40 text-[#dfdff2]">
-          20<b>2</b>6
-        </h1> */}
-
-        <div className="rounded-3xl p-6 md:p-8 text-center">
-          <Image
-            src="/Logo/kriya26white.png"
-            alt="Kriya 2026 Logo"
-            width={500}
-            height={400}
-            className="h-30 md:h-75 w-auto mx-auto mb-4"
-          />
-          <div className="flex items-center justify-center gap-2 text-5xl text-white font-zentry">
-            <h2 className="special-font font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
-              <span className="p-2"><b>Ma<b><b>r</b></b>ch</b></span>
-            </h2>
-            <span>13</span>
-            <span className="text-blue-400">,</span>
-            <span>14</span>
-            <span className="text-blue-400">,</span>
-            <span>15</span>
-          </div>
-          <div className="flex justify-center gap-4 mt-6">
-            <a
-              href="mailto:helpdesk.kriya@psgtech.ac.in"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
-            >
-              <FaEnvelope className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
-            </a>
-            <a
-              href="https://www.linkedin.com/company/studentsunion-psgtech/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
-            >
-              <FaLinkedin className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
-            </a>
-            <a
-              href="https://www.instagram.com/kriya_psgtech/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
-            >
-              <FaInstagram className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
-            </a>
-          </div>
+        {/* Top Text */}
+        <div className="flex flex-col items-center justify-center gap-2 mb-4">
+          <h3 className="special-font text-white text-3xl font-zentry tracking-wider">
+            <b>PSG COLLEGE OF TECHNOLOGY</b>
+          </h3>
+          <h3 className="special-font text-blue-400 text-3xl font-zentry tracking-wider">
+            <b>STUDENTS UNION</b>
+          </h3>
+          <h3 className="special-font text-white text-3xl font-zentry tracking-wider">
+            <b>PRESENTS</b>
+          </h3>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <div className="rounded-2xl p-8 md:p-10 text-center">
-            {/* Title Section */}
-            <h1 className="p-3 special-font text-center text-[2.5rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[7rem] font-zentry font-thin uppercase text-white mb-2 tracking-wide">
-              the gl<b>o</b>bal cl<b>a</b>sh
-            </h1>
-            <h2
-              className="special-font text-center text-[2.5rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[5rem] font-zentry font-thin uppercase text-white mb-6"
-            >
-              <span className="px-4 py-2"><b>o</b>f <span className="bg-black/50 p-2 rounded-xl text-blue-400"> te<b>c</b>h<b>n</b>o t<b>a</b>lents</span></span>
-            </h2>
-            <p className="text-base text-end mr-15 md:text-lg text-white font-zentry mb-8">
-              <span className="bg-black/50 px-4 py-2 rounded-md">POWERED BY <span className="text-blue-400 font-bold ml-2">STUDENTS UNION</span></span>
-            </p>
-            <div className="flex-center mt-6 gap-6">
-              <Button
-                title={isAuthenticated ? "MY PROFILE" : "REGISTER NOW"}
-                titleClass="font-bold"
-                containerClass="bg-blue-400 font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
-                leftIcon={isAuthenticated ? <TiUser className="w-5 h-5" /> : <TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
-                onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
-              />
-              <Button
-                title="EXPLORE EVENTS"
-                containerClass="bg-white font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
-                leftIcon={<TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
-                onClick={() => router.push("/portal/event")}
-              />
+        <div className="flex flex-row justify-center items-center gap-32">
+
+          {/* LEFT COLUMN: Logo + Title (Small) + Socials */}
+          <div className="flex flex-col items-center text-center gap-6">
+            <Image
+              src="/Logo/kriya26white.png"
+              alt="Kriya 2026 Logo"
+              width={500}
+              height={400}
+              className="h-30 md:h-60 w-auto mx-auto"
+            />
+
+
+
+            {/* Socials */}
+            <div className="flex justify-center gap-4">
+              <a
+                href="mailto:helpdesk.kriya@psgtech.ac.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
+              >
+                <FaEnvelope className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/studentsunion-psgtech/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
+              >
+                <FaLinkedin className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+              </a>
+              <a
+                href="https://www.instagram.com/kriya_psgtech/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-2 active:animate-bounce border border-white/40 hover:border-white/60 pointer-events-auto"
+              >
+                <FaInstagram className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: Date (Big) + Buttons */}
+          <div className="flex flex-col items-center justify-center gap-6">
+
+            {/* Title - Moved Here & Smaller */}
+            <div className="flex flex-col items-center mb-2">
+              <h1 className="special-font text-center text-4xl lg:text-5xl font-zentry font-thin uppercase text-white tracking-wide">
+                the gl<b>o</b>bal cl<b>a</b>sh <b>o</b>f <span className="bg-black/50 p-1 rounded-xl text-blue-400">te<b>c</b>h<b>n</b>o t<b>a</b>lents</span>
+              </h1>
+            </div>
+
+            {/* Date - Bigger */}
+            <div className="flex items-center justify-center gap-2 text-7xl xl:text-8xl text-white font-zentry">
+              <h2 className="special-font font-zentry font-thin uppercase text-white bg-clip-text text-transparent">
+                <span className="p-2"><b>Ma<b><b>r</b></b>ch</b></span>
+              </h2>
+              <span>13</span>
+              <span className="text-blue-400">,</span>
+              <span>14</span>
+              <span className="text-blue-400">,</span>
+              <span>15</span>
+              <span className="text-blue-400">,</span>
+              <span>2026</span>
+            </div>
+
+            <div className="flex flex-col gap-4">
+
+              {/* Buttons */}
+              <div className="flex-center gap-6">
+                <Button
+                  title={isAuthenticated ? "MY PROFILE" : "REGISTER NOW"}
+                  titleClass="font-bold"
+                  containerClass="bg-blue-400 font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
+                  leftIcon={isAuthenticated ? <TiUser className="w-5 h-5" /> : <TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
+                  onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
+                />
+                <Button
+                  title="EXPLORE EVENTS"
+                  containerClass="bg-white font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
+                  leftIcon={<TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
+                  onClick={() => router.push("/portal/event")}
+                />
+              </div>
             </div>
           </div>
         </div>
