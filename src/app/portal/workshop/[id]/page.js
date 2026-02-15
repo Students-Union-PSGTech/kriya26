@@ -280,7 +280,7 @@ export default function WorkshopPage({ params }) {
                 style={{ color: accent.primary, background: accent.primary }}
               />
               <span className="text-white font-bold uppercase tracking-widest text-sm">
-                {workshopDetail.closed ? "Registrations Closed" : "Live Now"}
+                {workshopDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
               </span>
             </div>
 
@@ -411,20 +411,24 @@ export default function WorkshopPage({ params }) {
       </div>
 
       {/* ===== Learn More Modal ===== */}
-      {isLearnMoreOpen && (
-        <EventDetailsModal
-          eventDetail={getMappedEventDetail()}
-          onClose={() => setIsLearnMoreOpen(false)}
-        />
-      )}
+      {
+        isLearnMoreOpen && (
+          <EventDetailsModal
+            eventDetail={getMappedEventDetail()}
+            onClose={() => setIsLearnMoreOpen(false)}
+          />
+        )
+      }
 
       {/* ===== Registration Modal ===== */}
-      {isModalOpen && (
-        <ConfirmationModal
-          onConfirm={handleRegister}
-          onCancel={() => setIsModalOpen(false)}
-        />
-      )}
-    </div>
+      {
+        isModalOpen && (
+          <ConfirmationModal
+            onConfirm={handleRegister}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        )
+      }
+    </div >
   );
 }

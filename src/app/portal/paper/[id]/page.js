@@ -311,10 +311,8 @@ export default function PaperPage({ params }) {
                                 style={{ color: accent.primary, background: accent.primary }}
                             />
                             <span className="text-white font-bold uppercase tracking-widest text-sm">
-                                {paperDetail.closed ? "Registrations Closed" : "Live Now"}
+                                {paperDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
                             </span>
-                            <span className="text-white/30 mx-2">|</span>
-                            <span className="text-white/60 font-bold uppercase tracking-widest text-sm">Free</span>
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
