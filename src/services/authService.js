@@ -73,4 +73,22 @@ export const authService = {
         const response = await api.post('/api/events/preregister/verify', { email, verificationCode });
         return response.data;
     },
+
+    // Upload ID card (multipart/form-data)
+    uploadIdCard: async (file) => {
+        const formData = new FormData();
+        formData.append('idCard', file);
+        const response = await api.post('/api/auth/user/id-card', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response.data;
+    },
+
+    // View uploaded ID card file as blob
+    getIdCardFile: async (idCardUrl) => {
+        const response = await api.get(`/api/auth/files/${idCardUrl}`, {
+            responseType: 'blob',
+        });
+        return response;
+    },
 };

@@ -8,6 +8,7 @@ import StatsGrid from "@/components/profile/StatsGrid";
 import QRCodeSection from "@/components/profile/QRCodeSection";
 import EventTicket from "@/components/profile/EventTicket";
 import ScrollableContainer from "@/components/profile/ScrollableContainer";
+import IdCardSection from "@/components/profile/IdCardSection";
 import { useAuth } from "@/context/AuthContext";
 import { eventService } from "@/services/eventservice";
 
@@ -308,9 +309,13 @@ export default function ProfilePage() {
                                 />
                             </section>
 
-                            {/* Row 2: Stats Row (Horizontal) */}
                             <section>
                                 <StatsGrid stats={statsData} />
+                            </section>
+
+                            {/* Row 2.5: ID Card Upload */}
+                            <section>
+                                <IdCardSection user={user} onRefresh={refreshUser} />
                             </section>
 
                             {/* Row 3: QR Code + My Workshops (Side by Side) */}
