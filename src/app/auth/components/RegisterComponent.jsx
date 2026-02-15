@@ -125,6 +125,7 @@ export default function RegisterComponent() {
 
     const finalizeRegistration = async () => {
         setLoading(true);
+        setError('');
 
         try {
             const storedReferralCode = localStorage.getItem('club_referral_code');
@@ -494,6 +495,12 @@ export default function RegisterComponent() {
                                     Instr<b>u</b>cti<b>o</b>ns
                                 </h2>
                             </div>
+
+                            {error && (
+                                <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-3 rounded mb-6 text-sm font-general">
+                                    {error}
+                                </div>
+                            )}
                             <div className="bg-white/5 border border-white/10 p-8 mb-10 h-72 overflow-y-auto custom-scrollbar">
                                 <ul className="space-y-6 text-gray-300 text-sm font-general">
                                     <li className="flex gap-6 items-start">
