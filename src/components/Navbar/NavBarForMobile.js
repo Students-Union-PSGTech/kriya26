@@ -36,7 +36,9 @@ const NavBarForMobile = () => {
       try {
         // Fetch events
         const eventsResponse = await eventService.getAllEvents();
-        const eventsData = Array.isArray(eventsResponse) ? eventsResponse : eventsResponse?.data || [];
+        const eventsData = Array.isArray(eventsResponse.events)
+          ? eventsResponse.events
+          : eventsResponse?.data || [];
         const sortedEvents = eventsData
           .map((event) => ({
             name: event.eventName || event.name,
@@ -77,7 +79,9 @@ const NavBarForMobile = () => {
 
         // Fetch workshops
         const workshopsResponse = await eventService.getAllWorkshops();
-        const workshopsData = Array.isArray(workshopsResponse.workshops) ? workshopsResponse.workshops : workshopsResponse?.data || [];
+        const workshopsData = Array.isArray(workshopsResponse.workshops)
+          ? workshopsResponse.workshops
+          : workshopsResponse?.data?.workshops || [];
         const sortedWorkshops = workshopsData
           .map((workshop) => ({
             name: workshop.workshopName || workshop.name,
@@ -164,7 +168,7 @@ const NavBarForMobile = () => {
         className={`transition-all duration-300 ease-in-out ${isOpen ? "max-h-[5000px] opacity-100" : "max-h-0 opacity-0 overflow-hidden"
           }`}
       >
-        <div className="px-6 py-8 space-y-8">
+        <div className="px-6 py-8 space-y-8 pb-32">
           {/* Core Links */}
           <section className="space-y-1">
             {(!token || !userDetails) && (
@@ -179,9 +183,9 @@ const NavBarForMobile = () => {
 
             {[
               { href: "/", label: "Home", icon: <AiOutlineHome /> },
-              { href: "/#features-section", label: "Events", icon: <MdOutlineEmojiEvents /> },
-              { href: "/#workshops-section", label: "Workshops", icon: <GrWorkshop /> },
-              { href: "/#paper-presentation-section", label: "Paper Presentations", icon: <HiOutlinePresentationChartBar /> },
+              { href: "/portal/event", label: "Events", icon: <MdOutlineEmojiEvents /> },
+              { href: "/portal/workshop", label: "Workshops", icon: <GrWorkshop /> },
+              { href: "/portal/paper", label: "Paper Presentations", icon: <HiOutlinePresentationChartBar /> },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -212,7 +216,7 @@ const NavBarForMobile = () => {
                   />
                 </div>
                 <div>
-                  <p className="px-4 py-1 text-xs font-bold text-white/90">Research</p>
+                  <p className="px-4 py-1 text-xs font-bold text-white/90">Paper Presentations</p>
                   <PaperNav
                     openState={[isOpen, setIsOpen]}
                     isMobile
@@ -229,6 +233,16 @@ const NavBarForMobile = () => {
               </h3>
               <div className="space-y-4">
                 <div>
+                  <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">Platinum Events</p>
+                  <GoldNav
+                    openState={[isOpen, setIsOpen]}
+                    isMobile
+                    noMargin
+                    goldEvents={platinumEvents}
+                  />
+                </div>
+
+                <div>
                   <p className="px-4 py-1 text-xs font-bold text-[#D9972B]">Gold Events</p>
                   <GoldNav
                     openState={[isOpen, setIsOpen]}
@@ -241,7 +255,7 @@ const NavBarForMobile = () => {
                 <div className="space-y-1">
                   <p className="px-4 py-1 text-xs font-bold text-white/90">Categories</p>
                   <div className="space-y-0.5">
-                    {["Quiz", "Bot", "Coding", "Fashion and Textile", "Core Engineering", "Science and Technology"].map((cat) => (
+                    {["Quiz", "Coding", "Fashion and Textile", "Core Engineering", "Science and Technology"].map((cat) => (
                       <EventNav
                         key={cat}
                         openState={[isOpen, setIsOpen]}
@@ -251,16 +265,6 @@ const NavBarForMobile = () => {
                       />
                     ))}
                   </div>
-                </div>
-
-                <div>
-                  <p className="px-4 py-1 text-xs font-bold text-[#C0C0C0]">Platinum Events</p>
-                  <GoldNav
-                    openState={[isOpen, setIsOpen]}
-                    isMobile
-                    noMargin
-                    goldEvents={platinumEvents}
-                  />
                 </div>
               </div>
             </div>

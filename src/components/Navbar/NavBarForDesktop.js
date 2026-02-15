@@ -121,7 +121,7 @@ const NavBarForDesktop = () => {
       <div className="sticky top-0 z-20 flex items-center justify-center w-full py-8 bg-[#0a0a0a]/90 backdrop-blur-sm border-b border-[#1a1a1a]">
         <Link
           href={"/"}
-          className="w-20 h-20 transition-transform duration-300 hover:scale-110"
+          className="w-50 h-30 transition-transform duration-300 hover:scale-110"
           style={{
             background: `url(/Logo/kriya26white.png)`,
             backgroundPosition: "center",
@@ -151,17 +151,17 @@ const NavBarForDesktop = () => {
           {[
             { href: "/", icon: <AiOutlineHome />, label: "Home" },
             {
-              href: "/#features-section",
+              href: "/portal/event",
               icon: <MdOutlineEmojiEvents />,
               label: "Events",
             },
             {
-              href: "/#workshops-section",
+              href: "/portal/workshop",
               icon: <GrWorkshop />,
               label: "Workshops",
             },
             {
-              href: "/#paper-presentation-section",
+              href: "/portal/paper",
               icon: <HiOutlinePresentationChartBar />,
               label: "Paper Presentations",
             },
@@ -192,7 +192,7 @@ const NavBarForDesktop = () => {
               </div>
               <div>
                 <p className="px-4 py-1 text-xs font-bold text-white/90">
-                  Research
+                  Paper Presentations
                 </p>
                 <PaperNav noMargin papers={papers} />
               </div>
@@ -224,7 +224,6 @@ const NavBarForDesktop = () => {
                     noMargin
                     events={events}
                   />
-                  <EventNav category="Bot" events={events} />
                   <EventNav category="Quiz" events={events} />
                   <EventNav category="Core Engineering" events={events} />
                   <EventNav category="Fashion and Textile" events={events} />
