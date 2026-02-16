@@ -23,6 +23,9 @@ const SmallTeamCard = ({ img, name, role }) => {
                     <img
                         src={img}
                         alt={name}
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority="low"
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                 ) : (

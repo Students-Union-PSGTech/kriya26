@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'mma.prnewswire.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'kriyabackend.psgtech.ac.in',
+        pathname: '/api/auth/files/**',
+      },
     ],
   },
 };
