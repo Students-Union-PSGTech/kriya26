@@ -155,16 +155,16 @@ export const departments = [
     title: "Video Editing Team",
     members: [
       // Leads
-      { name: "1455", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/COPY_OF_1455_34da887e.png" },
+      // { name: "1455", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/COPY_OF_1455_34da887e.png" },
       // Coordinators
       { name: "Aadhithya", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/AADHITHYA_6b03dbb6.png" },
       { name: "Sriya", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/SRIYA_c51edb36.png" },
-      { name: "1438", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1438_733127ae.png" },
+      // { name: "1438", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1438_733127ae.png" },
       // Core Members
-      { name: "1168", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1168_6e50bd9f.png" },
-      { name: "1339", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1339_caa0c5ae.png" },
-      { name: "1459", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1459_d2276c33.png" },
-      { name: "1498", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1498_7b4ee6c4.png" }
+      // { name: "1168", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1168_6e50bd9f.png" },
+      // { name: "1339", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1339_caa0c5ae.png" },
+      // { name: "1459", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1459_d2276c33.png" },
+      // { name: "1498", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1498_7b4ee6c4.png" }
     ]
   },
   {
