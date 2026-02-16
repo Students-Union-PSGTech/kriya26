@@ -11,7 +11,7 @@ import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
-const DEFAULT_YOUTUBE_URL = "https://www.youtube.com/watch?v=YeFJPRFhmCM";
+const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
 
 // Category accent colors for the dark theme
 const CATEGORY_ACCENTS = {

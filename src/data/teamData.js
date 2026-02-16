@@ -86,6 +86,7 @@ export const departments = [
     title: "ERM Team",
     members: [
       // Leads
+      { name: "Ashwin Ravichandran", role: "Team Lead", img:"/img/erm/ASHWIN_RAVICHANDRAN.png"},
       { name: "Ashok Kumar S", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/ASHOK_KUMAR_S_ERM_bac6ce16.png" },
       { name: "Catherine Mary", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/CATHERINE_MARY_ERM_d9366a86.png" },
       { name: "Harini", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/HARINI_ERM_299f53f7.png" },
