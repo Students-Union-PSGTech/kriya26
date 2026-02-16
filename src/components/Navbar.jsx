@@ -17,7 +17,7 @@ const navItems = [
   },
   {
     label: "Campus Map",
-    link: "#campus_map"
+    link: "https://kriya26-campusmap.vercel.app"
   },
   {
     label: "Ambassador",
