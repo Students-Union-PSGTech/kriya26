@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { Suspense, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { isPreRegistrationEnabled } from "@/settings/featureFlags";
 import Navbar from "@/components/Navbar";
@@ -39,7 +39,7 @@ const transformEvent = (item, itemType) => ({
     itemType
 });
 
-export default function ProfilePage() {
+function ProfilePageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user, loading: authLoading, isAuthenticated, logout, refreshUser } = useAuth();
@@ -469,5 +469,13 @@ export default function ProfilePage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function ProfilePage() {
+    return (
+        <Suspense fallback={null}>
+            <ProfilePageContent />
+        </Suspense>
     );
 }

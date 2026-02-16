@@ -125,11 +125,11 @@ const DepartmentCarousel = ({ departments }) => {
 const Team = () => {
     // First 5 core team members (keep as-is)
     const coreMembers = [
-        { name: "Sudharsan", role: "Chairperson" },
-        { name: "Arun Raja", role: "Co-Chairperson" },
-        { name: "Ravi Pravin", role: "Secretary (Men)" },
-        { name: "Naveena", role: "Secretary (Women)" },
-        { name: "Kavindra", role: "Secretary (Science)" },
+        { img: "/img/obs/Sudharsan_N.png", name: "Sudharsan", role: "Chairperson" },
+        { img: "/img/obs/Arunraja_C.jpeg", name: "Arun Raja", role: "Co-Chairperson" },
+        { img: "/img/obs/Ravi_Pravin_G.jpeg", name: "Ravi Pravin", role: "Secretary (Men)" },
+        { img: "/img/obs/Naveena_V.jpeg", name: "Naveena", role: "Secretary (Women)" },
+        { img: "/img/obs/Kavindra_S.jpeg", name: "Kavindra", role: "Secretary (Science)" },
     ];
 
     return (

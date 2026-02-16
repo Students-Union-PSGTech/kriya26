@@ -1,5 +1,39 @@
 export const departments = [
   {
+    title: "Tech Team",
+    members: [
+      // Leads
+      { name: "1428", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1428_3400f13c.png" },
+      { name: "1430", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1430_458b0019.png" },
+      { name: "1461", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1461_f095b69d.png" },
+      { name: "1463", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1463_df324a1c.png" },
+      { name: "Elamathi", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/ELAMATHI_a584ef60.png" },
+      { name: "Kishoreadhith V", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/KISHOREADHITH_V_22Z232_18dc7a1f.png" },
+      // Co-Leads
+      { name: "1470", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1470_7b2cd5b5.png" },
+      { name: "Akash S", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/AKASH_S_22Z255_a4b85535.png" },
+      { name: "Rithika", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/RITHIKA_ca592fc5.png" },
+      { name: "Vikashini", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/VIKASHINI_6dd48819.png" },
+      // Coordinators
+      { name: "1342", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1342_c3b43837.png" },
+      { name: "1348", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1348_d888dcf3.png" },
+      { name: "1352", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1352_d2efeda7.png" },
+      { name: "Priya Dharshini", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/PRIYA_DHARSHINI_00851ac8.png" },
+      // Core Members
+      { name: "1180", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1180_7922a813.png" },
+      { name: "1340", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1340_e451c99d.png" },
+      { name: "1343", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1343_a24308bf.png" },
+      { name: "1344", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1344_52bb5758.png" },
+      { name: "1350", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1350_241f7f59.png" },
+      { name: "1382", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1382_4f0c92c0.png" },
+      { name: "1387", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1387_35f058bf.png" },
+      { name: "1388", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1388_6e7c3a95.png" },
+      { name: "1391", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1391_68b7df17.png" },
+      { name: "1406", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1406_c3dacc5f.png" },
+      { name: "1410", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1410_ed9af266.png" }
+    ]
+  },
+  {
     title: "Ambience Team",
     members: [
       { name: "Shabari Sri R", role: "Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/SHABARI_SRI_R_AMBIENCE_3d2e081d.png" },
@@ -161,38 +195,4 @@ export const departments = [
       { name: "Thanya K", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/THANYA_K_PR_e0c2b14d.png" }
     ]
   },
-  {
-    title: "Tech Team",
-    members: [
-      // Leads
-      { name: "1428", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1428_3400f13c.png" },
-      { name: "1430", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1430_458b0019.png" },
-      { name: "1461", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1461_f095b69d.png" },
-      { name: "1463", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1463_df324a1c.png" },
-      { name: "Elamathi", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/ELAMATHI_a584ef60.png" },
-      { name: "Kishoreadhith V", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/KISHOREADHITH_V_22Z232_18dc7a1f.png" },
-      // Co-Leads
-      { name: "1470", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1470_7b2cd5b5.png" },
-      { name: "Akash S", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/AKASH_S_22Z255_a4b85535.png" },
-      { name: "Rithika", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/RITHIKA_ca592fc5.png" },
-      { name: "Vikashini", role: "Co-Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/VIKASHINI_6dd48819.png" },
-      // Coordinators
-      { name: "1342", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1342_c3b43837.png" },
-      { name: "1348", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1348_d888dcf3.png" },
-      { name: "1352", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1352_d2efeda7.png" },
-      { name: "Priya Dharshini", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/PRIYA_DHARSHINI_00851ac8.png" },
-      // Core Members
-      { name: "1180", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1180_7922a813.png" },
-      { name: "1340", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1340_e451c99d.png" },
-      { name: "1343", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1343_a24308bf.png" },
-      { name: "1344", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1344_52bb5758.png" },
-      { name: "1350", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1350_241f7f59.png" },
-      { name: "1382", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1382_4f0c92c0.png" },
-      { name: "1387", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1387_35f058bf.png" },
-      { name: "1388", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1388_6e7c3a95.png" },
-      { name: "1391", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1391_68b7df17.png" },
-      { name: "1406", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1406_c3dacc5f.png" },
-      { name: "1410", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1410_ed9af266.png" }
-    ]
-  }
 ];
