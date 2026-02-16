@@ -5,6 +5,7 @@ import AnimatedTitle from "./AnimatedTitle";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaUserCircle } from "react-icons/fa";
+import { departments } from "@/data/teamData";
 
 
 
@@ -129,25 +130,6 @@ const Team = () => {
         { name: "Ravi Pravin", role: "Secretary (Men)" },
         { name: "Naveena", role: "Secretary (Women)" },
         { name: "Kavindra", role: "Secretary (Science)" },
-    ];
-
-    // Generate placeholder members for each department
-    const generateMembers = (count, baseName) => {
-        return Array.from({ length: count }, (_, i) => ({
-            img: null, // Use icon instead
-            name: `${baseName} ${i + 1}`,
-            role: i < 3 ? (i === 0 ? "Team Lead" : "Co-Lead") : undefined // First 3 members have roles
-        }));
-    };
-
-    const departments = [
-        { title: "Tech Team", members: generateMembers(30, "Tech Member") },
-        { title: "PR Team", members: generateMembers(25, "PR Member") },
-        { title: "ERM Team", members: generateMembers(35, "ERM Member") },
-        { title: "Design Team", members: generateMembers(28, "Design Member") },
-        // { title: "Content Team", members: generateMembers(32, "Content Member") },
-        // { title: "Operations Team", members: generateMembers(40, "Operations Member") },
-        // { title: "Finance Team", members: generateMembers(20, "Finance Member") },
     ];
 
     return (
