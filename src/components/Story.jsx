@@ -474,8 +474,8 @@ const FloatingImage = () => {
                   }}
                   onClick={() => router.push(`/portal/event/${slide.id}`)}
                 >
-                  {/* Top Image Section */}
-                  <div className="h-[55%] md:h-[65%] w-full relative">
+                  {/* Top Image Section - grows/shrinks to fill remaining space */}
+                  <div className="flex-1 min-h-0 w-full relative">
                     <img
                       src={slide.image}
                       alt={slide.alt}
@@ -483,9 +483,9 @@ const FloatingImage = () => {
                     />
                   </div>
 
-                  {/* Bottom Info Section - Dynamic Color Background */}
+                  {/* Bottom Info Section - Fixed height so text is always visible */}
                   <div
-                    className="h-[45%] md:h-[35%] w-full p-4 md:p-6 lg:p-8 flex items-start justify-between relative"
+                    className="h-[160px] md:h-[200px] shrink-0 w-full p-4 md:p-6 lg:p-8 flex items-start justify-between relative"
                     style={{ backgroundColor: slide.color }}
                   >
                     <div className="flex flex-col h-full justify-between z-10 w-[65%]">
