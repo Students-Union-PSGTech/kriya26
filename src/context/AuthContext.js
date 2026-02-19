@@ -57,6 +57,9 @@ export function AuthProvider({ children }) {
         } catch (error) {
             console.error('Logout error:', error);
         } finally {
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('kriya_avatar');
+            }
             setUser(null);
             isLoggedInThisSession.current = false;
             hasCheckedAuth.current = false;

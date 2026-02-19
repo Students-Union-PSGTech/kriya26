@@ -30,6 +30,7 @@ export const departments = [
       { name: "Logavarshini", role: "Core Member", img: "/img/tech/Logavarshini.png" },
       { name: "Sathya Vaishnavi", role: "Core Member", img: "/img/tech/Sathyavaishnavi.png" },
       { name: "Gowtham P", role: "Core Member", img: "/img/tech/Gowtham.png" }
+      // { name: "1470", role: "Core Member", img: "/img/tech/1470.png" },
     ]
   },
   {
@@ -40,6 +41,14 @@ export const departments = [
       { name: "Muthu Selvam C", role: "Co-Lead", img: "/img/ambience/Muthu_Selvam_C_Ambience.png" },
       { name: "Ramkumar K", role: "Co-Lead", img: "/img/ambience/Ramkumar_K_Ambience.png" },
       { name: "Sushmita", role: "Co-Lead", img: "/img/ambience/Sushmita_Ambience.png" },
+      { name: "Gayathri", role: "Coordinator", img: "/img/ambience/Gayathri_Ambience.png" },
+      { name: "Harini S", role: "Coordinator", img: "/img/ambience/Harini_S_Ambience.png" },
+      { name: "Lakshmipriya", role: "Coordinator", img: "/img/ambience/Lakshmipriya_Ambience.png" },
+      { name: "M Haritha", role: "Coordinator", img: "/img/ambience/M_Haritha_Ambience.png" },
+      { name: "Madhumitha", role: "Coordinator", img: "/img/ambience/Madhumitha_Ambience.png" },
+      { name: "Roshini T", role: "Coordinator", img: "/img/ambience/Roshini_T_Ambience.png" },
+      { name: "S Sri Sakthi", role: "Coordinator", img: "/img/ambience/S_Sri_Sakthi_Ambience..png" },
+      { name: "Kanishka A C", role: "Coordinator", img: "/img/ambience/kanishka_A_C_Ambience.png" },
       { name: "Inbatamilan", role: "Core Team", img: "/img/ambience/Inbatamilan_Ambience.jpg" },
       { name: "Pavithra", role: "Core Team", img: "/img/ambience/Pavithra_Ambience.jpg" },
       { name: "Pooja Sri", role: "Core Team", img: "/img/ambience/Pooja_Sri_Ambience.jpg" },
@@ -50,35 +59,29 @@ export const departments = [
       { name: "Soundarya", role: "Core Team", img: "/img/ambience/Soundarya_Ambience.jpg" },
       { name: "Vinu Sree", role: "Core Team", img: "/img/ambience/Vinu_sree_Ambience.jpg" },
       { name: "Arun", role: "Coordinator", img: "/img/ambience/Arun_Ambience.png" },
-      { name: "Gayathri", role: "Coordinator", img: "/img/ambience/Gayathri_Ambience.png" },
-      { name: "Harini S", role: "Coordinator", img: "/img/ambience/Harini_S_Ambience.png" },
-      { name: "Lakshmipriya", role: "Coordinator", img: "/img/ambience/Lakshmipriya_Ambience.png" },
-      { name: "M Haritha", role: "Coordinator", img: "/img/ambience/M_Haritha_Ambience.png" },
-      { name: "Madhumitha", role: "Coordinator", img: "/img/ambience/Madhumitha_Ambience.png" },
-      { name: "Roshini T", role: "Coordinator", img: "/img/ambience/Roshini_T_Ambience.png" },
-      { name: "S Sri Sakthi", role: "Coordinator", img: "/img/ambience/S_Sri_Sakthi_Ambience.png" },
-      { name: "Kanishka A C", role: "Coordinator", img: "/img/ambience/kanishka_A_C_Ambience.png" },
-      { name: "Keerthana R", role: "Member", img: "/img/ambience/Keerthana_R_Ambience.png" },
-      { name: "Lavanya G", role: "Member", img: "/img/ambience/Lavanya_G_Ambience.png" },
-      { name: "Varshini", role: "Member", img: "/img/ambience/varshini_Ambience.png" }
+      { name: "Keerthana R", role: "Core Team", img: "/img/ambience/Keerthana_R_Ambience.png" },
+      { name: "Lavanya G", role: "Core Team", img: "/img/ambience/Lavanya_G_Ambience.png" },
+      { name: "Varshini", role: "Core Team", img: "/img/ambience/varshini_Ambience.png" }
     ]
   },
   {
     title: "Design Team",
     members: [
+      { name: "Nandakishor", role: "Team Lead", img: "/img/design/Nandakishor_Design.png" },
       { name: "Adhvika", role: "Team Coordinator", img: "/img/design/Adhvika_Design.png" },
       { name: "Akash", role: "Team Coordinator", img: "/img/design/Akash_Design.png" },
       { name: "Gokul", role: "Team Coordinator", img: "/img/design/Gokul_Design.png" },
       { name: "Harish", role: "Team Coordinator", img: "/img/design/Harish_Design.png" },
       { name: "Hemessh", role: "Team Coordinator", img: "/img/design/Hemessh_Design.png" },
       { name: "Ruthish", role: "Team Coordinator", img: "/img/design/Ruthish_Design.png" },
-      { name: "Nandakishor", role: "Team Lead", img: "/img/design/Nandakishor_Design.png" },
       { name: "Akshatha", role: "Core Team", img: "/img/design/Akshatha_Design.png" },
       { name: "Dinesh", role: "Core Team", img: "/img/design/Dinesh_Design.png" },
       { name: "Felishia", role: "Core Team", img: "/img/design/Felishia_Design.png" },
       { name: "Kowshika", role: "Core Team", img: "/img/design/Kowshika_Design.png" },
       { name: "Kowsick", role: "Core Team", img: "/img/design/Kowsick_Design.png" },
       { name: "Meshyashri", role: "Core Team", img: "/img/design/Meshyashri_Design.png" },
+      // { name: "Mohammed Vaseem", role: "Core Team", img: "/img/design/MohammedVaseem_Design.png" },
+      // { name: "Sivanarayanan", role: "Core Team", img: "/img/design/Sivanarayanan_Design.png" },
       { name: "Yazhini", role: "Core Team", img: "/img/design/Yazhini_Design.png" }
     ]
   },
@@ -132,9 +135,21 @@ export const departments = [
       { name: "Giri Prashath", role: "Team Lead", img: "/img/photography/Giri_Prashath_photography.png" },
       { name: "Harsha Ram", role: "Team Lead", img: "/img/photography/Harsha_Ram_photography.png" },
       { name: "Manoranjan", role: "Team Lead", img: "/img/photography/Manoranjan_photography.png" },
+      { name: "Sandhiya", role: "Team Lead", img: "/img/photography/Sandhiya_photography.png" },
+      { name: "Vijeyasri", role: "Team Lead", img: "/img/photography/Vijeyasri_photography.png" },
       // Co-Leads
       { name: "Kavinilavan", role: "Co-Lead", img: "/img/photography/Kavinilavan_Photography.png" },
-      { name: "Mathan Kumar S", role: "Co-Lead", img: "/img/photography/Mathan_Kumar_S_Photography.png" },
+      { name: "Mathan Kumar S", role: "Co-Lead", img: "/img/photography/Mathan_Kumar S_Photography.png" },
+      // Team Coordinator
+      { name: "Devanandh", role: "Team Coordinator", img: "/img/photography/Devanandh_Photography.png" },
+      { name: "Gowthaman", role: "Team Coordinator", img: "/img/photography/Gowthaman_Photography.png" },
+      { name: "Mohanraj", role: "Team Coordinator", img: "/img/photography/Mohanraj_Photography.png" },
+      { name: "Ponnishree", role: "Team Coordinator", img: "/img/photography/Ponnishree_Photography.png" },
+      { name: "Pranav", role: "Team Coordinator", img: "/img/photography/Pranav_Photography.png" },
+      { name: "Tharunsuryaa", role: "Team Coordinator", img: "/img/photography/Tharunsuryaa_Photography.png" },
+      { name: "Saraswathi", role: "Team Coordinator", img: "/img/photography/Saraswathi_Photography.png" },
+      { name: "Sathuhsini", role: "Team Coordinator", img: "/img/photography/Sathuhsini_Photography.png" },
+      { name: "Srihari", role: "Team Coordinator", img: "/img/photography/Srihari_Photography.png" },
       // Core
       { name: "Agathiya Lakshmanan", role: "Core Member", img: "/img/photography/Agathiya_Lakshmanan_photography.png" },
       { name: "Akhileshwar", role: "Core Member", img: "/img/photography/Akhileshwar_Photography.png" },
@@ -156,16 +171,16 @@ export const departments = [
     title: "Video Editing Team",
     members: [
       // Leads
-      // { name: "1455", role: "Team Lead", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/COPY_OF_1455_34da887e.png" },
+      // { name: "1455", role: "Team Lead", img: "/img/video/1455.png" },
       // Coordinators
       { name: "Aadhithya", role: "Team Coordinator", img: "/img/video/Aadhithya.png" },
       { name: "Sriya", role: "Team Coordinator", img: "/img/video/Sriya.png" },
-      // { name: "1438", role: "Team Coordinator", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1438_733127ae.png" },
+      // { name: "1438", role: "Team Coordinator", img: "/img/video/1438.png" },
       // Core Members
-      // { name: "1168", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1168_6e50bd9f.png" },
-      // { name: "1339", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1339_caa0c5ae.png" },
-      // { name: "1459", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1459_d2276c33.png" },
-      // { name: "1498", role: "Core Member", img: "https://kriyabackend.psgtech.ac.in/api/auth/files/1498_7b4ee6c4.png" }
+      // { name: "1168", role: "Core Member", img: "/img/video/1168.png" },
+      // { name: "1339", role: "Core Member", img: "/img/video/1339.png" },
+      // { name: "1459", role: "Core Member", img: "/img/video/1459.png" },
+      // { name: "1498", role: "Core Member", img: "/img/video/1498.png" }
     ]
   },
   {
@@ -179,9 +194,12 @@ export const departments = [
       // Co-Leads
       { name: "NithyaShri", role: "Co-Lead", img: "/img/pr/NithyaShri.png" },
       // Coordinators
+      { name: "Naren", role: "Team Coordinator", img: "/img/pr/Naren_PR.png" },
+      { name: "Sai Kaarthi Balaji", role: "Team Coordinator", img: "/img/pr/Sai_Kaarthi_Balagi_PR.png" },
       { name: "Dev Arulmozhie G", role: "Team Coordinator", img: "/img/pr/Dev_Arulmozhie_G_PR.png" },
       { name: "Harshil Momaya", role: "Team Coordinator", img: "/img/pr/Harshil_Momaya_PR.png" },
       { name: "Shivram K", role: "Team Coordinator", img: "/img/pr/Shivram_K_PR.png" },
+      { name: "Nazmeen Hehanaz", role: "Team Coordinator", img: "/img/pr/Nazmeen_hehanaz_PR.png" },
       // Core Members
       { name: "Chaithanya", role: "Core Member", img: "/img/pr/Chaithanya_PR.png" },
       { name: "Harshika", role: "Core Member", img: "/img/pr/Harshika_PR.png" },

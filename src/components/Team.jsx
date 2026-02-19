@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import AnimatedTitle from "./AnimatedTitle";
+import { useState, useCallback } from "react";
+import Image from "next/image";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaUserCircle } from "react-icons/fa";
 import { departments } from "@/data/teamData";
-
-
 
 const SmallTeamCard = ({ img, name, role }) => {
     return (
@@ -20,12 +18,11 @@ const SmallTeamCard = ({ img, name, role }) => {
             {/* Image/Icon First */}
             <div className="relative w-full aspect-square overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 transition-all duration-300 hover:scale-105 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 mb-2 flex items-center justify-center">
                 {img ? (
-                    <img
+                    <Image
                         src={img}
                         alt={name}
-                        loading="lazy"
-                        decoding="async"
-                        fetchpriority="low"
+                        fill
+                        sizes="(max-width: 640px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 16vw, 10vw"
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                 ) : (
@@ -128,11 +125,11 @@ const DepartmentCarousel = ({ departments }) => {
 const Team = () => {
     // First 5 core team members (keep as-is)
     const coreMembers = [
-        { img: "/img/obs/Sudharsan_N.png", name: "Sudharsan", role: "Chairperson" },
-        { img: "/img/obs/Arunraja_C.jpeg", name: "Arun Raja", role: "Co-Chairperson" },
-        { img: "/img/obs/Ravi_Pravin_G.jpeg", name: "Ravi Pravin", role: "Secretary (Men)" },
-        { img: "/img/obs/Naveena_V.jpeg", name: "Naveena", role: "Secretary (Women)" },
-        { img: "/img/obs/Kavindra_S.jpeg", name: "Kavindra", role: "Secretary (Science)" },
+        { img: "/img/obs/Sudharsan_N.png", name: "Sudharsan N", role: "Chairperson" },
+        { img: "/img/obs/Arunraja_C.jpeg", name: "Arunraja C", role: "Co-Chairperson" },
+        { img: "/img/obs/Ravi_Pravin_G.jpeg", name: "Ravi Pravin G", role: "Secretary (Men)" },
+        { img: "/img/obs/Naveena_V.jpeg", name: "Naveena V", role: "Secretary (Women)" },
+        { img: "/img/obs/Kavindra_S.jpeg", name: "Kavindra S", role: "Secretary (Science)" },
     ];
 
     return (
