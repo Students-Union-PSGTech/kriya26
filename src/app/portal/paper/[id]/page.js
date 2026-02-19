@@ -1,5 +1,6 @@
 "use client";
 import { IoMdCall, IoLogoWhatsapp, IoMdArrowBack } from "react-icons/io";
+import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import { SiGmail } from "react-icons/si";
 import { useRouter, useParams } from "next/navigation";
 import { isPreRegistrationEnabled, is_venue_available } from "@/settings/featureFlags";
@@ -46,16 +47,35 @@ export default function PaperPage({ params }) {
 
     const accent = PAPER_ACCENT;
 
-    // Get YouTube URL - use default if database value is empty
-    const getYouTubeUrl = () => {
+    // Netflix-style video hero state
+    const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
+    const [isMuted, setIsMuted] = useState(true);
+
+    // Auto-transition poster → video after 3 s once paper loads
+    useEffect(() => {
+        if (!paperDetail) return;
+        const t = setTimeout(() => setVideoPhase("video"), 3000);
+        return () => clearTimeout(t);
+    }, [paperDetail]);
+
+    const toggleMute = () => setIsMuted((prev) => !prev);
+
+    // Get video ID from any YouTube URL
+    const getVideoId = () => {
         const url = paperDetail?.youtubeUrl || DEFAULT_YOUTUBE_URL;
-        if (!url || url.trim() === "") return `https://www.youtube.com/embed/YeFJPRFhmCM`;
-        if (url.includes('/embed/')) return url;
-        const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-        if (videoIdMatch && videoIdMatch[1]) {
-            return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+        if (url.includes("/embed/")) {
+            const match = url.match(/\/embed\/([^?&]+)/);
+            return match ? match[1] : null;
         }
-        return url;
+        const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+        return m ? m[1] : null;
+    };
+
+    // Build autoplay URL — key remount handles mute toggle cross-device
+    const getAutoplayUrl = (muted = true) => {
+        const vid = getVideoId();
+        if (!vid) return "";
+        return `https://www.youtube.com/embed/${vid}?autoplay=1&mute=${muted ? 1 : 0}&controls=1&loop=1&playlist=${vid}&rel=0&modestbranding=1`;
     };
 
     // Format date from ISO string
@@ -239,8 +259,8 @@ export default function PaperPage({ params }) {
 
                 {/* Hero Section: Name + Description | YouTube */}
                 <div className="flex flex-col lg:flex-row w-full gap-8">
-                    {/* Left: Paper Info */}
-                    <div className="w-full lg:w-1/2 flex flex-col gap-6">
+                    {/* Left: Paper Info — on mobile appears below the video */}
+                    <div className="w-full lg:w-1/2 flex flex-col gap-6 order-2 lg:order-1">
                         {/* Category Badge */}
                         <div
                             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-xs font-bold uppercase tracking-widest"
@@ -307,22 +327,90 @@ export default function PaperPage({ params }) {
                         </div>
                     </div>
 
-                    {/* Right: YouTube Embed */}
-                    <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10">
-                        <iframe
-                            className="w-full h-full"
-                            src={getYouTubeUrl()}
-                            title="Paper Video"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                        <div
-                            className="absolute top-0 left-0 w-20 h-20 pointer-events-none"
-                            style={{
-                                background: `linear-gradient(135deg, ${accent.primary}20 0%, transparent 60%)`,
-                            }}
-                        />
+                    {/* Right: Netflix-style Video Hero — wrapper holds video box + mute button */}
+                    <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative order-1 lg:order-2">
+
+                        {/* Video clipping container — overflow-hidden ONLY contains poster + iframe */}
+                        <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+
+                            {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
+                            <div
+                                className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
+                                style={{
+                                    opacity: videoPhase === "poster" ? 1 : 0,
+                                    pointerEvents: videoPhase === "poster" ? "auto" : "none",
+                                }}
+                            >
+                                <div
+                                    className="absolute inset-0"
+                                    style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
+                                />
+                                <div
+                                    className="absolute inset-0"
+                                    style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
+                                />
+                                <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+                                    <Image
+                                        src="/Logo/kriya26white.png"
+                                        alt="Kriya 26"
+                                        width={220}
+                                        height={80}
+                                        className="object-contain opacity-90"
+                                        priority
+                                    />
+                                    <div
+                                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                                        style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
+                                    >
+                                        <span
+                                            className="w-1.5 h-1.5 rounded-full animate-pulse"
+                                            style={{ background: accent.primary }}
+                                        />
+                                        Paper Presentation — {paperDetail.eventName}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-white/40 text-xs">
+                                        <div className="w-4 h-[2px] rounded animate-pulse" style={{ background: accent.primary }} />
+                                        <span className="uppercase tracking-widest font-mono">Preview loading…</span>
+                                        <div className="w-4 h-[2px] rounded animate-pulse" style={{ background: accent.primary }} />
+                                    </div>
+                                </div>
+                                <div
+                                    className="absolute bottom-0 left-0 right-0 h-24"
+                                    style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                                />
+                            </div>
+
+                            {/* ── Layer 2: YouTube Autoplay iframe ── */}
+                            <iframe
+                                key={`yt-${isMuted}`}
+                                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                                style={{ opacity: videoPhase === "video" ? 1 : 0, touchAction: "manipulation" }}
+                                src={getAutoplayUrl(isMuted)}
+                                title="Paper Video"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+
+                            {/* ── Corner accent ── */}
+                            <div
+                                className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
+                                style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
+                            />
+                        </div>
+
+                        {/* ── Mute / Unmute button — OUTSIDE overflow-hidden ── */}
+                        {videoPhase === "video" && (
+                            <button
+                                onClick={toggleMute}
+                                className="absolute bottom-4 right-4 z-30 flex items-center gap-2 px-3 py-2 rounded-full text-white text-xs font-bold uppercase tracking-widest backdrop-blur-md transition-all duration-200 hover:scale-105 active:scale-95"
+                                style={{ background: "rgba(0,0,0,0.65)", border: `1px solid ${accent.primary}60` }}
+                                aria-label={isMuted ? "Unmute video" : "Mute video"}
+                            >
+                                {isMuted ? <MdVolumeOff className="text-lg" /> : <MdVolumeUp className="text-lg" />}
+                                <span style={{ color: accent.primary }}>{isMuted ? "Unmute" : "Mute"}</span>
+                            </button>
+                        )}
                     </div>
                 </div>
 

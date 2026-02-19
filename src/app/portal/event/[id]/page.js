@@ -66,7 +66,6 @@ export default function Home({ params }) {
   // Netflix-style video hero state
   const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
   const [isMuted, setIsMuted] = useState(true);
-  const iframeRef = useRef(null);
 
   const accent = CATEGORY_ACCENTS[eventDetail?.category] || DEFAULT_ACCENT;
 
@@ -81,12 +80,12 @@ export default function Home({ params }) {
     return videoIdMatch ? videoIdMatch[1] : null;
   };
 
-  // Build autoplay embed URL — muted so browsers allow autoplay
+  // Build autoplay embed URL — toggling mute remounts the iframe via `key`
   const getAutoplayUrl = (muted = true) => {
     const vid = getVideoId();
     if (!vid) return "";
     const muteParam = muted ? "&mute=1" : "&mute=0";
-    return `https://www.youtube.com/embed/${vid}?autoplay=1${muteParam}&controls=1&loop=1&playlist=${vid}&enablejsapi=1&rel=0&modestbranding=1`;
+    return `https://www.youtube.com/embed/${vid}?autoplay=1${muteParam}&controls=1&loop=1&playlist=${vid}&rel=0&modestbranding=1`;
   };
 
   // Auto-transition from poster to video after 3 s
@@ -96,17 +95,8 @@ export default function Home({ params }) {
     return () => clearTimeout(timer);
   }, [eventDetail]);
 
-  // Toggle mute via YouTube IFrame API postMessage
-  const toggleMute = () => {
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    try {
-      iframeRef.current?.contentWindow?.postMessage(
-        JSON.stringify({ event: "command", func: newMuted ? "mute" : "unMute", args: [] }),
-        "*"
-      );
-    } catch (_) { }
-  };
+  // Toggle mute — changing key forces iframe remount with new mute param
+  const toggleMute = () => setIsMuted((prev) => !prev);
 
   useEffect(() => {
     if (user) {
@@ -295,81 +285,91 @@ export default function Home({ params }) {
             </div>
           </div>
 
-          {/* Right: Netflix-style Video Hero — on mobile appears first */}
-          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl border border-white/10 bg-black order-1 lg:order-2">
+          {/* Right: Netflix-style Video Hero — wrapper holds both video box and mute button */}
+          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative order-1 lg:order-2">
 
-            {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
-            <div
-              className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
-              style={{
-                opacity: videoPhase === "poster" ? 1 : 0,
-                pointerEvents: videoPhase === "poster" ? "auto" : "none",
-              }}
-            >
-              {/* Dark cinematic background */}
+            {/* Video clipping container — overflow-hidden ONLY contains poster + iframe */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+
+              {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
               <div
-                className="absolute inset-0"
-                style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
-              />
-              {/* Subtle category-colored glow */}
-              <div
-                className="absolute inset-0"
-                style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
-              />
-              {/* Kriya logo + event info */}
-              <div className="relative z-10 flex flex-col items-center gap-6 px-8">
-                <Image
-                  src="/Logo/kriya26white.png"
-                  alt="Kriya 26"
-                  width={220}
-                  height={80}
-                  className="object-contain opacity-90"
-                  priority
-                />
-                {/* Category + event name badge */}
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
+                style={{
+                  opacity: videoPhase === "poster" ? 1 : 0,
+                  pointerEvents: videoPhase === "poster" ? "auto" : "none",
+                }}
+              >
+                {/* Dark cinematic background */}
                 <div
-                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
-                  style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full animate-pulse"
-                    style={{ background: accent.primary }}
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
+                />
+                {/* Subtle category-colored glow */}
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
+                />
+                {/* Kriya logo + event info */}
+                <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+                  <Image
+                    src="/Logo/kriya26white.png"
+                    alt="Kriya 26"
+                    width={220}
+                    height={80}
+                    className="object-contain opacity-90"
+                    priority
                   />
-                  {eventDetail.category} — {eventDetail.eventName}
-                </div>
-                {/* Loading hint */}
-                <div className="flex items-center gap-2 text-white/40 text-xs">
+                  {/* Category + event name badge */}
                   <div
-                    className="w-4 h-[2px] rounded animate-pulse"
-                    style={{ background: accent.primary }}
-                  />
-                  <span className="uppercase tracking-widest font-mono">Preview loading…</span>
-                  <div
-                    className="w-4 h-[2px] rounded animate-pulse"
-                    style={{ background: accent.primary }}
-                  />
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                    style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    {eventDetail.category} — {eventDetail.eventName}
+                  </div>
+                  {/* Loading hint */}
+                  <div className="flex items-center gap-2 text-white/40 text-xs">
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    <span className="uppercase tracking-widest font-mono">Preview loading…</span>
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                  </div>
                 </div>
+                {/* Bottom gradient fade into video */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-24"
+                  style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                />
               </div>
-              {/* Bottom gradient fade into video */}
+
+              {/* ── Layer 2: YouTube Autoplay iframe ── */}
+              <iframe
+                key={`yt-${isMuted}`}
+                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                style={{ opacity: videoPhase === "video" ? 1 : 0, touchAction: "manipulation" }}
+                src={getAutoplayUrl(isMuted)}
+                title="Event Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+
+              {/* ── Corner accent ── */}
               <div
-                className="absolute bottom-0 left-0 right-0 h-24"
-                style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
+                style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
               />
             </div>
 
-            {/* ── Layer 2: YouTube Autoplay iframe ── */}
-            <iframe
-              ref={iframeRef}
-              className="absolute inset-0 w-full h-full transition-opacity duration-1000"
-              style={{ opacity: videoPhase === "video" ? 1 : 0 }}
-              src={getAutoplayUrl(true)}
-              title="Event Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-
-            {/* ── Layer 3: Mute / Unmute button (visible once video starts) ── */}
+            {/* ── Mute / Unmute button — OUTSIDE overflow-hidden so it never blocks iframe touches ── */}
             {videoPhase === "video" && (
               <button
                 onClick={toggleMute}
@@ -381,13 +381,8 @@ export default function Home({ params }) {
                 <span style={{ color: accent.primary }}>{isMuted ? "Unmute" : "Mute"}</span>
               </button>
             )}
-
-            {/* ── Corner accent ── */}
-            <div
-              className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
-              style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
-            />
           </div>
+
         </div>
 
         {/* Info Cards Row */}

@@ -141,15 +141,12 @@ const Hero = ({ preloaderComplete = true }) => {
             className="h-20 w-auto mx-auto mb-2"
           />
 
-          {/* Global Clash Title - Smaller */}
+          {/* Global Clash Title */}
           <div className="mb-4">
-            <h1 className="special-font text-center text-2xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">the gl<b>o</b>bal</span>
-            </h1>
             <h1 className="special-font text-center text-xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">Cl<b>a</b>sh <b>of</b></span>
+              <span>the gl<b>o</b>bal cl<b>a</b>sh <b>o</b>f</span>
             </h1>
-            <h2 className="special-font text-center text-xl font-zentry font-thin uppercase text-white bg-clip-text">
+            <h2 className="special-font text-center text-3xl font-zentry font-thin uppercase text-white bg-clip-text">
               <span className="bg-black/50 text-blue-500 p-1 rounded-md">te<b>c</b>h<b>n</b>o t<b>a</b>lents</span>
             </h2>
           </div>
