@@ -353,7 +353,7 @@ export default function PaperPage({ params }) {
                                 />
                                 <div className="relative z-10 flex flex-col items-center gap-6 px-8">
                                     <Image
-                                        src="/Logo/kriya26white.png"
+                                        src="/Logo/kriya.png"
                                         alt="Kriya 26"
                                         width={220}
                                         height={80}

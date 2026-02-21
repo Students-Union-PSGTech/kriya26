@@ -134,7 +134,7 @@ const Hero = ({ preloaderComplete = true }) => {
           </div>
 
           <Image
-            src="/Logo/kriya26white.png"
+            src="/Logo/kriya.png"
             alt="Kriya 2026 Logo"
             width={300}
             height={300}
@@ -230,7 +230,7 @@ const Hero = ({ preloaderComplete = true }) => {
           {/* LEFT COLUMN: Logo + Title (Small) + Socials */}
           <div className="flex flex-col items-center text-center gap-6">
             <Image
-              src="/Logo/kriya26white.png"
+              src="/Logo/kriya.png"
               alt="Kriya 2026 Logo"
               width={500}
               height={400}

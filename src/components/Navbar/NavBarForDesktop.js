@@ -126,7 +126,7 @@ const NavBarForDesktop = () => {
           href={"/"}
           className="w-50 h-30 transition-transform duration-300 hover:scale-110"
           style={{
-            background: `url(/Logo/kriya26white.png)`,
+            background: `url(/Logo/kriya.png)`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "contain",

@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   title: "Kriya 26 | PSG COLLEGE",
   description: "Event conducted By The Student Union at PSG College of Technology",
   icons: {
-    icon: "/Logo/kriya26white.png",
-    shortcut: "/Logo/kriya26white.png",
-    apple: "/Logo/kriya26white.png",
+    icon: "/Logo/kriya.png",
+    shortcut: "/Logo/kriya.png",
+    apple: "/Logo/kriya.png",
   },
 };
 
