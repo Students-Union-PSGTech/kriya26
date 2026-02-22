@@ -296,7 +296,11 @@ export default function PaperPage({ params }) {
                         {paperDetail.topic && (
                             <div className="glass-card-light p-4 mt-2">
                                 <p className="text-xs uppercase tracking-widest mb-2 font-bold" style={{ color: accent.primary }}>Topics</p>
-                                <p className="text-white/70 text-sm md:text-base leading-relaxed">{paperDetail.topic}</p>
+                                <div className="text-white/70 text-sm md:text-base leading-relaxed">
+                                    {paperDetail.topic.split(/\\n|\n/).map((line, i, arr) => (
+                                        <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
