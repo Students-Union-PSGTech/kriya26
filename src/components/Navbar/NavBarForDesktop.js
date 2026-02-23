@@ -145,6 +145,8 @@ const NavBarForDesktop = () => {
                   "_blank",
                 )
               }
+              data-umami-event="how-to-register"
+              data-umami-event-source="desktop-nav"
               className="w-full px-4 py-3 mb-6 text-sm font-bold tracking-widest uppercase transition-all duration-300 bg-white text-black hover:bg-gray-200 rounded-lg shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]"
             >
               How to Register

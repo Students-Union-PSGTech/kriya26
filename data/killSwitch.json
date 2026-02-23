@@ -1,0 +1,15 @@
+{
+  "registrationClosedAll": {
+    "events": false,
+    "workshops": false,
+    "papers": false
+  },
+  "registrationClosedIds": {
+    "events": [],
+    "workshops": [],
+    "papers": []
+  },
+  "paymentActionsDisabled": true,
+  "whatsappDisabledAll": false,
+  "whatsappDisabledIds": []
+}

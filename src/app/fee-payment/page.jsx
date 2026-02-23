@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import api from "@/services/api";
 
 const PAYMENT_URL = process.env.NEXT_PUBLIC_PAYMENT_URL;
@@ -28,6 +29,8 @@ export default function FeePaymentPage() {
     const [statusMessage, setStatusMessage] = useState(null);
     const router = useRouter();
     const { isAuthenticated, loading: authLoading } = useAuth();
+    const { config: killSwitchConfig } = useKillSwitch();
+    const paymentActionsDisabled = killSwitchConfig?.paymentActionsDisabled ?? false;
 
     // Redirect to auth if not authenticated
     useEffect(() => {
@@ -228,13 +231,21 @@ export default function FeePaymentPage() {
                     </label>
                 </div>
 
+                {/* Payment actions disabled message */}
+                {paymentActionsDisabled && (
+                    <div className="rounded-lg p-4 border bg-amber-500/10 border-amber-400/30">
+                        <p className="font-circular-web text-sm text-amber-200">
+                            Payment actions are temporarily disabled.
+                        </p>
+                    </div>
+                )}
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                     {/* Pay Now Button */}
                     <button
                         onClick={handlePayNow}
-                        disabled={!hasReadInstructions}
-                        className={`group relative px-10 py-4 text-white font-general text-sm uppercase tracking-widest rounded-lg transition-all duration-300 ${hasReadInstructions
+                        disabled={!hasReadInstructions || paymentActionsDisabled}
+                        className={`group relative px-10 py-4 text-white font-general text-sm uppercase tracking-widest rounded-lg transition-all duration-300 ${hasReadInstructions && !paymentActionsDisabled
                             ? "bg-blue-500 hover:bg-blue-600 hover:scale-105 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] active:scale-95 cursor-pointer"
                             : "bg-gray-600/50 cursor-not-allowed opacity-50"
                             }`}
@@ -259,8 +270,10 @@ export default function FeePaymentPage() {
                     {/* Check Payment Status Button */}
                     <button
                         onClick={handleCheckPaymentStatus}
-                        disabled={checkingPayment}
-                        className={`group relative px-10 py-4 text-white font-general text-sm uppercase tracking-widest rounded-lg transition-all duration-300 border ${checkingPayment
+                        disabled={checkingPayment || paymentActionsDisabled}
+                        data-umami-event="check-payment-status"
+                        data-umami-event-page="fee-payment"
+                        className={`group relative px-10 py-4 text-white font-general text-sm uppercase tracking-widest rounded-lg transition-all duration-300 border ${checkingPayment || paymentActionsDisabled
                             ? "border-gray-500/30 bg-gray-600/30 cursor-not-allowed opacity-60"
                             : "border-emerald-400/30 bg-emerald-500/20 hover:bg-emerald-500/40 hover:scale-105 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] active:scale-95 cursor-pointer"
                             }`}

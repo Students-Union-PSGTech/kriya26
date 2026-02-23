@@ -10,6 +10,7 @@ import Image from "next/image";
 import { SiGmail } from "react-icons/si";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
@@ -69,6 +70,15 @@ export default function Home({ params }) {
   const [isMuted, setIsMuted] = useState(true);
 
   const accent = CATEGORY_ACCENTS[eventDetail?.category] || DEFAULT_ACCENT;
+  const { config: killSwitchConfig } = useKillSwitch();
+  const effectiveClosed =
+    eventDetail?.closed ||
+    killSwitchConfig?.registrationClosedAll?.events ||
+    (Array.isArray(killSwitchConfig?.registrationClosedIds?.events) &&
+      killSwitchConfig.registrationClosedIds.events.includes(String(id)));
+  const showWhatsApp =
+    !killSwitchConfig?.whatsappDisabledAll &&
+    !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
   // Extract YouTube video ID from any YouTube URL format
   const getVideoId = () => {
@@ -214,7 +224,7 @@ export default function Home({ params }) {
           {!isPreRegistrationEnabled && (
             <button
               className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-              disabled={isRegisteredForEvent() || eventDetail.closed}
+              disabled={isRegisteredForEvent() || effectiveClosed}
               onClick={() => setIsModalOpen(true)}
               style={{
                 background: isRegisteredForEvent() ? accent.primary : "transparent",
@@ -224,10 +234,10 @@ export default function Home({ params }) {
             >
               {userEventDetails && (
                 <>
-                  {isRegisteredForEvent() ? "Registered" : eventDetail.closed ? "Closed" : "Register"}
+                  {isRegisteredForEvent() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                 </>
               )}
-              {!userEventDetails && <>{eventDetail.closed ? "Closed" : "Register"}</>}
+              {!userEventDetails && <>{effectiveClosed ? "Closed" : "Register"}</>}
             </button>
           )}
 
@@ -273,8 +283,8 @@ export default function Home({ params }) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mt-4">
-              {/* WhatsApp Button - Only show if user is registered */}
-              {isRegisteredForEvent() && (
+              {/* WhatsApp Button - Only show if user is registered and not killed */}
+              {isRegisteredForEvent() && showWhatsApp && (
                 <a
                   href={getWhatsAppLink(id)}
                   target="_blank"
@@ -387,7 +397,7 @@ export default function Home({ params }) {
                 style={{ color: accent.primary, background: accent.primary }}
               />
               <span className="text-white font-bold uppercase tracking-widest text-sm">
-                {eventDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
               </span>
             </div>
 
@@ -482,7 +492,7 @@ export default function Home({ params }) {
       {/* ===== Learn More Modal ===== */}
       {isLearnMoreOpen && (
         <EventDetailsModal
-          eventDetail={eventDetail}
+          eventDetail={eventDetail ? { ...eventDetail, closed: effectiveClosed } : eventDetail}
           onClose={() => setIsLearnMoreOpen(false)}
         />
       )}

@@ -10,6 +10,7 @@ import EventTicket from "@/components/profile/EventTicket";
 import ScrollableContainer from "@/components/profile/ScrollableContainer";
 import IdCardSection from "@/components/profile/IdCardSection";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { eventService } from "@/services/eventservice";
 import api from "@/services/api";
 
@@ -44,6 +45,8 @@ function ProfilePageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user, loading: authLoading, isAuthenticated, logout, refreshUser } = useAuth();
+    const { config: killSwitchConfig } = useKillSwitch();
+    const paymentActionsDisabled = killSwitchConfig?.paymentActionsDisabled ?? false;
     const [activeTab, setActiveTab] = useState("profile");
     const [events, setEvents] = useState([]);
     const [workshops, setWorkshops] = useState([]);
@@ -513,12 +516,21 @@ function ProfilePageContent() {
                                     )}
                                 </div>
 
+                                {paymentActionsDisabled && (
+                                    <div className="rounded-lg p-3 border mb-4 bg-amber-500/10 border-amber-400/30">
+                                        <p className="font-circular-web text-sm text-amber-200">
+                                            Payment actions are temporarily disabled.
+                                        </p>
+                                    </div>
+                                )}
                                 {/* Check Payment Status Button */}
                                 <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
                                     <button
                                         onClick={handleCheckPaymentStatus}
-                                        disabled={checkingPayment}
-                                        className={`group relative px-6 py-3 text-white font-general text-xs uppercase tracking-widest rounded-lg transition-all duration-300 border ${checkingPayment
+                                        disabled={checkingPayment || paymentActionsDisabled}
+                                        data-umami-event="check-payment-status"
+                                        data-umami-event-page="profile"
+                                        className={`group relative px-6 py-3 text-white font-general text-xs uppercase tracking-widest rounded-lg transition-all duration-300 border ${checkingPayment || paymentActionsDisabled
                                             ? "border-gray-500/30 bg-gray-600/30 cursor-not-allowed opacity-60"
                                             : "border-emerald-400/30 bg-emerald-500/20 hover:bg-emerald-500/40 hover:scale-105 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] active:scale-95 cursor-pointer"
                                             }`}

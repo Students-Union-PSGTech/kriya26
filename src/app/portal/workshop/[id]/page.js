@@ -8,6 +8,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import Image from "next/image";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 // Default accent for workshops - Blue to match landing page
@@ -47,6 +48,15 @@ export default function WorkshopPage({ params }) {
 
   // Use purple accent for all workshops for now
   const accent = WORKSHOP_ACCENT;
+  const { config: killSwitchConfig } = useKillSwitch();
+  const effectiveClosed =
+    workshopDetail?.closed ||
+    killSwitchConfig?.registrationClosedAll?.workshops ||
+    (Array.isArray(killSwitchConfig?.registrationClosedIds?.workshops) &&
+      killSwitchConfig.registrationClosedIds.workshops.includes(String(id)));
+  const showWhatsApp =
+    !killSwitchConfig?.whatsappDisabledAll &&
+    !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
   useEffect(() => {
     if (user) {
@@ -117,7 +127,7 @@ export default function WorkshopPage({ params }) {
       eventName: workshopDetail.workshopName,
       category: workshopDetail.clubName || "Workshop",
       custom_category: "Workshop",
-      closed: workshopDetail.closed,
+      closed: effectiveClosed,
       timing: workshopDetail.startTime && workshopDetail.endTime ? `${workshopDetail.startTime} - ${workshopDetail.endTime}` : workshopDetail.time,
       hall: workshopDetail.hall,
       teamSize: "Individual", // Default for workshops
@@ -178,7 +188,7 @@ export default function WorkshopPage({ params }) {
           {!isPreRegistrationEnabled && (
             <button
               className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-              disabled={isRegisteredForWorkshop() || workshopDetail.closed}
+              disabled={isRegisteredForWorkshop() || effectiveClosed}
               onClick={() => setIsModalOpen(true)}
               style={{
                 background: isRegisteredForWorkshop() ? accent.primary : 'transparent',
@@ -188,10 +198,10 @@ export default function WorkshopPage({ params }) {
             >
               {userWorkshopDetails && (
                 <>
-                  {isRegisteredForWorkshop() ? "Registered" : workshopDetail.closed ? "Closed" : "Register"}
+                  {isRegisteredForWorkshop() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                 </>
               )}
-              {!userWorkshopDetails && <>{workshopDetail.closed ? "Closed" : "Register"}</>}
+              {!userWorkshopDetails && <>{effectiveClosed ? "Closed" : "Register"}</>}
             </button>
           )}
 
@@ -235,8 +245,8 @@ export default function WorkshopPage({ params }) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mt-4">
-              {/* WhatsApp Button - Only show if user is registered */}
-              {isRegisteredForWorkshop() && (
+              {/* WhatsApp Button - Only show if user is registered and not killed */}
+              {isRegisteredForWorkshop() && showWhatsApp && (
                 <a
                   href={getWhatsAppLink(id)}
                   target="_blank"
@@ -282,7 +292,7 @@ export default function WorkshopPage({ params }) {
                 style={{ color: accent.primary, background: accent.primary }}
               />
               <span className="text-white font-bold uppercase tracking-widest text-sm">
-                {workshopDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
               </span>
             </div>
 

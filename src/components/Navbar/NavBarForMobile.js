@@ -180,6 +180,8 @@ const NavBarForMobile = () => {
               <button
                 type="button"
                 onClick={() => window.open("https://www.youtube.com/watch?v=YeFJPRFhmCM", "_blank")}
+                data-umami-event="how-to-register"
+                data-umami-event-source="mobile-nav"
                 className="w-full px-4 py-3 mb-6 text-xs font-black tracking-widest uppercase bg-white text-black rounded-lg shadow-lg hover:bg-gray-200 transition-all"
               >
                 How to Register

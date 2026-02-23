@@ -10,6 +10,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import Image from "next/image";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
@@ -46,6 +47,15 @@ export default function PaperPage({ params }) {
     const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
 
     const accent = PAPER_ACCENT;
+    const { config: killSwitchConfig } = useKillSwitch();
+    const effectiveClosed =
+        paperDetail?.closed ||
+        killSwitchConfig?.registrationClosedAll?.papers ||
+        (Array.isArray(killSwitchConfig?.registrationClosedIds?.papers) &&
+            killSwitchConfig.registrationClosedIds.papers.includes(String(id)));
+    const showWhatsApp =
+        !killSwitchConfig?.whatsappDisabledAll &&
+        !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
     // Netflix-style video hero state
     const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
@@ -163,7 +173,7 @@ export default function PaperPage({ params }) {
             eventName: paperDetail.eventName,
             category: "Paper Presentation",
             custom_category: "Paper Presentation",
-            closed: paperDetail.closed,
+            closed: effectiveClosed,
             timing: paperDetail.startTime && paperDetail.endTime
                 ? `${paperDetail.startTime} - ${paperDetail.endTime}`
                 : (paperDetail.time || "TBA"),
@@ -233,7 +243,7 @@ export default function PaperPage({ params }) {
                     {!isPreRegistrationEnabled && (
                         <button
                             className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-                            disabled={isRegisteredForPaper() || paperDetail.closed}
+                            disabled={isRegisteredForPaper() || effectiveClosed}
                             onClick={() => setIsModalOpen(true)}
                             style={{
                                 background: isRegisteredForPaper() ? accent.primary : 'transparent',
@@ -241,7 +251,7 @@ export default function PaperPage({ params }) {
                                 borderColor: accent.primary,
                             }}
                         >
-                            {isRegisteredForPaper() ? "Registered" : paperDetail.closed ? "Closed" : "Register"}
+                            {isRegisteredForPaper() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                         </button>
                     )}
 
@@ -306,8 +316,8 @@ export default function PaperPage({ params }) {
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-4 mt-4">
-                            {/* WhatsApp Button - Only show if user is registered */}
-                            {isRegisteredForPaper() && (
+                            {/* WhatsApp Button - Only show if user is registered and not killed */}
+                            {isRegisteredForPaper() && showWhatsApp && (
                                 <a
                                     href={getWhatsAppLink(id)}
                                     target="_blank"
@@ -419,7 +429,7 @@ export default function PaperPage({ params }) {
                                 style={{ color: accent.primary, background: accent.primary }}
                             />
                             <span className="text-white font-bold uppercase tracking-widest text-sm">
-                                {paperDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
                             </span>
                         </div>
 
