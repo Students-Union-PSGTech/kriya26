@@ -222,17 +222,8 @@ export default function WorkshopPage({ params }) {
         <div className="flex flex-col lg:flex-row w-full gap-8">
           {/* Left: Workshop Info */}
           <div className="w-full lg:w-1/2 flex flex-col gap-6">
-            {/* Category Badge */}
-            <div
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-xs font-bold uppercase tracking-widest"
-              style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}30` }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ background: accent.primary }}
-              />
-              {workshopDetail.clubName || "Workshop"}
-            </div>
+
+
 
             {/* Workshop Name */}
             <h1 className="special-font text-3xl md:text-5xl lg:text-6xl font-black font-poppins text-white leading-none uppercase tracking-wider">

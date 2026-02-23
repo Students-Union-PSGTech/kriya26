@@ -250,16 +250,6 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
             >
               <div className="space-y-5 mb-2 p-2">
 
-                {/* Club Name */}
-                <motion.div
-                  className="flex flex-col"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.03, duration: 0.15 }}
-                >
-                  <span className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Organized By</span>
-                  <span className="text-white text-sm font-bold uppercase tracking-wider text-shadow-sm">{item.club || "PSGC"}</span>
-                </motion.div>
 
                 {/* Time */}
                 {is_venue_available && (
