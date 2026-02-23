@@ -329,8 +329,8 @@ export default function PaperPage({ params }) {
                                 </a>
                             )}
 
-                            {/* Email contact */}
-                            {paperDetail.eventMail && (
+                            {/* Email contact - only after registration */}
+                            {paperDetail.eventMail && isRegisteredForPaper() && (
                                 <a
                                     href={`mailto:${paperDetail.eventMail}`}
                                     className="px-6 py-2.5 md:px-8 md:py-3 border text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-white/10 transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
@@ -528,8 +528,8 @@ export default function PaperPage({ params }) {
                                     )}
                                 </div>
 
-                                {/* Email */}
-                                {paperDetail.eventMail && (
+                                {/* Email - only after registration */}
+                                {paperDetail.eventMail && isRegisteredForPaper() && (
                                     <div className="mt-4 flex items-center gap-3 text-white/40 text-sm">
                                         <SiGmail style={{ color: accent.primary }} />
                                         <a href={`mailto:${paperDetail.eventMail}`} className="hover:text-white/70 transition-colors">
