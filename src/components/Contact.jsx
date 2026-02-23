@@ -119,16 +119,20 @@ const Contact = () => {
                             className="mt-6 whitespace-nowrap"
                         />
                     </div> */}
-                    {/* 
-                    <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
+                    <motion.div variants={itemVariants} className="w-full lg:w-56 flex flex-col items-center lg:items-start">
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Tech Support</h5>
-                        <ContactItem name="Bragadeesh V" phone="+91 74188 52849" />
+                        <ContactItem name="Darshan V G" phone="+91 97905 21129" />
                         <ContactItem
-                            name="Abinav P"
-                            phone="+91 99655 11133"
+                            name="Pravith N"
+                            phone="+91 98432 43610"
                             className="mt-6 whitespace-nowrap"
                         />
-                    </div> */}
+                        <ContactItem
+                            name="Kathick J S"
+                            phone="+91 90424 80747"
+                            className="mt-6 whitespace-nowrap"
+                        />
+                    </motion.div>
 
                 </motion.div>
             </div>
