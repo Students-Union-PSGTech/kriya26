@@ -4,10 +4,11 @@ import { useRouter, useParams } from "next/navigation";
 import { isPreRegistrationEnabled, is_venue_available } from "@/settings/featureFlags";
 import { useState, useRef, useEffect } from "react";
 import { eventService } from "../../../../services/eventservice";
-import ConfirmationModal from "@/components/ConfirmationModal";
+
 import Image from "next/image";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 // Default accent for workshops - Blue to match landing page
@@ -42,11 +43,21 @@ export default function WorkshopPage({ params }) {
   const [userWorkshopDetails, setUserWorkshopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [workshopDetail, setWorkshopDetail] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
+  const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false);
 
   // Use purple accent for all workshops for now
   const accent = WORKSHOP_ACCENT;
+  const { config: killSwitchConfig } = useKillSwitch();
+  const effectiveClosed =
+    workshopDetail?.closed ||
+    killSwitchConfig?.registrationClosedAll?.workshops ||
+    (Array.isArray(killSwitchConfig?.registrationClosedIds?.workshops) &&
+      killSwitchConfig.registrationClosedIds.workshops.includes(String(id)));
+  const showWhatsApp =
+    !killSwitchConfig?.whatsappDisabledAll &&
+    !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
   useEffect(() => {
     if (user) {
@@ -99,7 +110,7 @@ export default function WorkshopPage({ params }) {
       const callbackUrl = encodeURIComponent(`/portal/workshop/${id}`);
       router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
     } else if (!generalPayment) {
-      router.push("/auth/payment?type=GENERAL");
+      setIsPaymentOverlayOpen(true);
     } else {
       try {
         await eventService.registerWorkshop(id);
@@ -117,7 +128,7 @@ export default function WorkshopPage({ params }) {
       eventName: workshopDetail.workshopName,
       category: workshopDetail.clubName || "Workshop",
       custom_category: "Workshop",
-      closed: workshopDetail.closed,
+      closed: effectiveClosed,
       timing: workshopDetail.startTime && workshopDetail.endTime ? `${workshopDetail.startTime} - ${workshopDetail.endTime}` : workshopDetail.time,
       hall: workshopDetail.hall,
       teamSize: "Individual", // Default for workshops
@@ -178,8 +189,8 @@ export default function WorkshopPage({ params }) {
           {!isPreRegistrationEnabled && (
             <button
               className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-              disabled={isRegisteredForWorkshop() || workshopDetail.closed}
-              onClick={() => setIsModalOpen(true)}
+              disabled={isRegisteredForWorkshop() || effectiveClosed}
+              onClick={handleRegister}
               style={{
                 background: isRegisteredForWorkshop() ? accent.primary : 'transparent',
                 color: isRegisteredForWorkshop() ? '#0a0a0a' : 'white',
@@ -188,10 +199,10 @@ export default function WorkshopPage({ params }) {
             >
               {userWorkshopDetails && (
                 <>
-                  {isRegisteredForWorkshop() ? "Registered" : workshopDetail.closed ? "Closed" : "Register"}
+                  {isRegisteredForWorkshop() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                 </>
               )}
-              {!userWorkshopDetails && <>{workshopDetail.closed ? "Closed" : "Register"}</>}
+              {!userWorkshopDetails && <>{effectiveClosed ? "Closed" : "Register"}</>}
             </button>
           )}
 
@@ -235,8 +246,8 @@ export default function WorkshopPage({ params }) {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mt-4">
-              {/* WhatsApp Button - Only show if user is registered */}
-              {isRegisteredForWorkshop() && (
+              {/* WhatsApp Button - Only show if user is registered and not killed */}
+              {isRegisteredForWorkshop() && showWhatsApp && (
                 <a
                   href={getWhatsAppLink(id)}
                   target="_blank"
@@ -282,7 +293,7 @@ export default function WorkshopPage({ params }) {
                 style={{ color: accent.primary, background: accent.primary }}
               />
               <span className="text-white font-bold uppercase tracking-widest text-sm">
-                {workshopDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
               </span>
             </div>
 
@@ -322,23 +333,24 @@ export default function WorkshopPage({ params }) {
           </div>
         </div>
 
+        {/* View Agenda & Details Button - Full Width */}
+        <button
+          onClick={() => setIsLearnMoreOpen(true)}
+          className="w-full py-4 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 group relative overflow-hidden"
+          style={{
+            borderColor: `${accent.primary}40`,
+            background: `linear-gradient(90deg, ${accent.primary}10, transparent, ${accent.primary}10)`
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          <span className="text-lg relative z-10" style={{ textShadow: `0 0 20px ${accent.primary}80` }}>View Agenda & Details</span>
+          <IoMdArrowBack className="group-hover:translate-x-1 transition-transform rotate-180 text-xl relative z-10" style={{ color: accent.primary }} />
+        </button>
+
         {/* Bottom Section: Convenors */}
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           {/* Left: Convenors */}
           <div className="w-full lg:w-7/12 flex flex-col gap-8">
-            {/* View Agenda & Details Button */}
-            <button
-              onClick={() => setIsLearnMoreOpen(true)}
-              className="w-full py-4 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 group relative overflow-hidden"
-              style={{
-                borderColor: `${accent.primary}40`,
-                background: `linear-gradient(90deg, ${accent.primary}10, transparent, ${accent.primary}10)`
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <span className="text-lg relative z-10" style={{ textShadow: `0 0 20px ${accent.primary}80` }}>View Agenda & Details</span>
-              <IoMdArrowBack className="group-hover:translate-x-1 transition-transform rotate-180 text-xl relative z-10" style={{ color: accent.primary }} />
-            </button>
 
 
             {workshopDetail.contacts && workshopDetail.contacts.length > 0 && (
@@ -385,15 +397,36 @@ export default function WorkshopPage({ params }) {
         )
       }
 
-      {/* ===== Registration Modal ===== */}
-      {
-        isModalOpen && (
-          <ConfirmationModal
-            onConfirm={handleRegister}
-            onCancel={() => setIsModalOpen(false)}
-          />
-        )
-      }
+      {/* ===== Payment Overlay ===== */}
+      {isPaymentOverlayOpen && (
+        <div className="absolute inset-0 top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+          <div className="flex-col items-center justify-center p-6 text-black bg-white rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-semibold">Payment Required</h2>
+            <p className="mt-2 text-sm">
+              Please select and pay the respective workshop fee amount to successfully register for{' '}
+              <span className="font-semibold">{workshopDetail.workshopName}</span>{' '}
+              workshop.
+            </p>
+            <div className="flex mt-4 space-x-3">
+              <button
+                className="px-4 py-2 text-black bg-gray-300 rounded-lg hover:bg-gray-400"
+                onClick={() => setIsPaymentOverlayOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
+                onClick={() => {
+                  setIsPaymentOverlayOpen(false);
+                  router.push('/fee-payment');
+                }}
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   );
 }

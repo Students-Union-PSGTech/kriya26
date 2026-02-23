@@ -6,7 +6,7 @@ import LazyVideo from "./ui/LazyVideo";
 const stats = [
   { number: "30 +", label: "Events" },
   { number: "10 +", label: "Workshops" },
-  { number: "5 +", label: "Paper Presentations" },
+  { number: "3 +", label: "Paper Presentations" },
 ];
 
 // Animated Counter Component

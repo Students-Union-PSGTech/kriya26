@@ -1,0 +1,36 @@
+# Dependencies — use the image’s node_modules from the deps stage
+node_modules
+**/node_modules
+
+# Build output
+.next
+out
+
+# Git and IDE
+.git
+.gitignore
+.cursor
+*.md
+!README.md
+
+# Env and secrets (set via build args at build time)
+.env
+.env.*
+!.env.example
+
+# Logs and cache
+npm-debug.log*
+.npm
+.yarn
+.pnpm-store
+
+# OS and misc
+.DS_Store
+Thumbs.db
+*.log
+
+# Optional: shrink context (faster COPY . .)
+.vercel
+coverage
+.nyc_output
+*.tsbuildinfo

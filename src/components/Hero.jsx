@@ -125,9 +125,6 @@ const Hero = ({ preloaderComplete = true }) => {
 
           {/* Top Text */}
           <div className="flex flex-col items-center justify-center gap-1 mb-4">
-            <h3 className="special-font text-white text-lg font-zentry tracking-wider">
-              <b>PSG COLLEGE OF TECHNOLOGY</b>
-            </h3>
             <h3 className="special-font text-blue-500 text-lg font-zentry tracking-wider">
               <b>STUDENTS UNION</b>
             </h3>
@@ -137,22 +134,19 @@ const Hero = ({ preloaderComplete = true }) => {
           </div>
 
           <Image
-            src="/Logo/kriya26white.png"
+            src="/Logo/kriya.png"
             alt="Kriya 2026 Logo"
             width={300}
             height={300}
             className="h-20 w-auto mx-auto mb-2"
           />
 
-          {/* Global Clash Title - Smaller */}
+          {/* Global Clash Title */}
           <div className="mb-4">
-            <h1 className="special-font text-center text-2xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">the gl<b>o</b>bal</span>
-            </h1>
             <h1 className="special-font text-center text-xl font-zentry font-thin uppercase text-white mb-1 tracking-wide">
-              <span className="">Cl<b>a</b>sh <b>of</b></span>
+              <span>the gl<b>o</b>bal cl<b>a</b>sh <b>o</b>f</span>
             </h1>
-            <h2 className="special-font text-center text-xl font-zentry font-thin uppercase text-white bg-clip-text">
+            <h2 className="special-font text-center text-3xl font-zentry font-thin uppercase text-white bg-clip-text">
               <span className="bg-black/50 text-blue-500 p-1 rounded-md">te<b>c</b>h<b>n</b>o t<b>a</b>lents</span>
             </h2>
           </div>
@@ -223,9 +217,6 @@ const Hero = ({ preloaderComplete = true }) => {
 
         {/* Top Text */}
         <div className="flex flex-col items-center justify-center gap-2 mb-4">
-          <h3 className="special-font text-white text-3xl font-zentry tracking-wider">
-            <b>PSG COLLEGE OF TECHNOLOGY</b>
-          </h3>
           <h3 className="special-font text-blue-500 text-3xl font-zentry tracking-wider">
             <b>STUDENTS UNION</b>
           </h3>
@@ -239,7 +230,7 @@ const Hero = ({ preloaderComplete = true }) => {
           {/* LEFT COLUMN: Logo + Title (Small) + Socials */}
           <div className="flex flex-col items-center text-center gap-6">
             <Image
-              src="/Logo/kriya26white.png"
+              src="/Logo/kriya.png"
               alt="Kriya 2026 Logo"
               width={500}
               height={400}

@@ -32,7 +32,8 @@ const NavBarForMobile = () => {
   const [userDetails, setUserDetails] = useState();
   const [token, setToken] = useState();
 
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, isAuthenticated, logout } = useAuth();
   const isPSGStudent = user?.email?.toLowerCase().endsWith('@psgtech.ac.in');
 
   useEffect(() => {
@@ -135,31 +136,31 @@ const NavBarForMobile = () => {
     <nav className="fixed top-0 z-50 w-screen max-h-screen overflow-y-auto bg-[#0a0a0a] shadow-2xl lg:hidden font-poppins custom-scrollbar transition-all duration-300">
       <div className="sticky top-0 z-20 flex items-center justify-between w-full px-6 py-4 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#1a1a1a]">
         <MenuToggle isOpen={isOpen} setIsOpen={setIsOpen} className="text-white" />
-        <Link
-          href={"/"}
-          className="w-12 h-8"
-          style={{
-            background: `url(/Logo/kriya26white.png)`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-          }}
-        ></Link>
+        <Link href={"/"} className="flex items-center gap-2">
+          <img
+            src="/Logo/PSG_LOGO_v2.png"
+            alt="PSG Tech"
+            className="h-8 w-8 object-contain"
+          />
+          <span className="text-white font-bold uppercase tracking-wider text-[10px] leading-tight">
+            PSG College<br />of Technology
+          </span>
+        </Link>
         <div className="flex justify-end">
-          {userDetails ? (
+          {isAuthenticated && user ? (
             <Link
-              href={"/portal/profile"}
+              href="/profile"
               className="w-9 h-9 border border-[#333] rounded-full overflow-hidden"
             >
               <img
-                src={userDetails?.profilePhoto}
+                src={`/profile/${typeof window !== 'undefined' ? (localStorage.getItem('kriya_avatar') || '1') : '1'}.png`}
                 alt="profile"
                 className="w-full h-full object-cover"
               />
             </Link>
           ) : (
             <Link
-              href={"/auth?type=login"}
+              href="/auth?type=login"
               className="text-white hover:text-gray-300 transition-colors"
             >
               <FaRegUserCircle size={28} />
@@ -178,7 +179,9 @@ const NavBarForMobile = () => {
             {(!token || !userDetails) && (
               <button
                 type="button"
-                onClick={() => window.open("https://www.youtube.com/watch?v=YeFJPRFhmCM", "_blank")}
+                onClick={() => window.open("https://www.youtube.com/watch?v=MNtgrMCUZTg&list=PL-3CDE5A0hSMnMnK2uJkKjeHNXwfCjEQ-", "_blank")}
+                data-umami-event="how-to-register"
+                data-umami-event-source="mobile-nav"
                 className="w-full px-4 py-3 mb-6 text-xs font-black tracking-widest uppercase bg-white text-black rounded-lg shadow-lg hover:bg-gray-200 transition-all"
               >
                 How to Register
@@ -286,12 +289,12 @@ const NavBarForMobile = () => {
           </div>
         </div>
 
-        {token && (
+        {isAuthenticated && (
           <div className="sticky bottom-0 z-30 w-full bg-[#0a0a0a]/95 backdrop-blur-md border-t border-[#1a1a1a] p-4">
             <button
-              onClick={() => {
-                localStorage.clear();
-                window.location.reload();
+              onClick={async () => {
+                await logout();
+                router.push('/auth?type=login');
               }}
               className="flex items-center justify-center w-full px-6 py-3 space-x-3 text-sm font-bold text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-transparent hover:border-red-500/20"
             >

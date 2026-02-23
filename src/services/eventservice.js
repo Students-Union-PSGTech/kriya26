@@ -90,7 +90,7 @@ export const eventService = {
 
     // Register for a paper
     registerPaper: async (paperId) => {
-        const response = await api.post(`/api/events/papers/${paperId}/register`);
+        const response = await api.post(`/api/events/paper/${paperId}/register`);
         return response.data;
     },
 
@@ -131,7 +131,7 @@ export const eventService = {
     // Get papers registered by the logged-in user
     getUserPapers: async () => {
         const response = await api.get('/api/events/user/paper');
-        //console.log(response.data);
+        console.log(response.data);
         return response.data;
 
     }

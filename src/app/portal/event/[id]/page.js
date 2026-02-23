@@ -1,5 +1,6 @@
 "use client";
 import { IoMdCall, IoLogoWhatsapp, IoMdArrowBack } from "react-icons/io";
+import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import { useRouter, useParams } from "next/navigation";
 import { isPreRegistrationEnabled, is_venue_available } from "@/settings/featureFlags";
 import { useState, useRef, useEffect } from "react";
@@ -9,6 +10,7 @@ import Image from "next/image";
 import { SiGmail } from "react-icons/si";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
@@ -54,7 +56,6 @@ export default function Home({ params }) {
 
   const [showDetails, setShowDetails] = useState(false);
   const geeksForGeeksRef = useRef(null);
-  const [showVideo, setShowVideo] = useState(false);
   const router = useRouter();
   const [generalPayment, setGeneralPayment] = useState(false);
   const [userEventDetails, setUserEventDetails] = useState(null);
@@ -62,33 +63,51 @@ export default function Home({ params }) {
   const [eventDetail, setEventDetail] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
-  const [showTutorial, setShowTutorial] = useState(false);
+  const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false);
 
-  // Check for tutorial in localStorage
-  useEffect(() => {
-    const hasSeenTutorial = localStorage.getItem("kriya_video_tutorial_seen");
-    if (!hasSeenTutorial) {
-      setShowTutorial(true);
-    }
-  }, []);
-
-  const handleCloseTutorial = () => {
-    localStorage.setItem("kriya_video_tutorial_seen", "true");
-    setShowTutorial(false);
-  };
+  // Netflix-style video hero state
+  const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
+  const [isMuted, setIsMuted] = useState(true);
 
   const accent = CATEGORY_ACCENTS[eventDetail?.category] || DEFAULT_ACCENT;
+  const { config: killSwitchConfig } = useKillSwitch();
+  const effectiveClosed =
+    eventDetail?.closed ||
+    killSwitchConfig?.registrationClosedAll?.events ||
+    (Array.isArray(killSwitchConfig?.registrationClosedIds?.events) &&
+      killSwitchConfig.registrationClosedIds.events.includes(String(id)));
+  const showWhatsApp =
+    !killSwitchConfig?.whatsappDisabledAll &&
+    !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
-  // Get YouTube URL - use default if database value is empty
-  const getYouTubeUrl = () => {
+  // Extract YouTube video ID from any YouTube URL format
+  const getVideoId = () => {
     const url = eventDetail?.youtubeUrl || DEFAULT_YOUTUBE_URL;
-    if (url.includes('/embed/')) return url;
-    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-    if (videoIdMatch && videoIdMatch[1]) {
-      return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+    if (url.includes("/embed/")) {
+      const match = url.match(/\/embed\/([^?&]+)/);
+      return match ? match[1] : null;
     }
-    return url;
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return videoIdMatch ? videoIdMatch[1] : null;
   };
+
+  // Build autoplay embed URL — toggling mute remounts the iframe via `key`
+  const getAutoplayUrl = (muted = true) => {
+    const vid = getVideoId();
+    if (!vid) return "";
+    const muteParam = muted ? "&mute=1" : "&mute=0";
+    return `https://www.youtube.com/embed/${vid}?autoplay=1${muteParam}&controls=1&loop=1&playlist=${vid}&rel=0&modestbranding=1`;
+  };
+
+  // Auto-transition from poster to video after 3 s
+  useEffect(() => {
+    if (!eventDetail) return;
+    const timer = setTimeout(() => setVideoPhase("video"), 3000);
+    return () => clearTimeout(timer);
+  }, [eventDetail]);
+
+  // Toggle mute — changing key forces iframe remount with new mute param
+  const toggleMute = () => setIsMuted((prev) => !prev);
 
   useEffect(() => {
     if (user) {
@@ -139,9 +158,9 @@ export default function Home({ params }) {
   const handleRegister = async () => {
     if (!isAuthenticated) {
       const callbackUrl = encodeURIComponent(`/portal/event/${id}`);
-      router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
+      router.push(`/auth?type=login&callbackUrl=${callbackUrl}`);
     } else if (!generalPayment) {
-      router.push("/auth/payment?type=GENERAL");
+      setIsPaymentOverlayOpen(true);
     } else {
       try {
         await eventService.registerEvent(id);
@@ -205,20 +224,20 @@ export default function Home({ params }) {
           {!isPreRegistrationEnabled && (
             <button
               className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-              disabled={isRegisteredForEvent() || eventDetail.closed}
+              disabled={isRegisteredForEvent() || effectiveClosed}
               onClick={() => setIsModalOpen(true)}
               style={{
-                background: isRegisteredForEvent() ? accent.primary : 'transparent',
-                color: isRegisteredForEvent() ? '#0a0a0a' : 'white',
+                background: isRegisteredForEvent() ? accent.primary : "transparent",
+                color: isRegisteredForEvent() ? "#0a0a0a" : "white",
                 borderColor: accent.primary,
               }}
             >
               {userEventDetails && (
                 <>
-                  {isRegisteredForEvent() ? "Registered" : eventDetail.closed ? "Closed" : "Register"}
+                  {isRegisteredForEvent() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                 </>
               )}
-              {!userEventDetails && <>{eventDetail.closed ? "Closed" : "Register"}</>}
+              {!userEventDetails && <>{effectiveClosed ? "Closed" : "Register"}</>}
             </button>
           )}
 
@@ -234,10 +253,10 @@ export default function Home({ params }) {
       {/* ===== Main Content ===== */}
       <div className="flex flex-col flex-1 w-full px-4 md:px-8 py-8 gap-10 relative z-10">
 
-        {/* Hero Section: Name + Description | YouTube */}
+        {/* Hero Section: Name + Description | Video */}
         <div className="flex flex-col lg:flex-row w-full gap-8">
-          {/* Left: Event Info */}
-          <div className="w-full lg:w-1/2 flex flex-col gap-6">
+          {/* Left: Event Info — on mobile appears below the video */}
+          <div className="w-full lg:w-1/2 flex flex-col gap-6 order-2 lg:order-1">
             {/* Category Badge */}
             <div
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-xs font-bold uppercase tracking-widest"
@@ -257,13 +276,15 @@ export default function Home({ params }) {
 
             {/* Description */}
             <div className="text-base md:text-lg text-white/70 leading-relaxed mt-2 text-justify">
-              {eventDetail.description}
+              {eventDetail.description?.split('\n').map((line, i, arr) => (
+                <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+              ))}
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-4 mt-4">
-              {/* WhatsApp Button - Only show if user is registered */}
-              {isRegisteredForEvent() && (
+              {/* WhatsApp Button - Only show if user is registered and not killed */}
+              {isRegisteredForEvent() && showWhatsApp && (
                 <a
                   href={getWhatsAppLink(id)}
                   target="_blank"
@@ -277,83 +298,93 @@ export default function Home({ params }) {
             </div>
           </div>
 
-          {/* Right: YouTube Embed */}
-          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10">
-            <iframe
-              className="w-full h-full"
-              src={getYouTubeUrl()}
-              title="Event Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            {/* Corner accent */}
-            <div
-              className="absolute top-0 left-0 w-20 h-20 pointer-events-none"
-              style={{
-                background: `linear-gradient(135deg, ${accent.primary}20 0%, transparent 60%)`,
-              }}
-            />
-            {/* ===== Tutorial Overlay (Subtle Tooltip) ===== */}
-            {showTutorial && (
-              <div className="absolute inset-0 z-40 flex items-center justify-center pointer-events-none">
-                <style>{`
-                  @keyframes subtle-bounce-x {
-                    0%, 100% { transform: translateX(130px); }
-                    50% { transform: translateX(120px); }
-                  }
-                  @keyframes subtle-bounce-y {
-                    0%, 100% { transform: translateY(70px); }
-                    50% { transform: translateY(80px); }
-                  }
-                  .tutorial-card-animation {
-                    animation: subtle-bounce-x 2s ease-in-out infinite;
-                  }
-                  @media (max-width: 768px) {
-                    .tutorial-card-animation {
-                      animation: subtle-bounce-y 2s ease-in-out infinite;
-                    }
-                  }
-                `}</style>
+          {/* Right: Netflix-style Video Hero — wrapper holds both video box and mute button */}
+          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative order-1 lg:order-2">
+
+            {/* Video clipping container — overflow-hidden ONLY contains poster + iframe */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+
+              {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
+              <div
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
+                style={{
+                  opacity: videoPhase === "poster" ? 1 : 0,
+                  pointerEvents: videoPhase === "poster" ? "auto" : "none",
+                }}
+              >
+                {/* Dark cinematic background */}
                 <div
-                  className="relative pointer-events-auto bg-black/95 backdrop-blur-xl border border-white/20 p-3 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] w-[160px] flex flex-col items-center gap-2 tutorial-card-animation"
-                >
-                  <div className="flex items-center gap-2 text-white/90">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-center leading-tight">Watch Video Detail!</p>
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCloseTutorial();
-                    }}
-                    className="w-full py-1.5 px-3 text-black text-[9px] font-black uppercase rounded-sm transition-transform active:scale-95 shadow-lg"
-                    style={{ backgroundColor: accent.primary }}
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
+                />
+                {/* Subtle category-colored glow */}
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
+                />
+                {/* Kriya logo + event info */}
+                <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+                  <Image
+                    src="/Logo/kriya.png"
+                    alt="Kriya 26"
+                    width={220}
+                    height={80}
+                    className="object-contain opacity-90"
+                    priority
+                  />
+                  {/* Category + event name badge */}
+                  <div
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                    style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
                   >
-                    Got it
-                  </button>
-
-                  {/* Desktop Pointer: Side "<" */}
-                  <div
-                    className="hidden md:block absolute top-1/2 -left-2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-r-8"
-                    style={{ borderRightColor: 'rgba(255, 255, 255, 0.2)' }}
-                  />
-                  <div
-                    className="hidden md:block absolute top-1/2 -left-1.5 -translate-y-1/2 w-0 h-0 border-t-[7px] border-t-transparent border-b-[7px] border-b-transparent border-r-[7px] border-r-black/95"
-                  />
-
-                  {/* Mobile Pointer: Top "^" pointing up to logo */}
-                  <div
-                    className="md:hidden absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8"
-                    style={{ borderBottomColor: 'rgba(255, 255, 255, 0.2)' }}
-                  />
-                  <div
-                    className="md:hidden absolute -top-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[7px] border-b-black/95"
-                  />
+                    <span
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    {eventDetail.category} — {eventDetail.eventName}
+                  </div>
+                  {/* Loading hint */}
+                  <div className="flex items-center gap-2 text-white/40 text-xs">
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    <span className="uppercase tracking-widest font-mono">Preview loading…</span>
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                  </div>
                 </div>
+                {/* Bottom gradient fade into video */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-24"
+                  style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                />
               </div>
-            )}
+
+              {/* ── Layer 2: YouTube Autoplay iframe ── */}
+              <iframe
+                key={`yt-${isMuted}`}
+                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                style={{ opacity: videoPhase === "video" ? 1 : 0, touchAction: "manipulation" }}
+                src={getAutoplayUrl(isMuted)}
+                title="Event Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+
+              {/* ── Corner accent ── */}
+              <div
+                className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
+                style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
+              />
+            </div>
+
+
           </div>
+
         </div>
 
         {/* Info Cards Row */}
@@ -366,7 +397,7 @@ export default function Home({ params }) {
                 style={{ color: accent.primary, background: accent.primary }}
               />
               <span className="text-white font-bold uppercase tracking-widest text-sm">
-                {eventDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
               </span>
             </div>
 
@@ -375,7 +406,7 @@ export default function Home({ params }) {
                 <>
                   <div>
                     <p className="text-xs uppercase tracking-widest mb-1.5 font-bold" style={{ color: accent.primary }}>Timing</p>
-                    <p className="text-white font-semibold text-lg">{eventDetail.timing || "TBA"}</p>
+                    <p className="text-white font-semibold text-lg">{eventDetail.startTime && eventDetail.endTime ? `${eventDetail.startTime} - ${eventDetail.endTime}` : "TBA"}</p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-widest mb-1.5 font-bold" style={{ color: accent.primary }}>Venue</p>
@@ -422,7 +453,7 @@ export default function Home({ params }) {
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <span className="text-lg relative z-10" style={{ textShadow: `0 0 20px ${accent.primary}80` }}>View Rules & Rounds</span>
+              <span className="text-lg relative z-10" style={{ textShadow: `0 0 20px ${accent.primary}80` }}>View Rules &amp; Rounds</span>
               <IoMdArrowBack className="group-hover:translate-x-1 transition-transform rotate-180 text-xl relative z-10" style={{ color: accent.primary }} />
             </button>
 
@@ -461,7 +492,7 @@ export default function Home({ params }) {
       {/* ===== Learn More Modal ===== */}
       {isLearnMoreOpen && (
         <EventDetailsModal
-          eventDetail={eventDetail}
+          eventDetail={eventDetail ? { ...eventDetail, closed: effectiveClosed } : eventDetail}
           onClose={() => setIsLearnMoreOpen(false)}
         />
       )}
@@ -472,6 +503,30 @@ export default function Home({ params }) {
           onConfirm={handleRegister}
           onCancel={() => setIsModalOpen(false)}
         />
+      )}
+
+      {/* ===== Payment Required Overlay ===== */}
+      {isPaymentOverlayOpen && (
+        <div className="absolute inset-0 top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+          <div className="flex-col items-center justify-center p-6 text-black bg-white rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-semibold">General Payment Required</h2>
+            <p className="mt-2 text-sm">You need to complete the general fee payment before registering for events.</p>
+            <div className="flex mt-4 space-x-3">
+              <button
+                className="px-4 py-2 text-black bg-gray-300 rounded-lg hover:bg-gray-400"
+                onClick={() => setIsPaymentOverlayOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
+                onClick={() => router.push('/fee-payment')}
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

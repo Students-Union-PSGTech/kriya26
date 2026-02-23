@@ -1,5 +1,6 @@
 "use client";
 import { IoMdCall, IoLogoWhatsapp, IoMdArrowBack } from "react-icons/io";
+import { MdVolumeOff, MdVolumeUp } from "react-icons/md";
 import { SiGmail } from "react-icons/si";
 import { useRouter, useParams } from "next/navigation";
 import { isPreRegistrationEnabled, is_venue_available } from "@/settings/featureFlags";
@@ -9,6 +10,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import Image from "next/image";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
+import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { getWhatsAppLink } from "@/data/whatsappLinks";
 
 const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
@@ -45,17 +47,45 @@ export default function PaperPage({ params }) {
     const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
 
     const accent = PAPER_ACCENT;
+    const { config: killSwitchConfig } = useKillSwitch();
+    const effectiveClosed =
+        paperDetail?.closed ||
+        killSwitchConfig?.registrationClosedAll?.papers ||
+        (Array.isArray(killSwitchConfig?.registrationClosedIds?.papers) &&
+            killSwitchConfig.registrationClosedIds.papers.includes(String(id)));
+    const showWhatsApp =
+        !killSwitchConfig?.whatsappDisabledAll &&
+        !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
 
-    // Get YouTube URL - use default if database value is empty
-    const getYouTubeUrl = () => {
+    // Netflix-style video hero state
+    const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
+    const [isMuted, setIsMuted] = useState(true);
+
+    // Auto-transition poster → video after 3 s once paper loads
+    useEffect(() => {
+        if (!paperDetail) return;
+        const t = setTimeout(() => setVideoPhase("video"), 3000);
+        return () => clearTimeout(t);
+    }, [paperDetail]);
+
+    const toggleMute = () => setIsMuted((prev) => !prev);
+
+    // Get video ID from any YouTube URL
+    const getVideoId = () => {
         const url = paperDetail?.youtubeUrl || DEFAULT_YOUTUBE_URL;
-        if (!url || url.trim() === "") return `https://www.youtube.com/embed/YeFJPRFhmCM`;
-        if (url.includes('/embed/')) return url;
-        const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
-        if (videoIdMatch && videoIdMatch[1]) {
-            return `https://www.youtube.com/embed/${videoIdMatch[1]}`;
+        if (url.includes("/embed/")) {
+            const match = url.match(/\/embed\/([^?&]+)/);
+            return match ? match[1] : null;
         }
-        return url;
+        const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+        return m ? m[1] : null;
+    };
+
+    // Build autoplay URL — key remount handles mute toggle cross-device
+    const getAutoplayUrl = (muted = true) => {
+        const vid = getVideoId();
+        if (!vid) return "";
+        return `https://www.youtube.com/embed/${vid}?autoplay=1&mute=${muted ? 1 : 0}&controls=1&loop=1&playlist=${vid}&rel=0&modestbranding=1`;
     };
 
     // Format date from ISO string
@@ -133,8 +163,13 @@ export default function PaperPage({ params }) {
     }, []);
 
     const isRegisteredForPaper = () => {
-        if (!user || !user.registeredPapers) return false;
-        return user.registeredPapers.some(p => p.paperId === id);
+        // Check from user.registeredPapers
+        if (user?.registeredPapers?.some(p => p.paperId === id)) return true;
+        // Check from fetched userPaperDetails
+        if (userPaperDetails && Array.isArray(userPaperDetails)) {
+            return userPaperDetails.some(p => p.paperId === id || p.paper_id === id || p._id === id);
+        }
+        return false;
     };
 
     const getMappedPaperDetail = () => {
@@ -143,7 +178,7 @@ export default function PaperPage({ params }) {
             eventName: paperDetail.eventName,
             category: "Paper Presentation",
             custom_category: "Paper Presentation",
-            closed: paperDetail.closed,
+            closed: effectiveClosed,
             timing: paperDetail.startTime && paperDetail.endTime
                 ? `${paperDetail.startTime} - ${paperDetail.endTime}`
                 : (paperDetail.time || "TBA"),
@@ -160,8 +195,6 @@ export default function PaperPage({ params }) {
         if (!isAuthenticated) {
             const callbackUrl = encodeURIComponent(`/portal/paper/${id}`);
             router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
-        } else if (!generalPayment) {
-            router.push("/auth/payment?type=GENERAL");
         } else {
             try {
                 await eventService.registerPaper(id);
@@ -213,7 +246,7 @@ export default function PaperPage({ params }) {
                     {!isPreRegistrationEnabled && (
                         <button
                             className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
-                            disabled={isRegisteredForPaper() || paperDetail.closed}
+                            disabled={isRegisteredForPaper() || effectiveClosed}
                             onClick={() => setIsModalOpen(true)}
                             style={{
                                 background: isRegisteredForPaper() ? accent.primary : 'transparent',
@@ -221,7 +254,7 @@ export default function PaperPage({ params }) {
                                 borderColor: accent.primary,
                             }}
                         >
-                            {isRegisteredForPaper() ? "Registered" : paperDetail.closed ? "Closed" : "Register"}
+                            {isRegisteredForPaper() ? "Registered" : effectiveClosed ? "Closed" : "Register"}
                         </button>
                     )}
 
@@ -239,8 +272,8 @@ export default function PaperPage({ params }) {
 
                 {/* Hero Section: Name + Description | YouTube */}
                 <div className="flex flex-col lg:flex-row w-full gap-8">
-                    {/* Left: Paper Info */}
-                    <div className="w-full lg:w-1/2 flex flex-col gap-6">
+                    {/* Left: Paper Info — on mobile appears below the video */}
+                    <div className="w-full lg:w-1/2 flex flex-col gap-6 order-2 lg:order-1">
                         {/* Category Badge */}
                         <div
                             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-xs font-bold uppercase tracking-widest"
@@ -267,21 +300,27 @@ export default function PaperPage({ params }) {
 
                         {/* Theme / Description */}
                         <div className="text-base md:text-lg text-white/70 leading-relaxed mt-2 text-justify">
-                            {paperDetail.theme}
+                            {paperDetail.theme?.split('\\n').map((line, i, arr) => (
+                                <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                            ))}
                         </div>
 
                         {/* Topic */}
                         {paperDetail.topic && (
                             <div className="glass-card-light p-4 mt-2">
                                 <p className="text-xs uppercase tracking-widest mb-2 font-bold" style={{ color: accent.primary }}>Topics</p>
-                                <p className="text-white/70 text-sm md:text-base leading-relaxed">{paperDetail.topic}</p>
+                                <div className="text-white/70 text-sm md:text-base leading-relaxed">
+                                    {paperDetail.topic.split(/\\n|\n/).map((line, i, arr) => (
+                                        <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-4 mt-4">
-                            {/* WhatsApp Button - Only show if user is registered */}
-                            {isRegisteredForPaper() && (
+                            {/* WhatsApp Button - Only show if user is registered and not killed */}
+                            {isRegisteredForPaper() && showWhatsApp && (
                                 <a
                                     href={getWhatsAppLink(id)}
                                     target="_blank"
@@ -293,8 +332,8 @@ export default function PaperPage({ params }) {
                                 </a>
                             )}
 
-                            {/* Email contact */}
-                            {paperDetail.eventMail && (
+                            {/* Email contact - only after registration */}
+                            {paperDetail.eventMail && isRegisteredForPaper() && (
                                 <a
                                     href={`mailto:${paperDetail.eventMail}`}
                                     className="px-6 py-2.5 md:px-8 md:py-3 border text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-white/10 transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
@@ -307,22 +346,79 @@ export default function PaperPage({ params }) {
                         </div>
                     </div>
 
-                    {/* Right: YouTube Embed */}
-                    <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10">
-                        <iframe
-                            className="w-full h-full"
-                            src={getYouTubeUrl()}
-                            title="Paper Video"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                        <div
-                            className="absolute top-0 left-0 w-20 h-20 pointer-events-none"
-                            style={{
-                                background: `linear-gradient(135deg, ${accent.primary}20 0%, transparent 60%)`,
-                            }}
-                        />
+                    {/* Right: Netflix-style Video Hero — wrapper holds video box + mute button */}
+                    <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative order-1 lg:order-2">
+
+                        {/* Video clipping container — overflow-hidden ONLY contains poster + iframe */}
+                        <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+
+                            {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
+                            <div
+                                className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
+                                style={{
+                                    opacity: videoPhase === "poster" ? 1 : 0,
+                                    pointerEvents: videoPhase === "poster" ? "auto" : "none",
+                                }}
+                            >
+                                <div
+                                    className="absolute inset-0"
+                                    style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
+                                />
+                                <div
+                                    className="absolute inset-0"
+                                    style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
+                                />
+                                <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+                                    <Image
+                                        src="/Logo/kriya.png"
+                                        alt="Kriya 26"
+                                        width={220}
+                                        height={80}
+                                        className="object-contain opacity-90"
+                                        priority
+                                    />
+                                    <div
+                                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                                        style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
+                                    >
+                                        <span
+                                            className="w-1.5 h-1.5 rounded-full animate-pulse"
+                                            style={{ background: accent.primary }}
+                                        />
+                                        Paper Presentation — {paperDetail.eventName}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-white/40 text-xs">
+                                        <div className="w-4 h-[2px] rounded animate-pulse" style={{ background: accent.primary }} />
+                                        <span className="uppercase tracking-widest font-mono">Preview loading…</span>
+                                        <div className="w-4 h-[2px] rounded animate-pulse" style={{ background: accent.primary }} />
+                                    </div>
+                                </div>
+                                <div
+                                    className="absolute bottom-0 left-0 right-0 h-24"
+                                    style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                                />
+                            </div>
+
+                            {/* ── Layer 2: YouTube Autoplay iframe ── */}
+                            <iframe
+                                key={`yt-${isMuted}`}
+                                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                                style={{ opacity: videoPhase === "video" ? 1 : 0, touchAction: "manipulation" }}
+                                src={getAutoplayUrl(isMuted)}
+                                title="Paper Video"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+
+                            {/* ── Corner accent ── */}
+                            <div
+                                className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
+                                style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
+                            />
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -336,7 +432,7 @@ export default function PaperPage({ params }) {
                                 style={{ color: accent.primary, background: accent.primary }}
                             />
                             <span className="text-white font-bold uppercase tracking-widest text-sm">
-                                {paperDetail.closed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
+                                {effectiveClosed ? "Registrations Closed" : (isPreRegistrationEnabled ? "Registration Not Yet Opened" : "Registration is Open Now")}
                             </span>
                         </div>
 
@@ -435,8 +531,8 @@ export default function PaperPage({ params }) {
                                     )}
                                 </div>
 
-                                {/* Email */}
-                                {paperDetail.eventMail && (
+                                {/* Email - only after registration */}
+                                {paperDetail.eventMail && isRegisteredForPaper() && (
                                     <div className="mt-4 flex items-center gap-3 text-white/40 text-sm">
                                         <SiGmail style={{ color: accent.primary }} />
                                         <a href={`mailto:${paperDetail.eventMail}`} className="hover:text-white/70 transition-colors">
