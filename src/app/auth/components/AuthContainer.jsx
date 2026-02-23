@@ -223,9 +223,12 @@ export default function AuthContainer() {
                         loop
                         muted
                         playsInline
+                        preload="none"
+                        poster="/videos/optimized/auth-background.webp"
                         className="auth-video-bg"
                     >
-                        <source src="https://res.cloudinary.com/dkashskr5/video/upload/v1770518239/auth-background_hnm49d.mp4" type="video/mp4" />
+                        <source src="/videos/optimized/auth-background.webm" type="video/webm" />
+                        <source src="/videos/optimized/auth-background.mp4" type="video/mp4" />
                     </video>
                     <div className="toggle-panel toggle-left">
                     </div>
