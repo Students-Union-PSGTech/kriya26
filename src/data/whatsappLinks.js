@@ -49,7 +49,7 @@ export const whatsappLinks = {
   "WS16": "https://chat.whatsapp.com/L7Ddud5RbYIKpsYxvIHC3k?mode=gi_t",
   "WS20": "https://chat.whatsapp.com/I6ESdQSCwo6BfiFtlvVfhF",
   "PRP01": "https://chat.whatsapp.com/CTnHQJMLLyb3Ghd6m292le?mode=gi_t",
-  // "PRP03": "invalid",
+  "PRP03": "https://chat.whatsapp.com/BtZwX7I9itMK7ZofwBQW1q?mode=gi_t",
   "PRP06": "https://chat.whatsapp.com/L7bSyOW3nu0160yuPmMDQw?mode=gi_t",
   "PRP09": "https://chat.whatsapp.com/KoD30hTSpQ6L5hjjAEZ3Xu?mode=gi_t",
 
