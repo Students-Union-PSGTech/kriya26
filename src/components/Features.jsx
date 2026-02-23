@@ -43,19 +43,24 @@ export const BentoTilt = ({ children, className = "", onClick }) => {
   );
 };
 
-export const BentoCard = ({ src, title, description, isComingSoon, onClick, textColor = "text-white", titleColor = "text-white", cardId }) => {
+export const BentoCard = ({ src, videoMp4, videoWebm, poster, title, description, isComingSoon, onClick, textColor = "text-white", titleColor = "text-white", cardId }) => {
   const hoverButtonRef = useRef(null);
   const cardRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.5,
-        rootMargin: "-70% 0px"
+        threshold: 0.25,
+        rootMargin: "200px 0px"
       }
     );
 
@@ -72,11 +77,34 @@ export const BentoCard = ({ src, title, description, isComingSoon, onClick, text
 
   return (
     <div ref={cardRef} className="relative size-full">
-      <img
-        src={src}
-        alt="feature-bg"
-        className="absolute left-0 top-0 size-full object-cover object-center"
-      />
+      {videoMp4 || videoWebm ? (
+        isVisible ? (
+          <video
+            className="absolute left-0 top-0 size-full object-cover object-center"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster={poster || src}
+          >
+            {videoWebm && <source src={videoWebm} type="video/webm" />}
+            {videoMp4 && <source src={videoMp4} type="video/mp4" />}
+          </video>
+        ) : (
+          <img
+            src={poster || src}
+            alt="feature-bg"
+            className="absolute left-0 top-0 size-full object-cover object-center"
+          />
+        )
+      ) : (
+        <img
+          src={src}
+          alt="feature-bg"
+          className="absolute left-0 top-0 size-full object-cover object-center"
+        />
+      )}
       <div className="relative z-10 flex size-full flex-col justify-between p-2 md:p-5 text-blue-75">
         <div>
           <h1 className={`special-font text-3xl xl:text-4xl font-bold ${titleColor} tracking-wider`}><b>{title}</b></h1>
@@ -131,6 +159,9 @@ const Features = () => {
         >
           <BentoCard
             src="/img/core-eng.webp"
+            videoMp4="/videos/optimized/feature-4.mp4"
+            videoWebm="/videos/optimized/feature-4.webm"
+            poster="/videos/optimized/feature-4.webp"
             title={
               <>
                 <b>C</b>ore <b>E</b>ngineering
@@ -150,8 +181,11 @@ const Features = () => {
             className="bento-tilt_1 h-60 md:h-auto md:row-span-1 md:col-span-1"
             onClick={() => handleCategoryClick('coding')}
           >
-            <BentoCard
+          <BentoCard
               src="/img/coding.webp"
+              videoMp4="/videos/optimized/feature-3.mp4"
+              videoWebm="/videos/optimized/feature-3.webm"
+              poster="/videos/optimized/feature-3.webp"
               title={
                 <>
                   <b>C</b>oding
@@ -169,8 +203,11 @@ const Features = () => {
             className="bento-tilt_2 h-60 md:h-auto md:row-span-1"
             onClick={() => handleCategoryClick('quiz')}
           >
-            <BentoCard
+          <BentoCard
               src="/img/quiz.webp"
+              videoMp4="/videos/optimized/feature-5.mp4"
+              videoWebm="/videos/optimized/feature-5.webm"
+              poster="/videos/optimized/feature-5.webp"
               title={
                 <>
                   <b>Q</b>uiz
@@ -189,8 +226,11 @@ const Features = () => {
             className="bento-tilt_1 h-60 md:h-auto md:row-span-2 md:col-start-2 md:row-start-1 md:col-span-1"
             onClick={() => handleCategoryClick('fashion')}
           >
-            <BentoCard
+          <BentoCard
               src="/img/ft.webp"
+              videoMp4="/videos/optimized/feature-2.mp4"
+              videoWebm="/videos/optimized/feature-2.webm"
+              poster="/videos/optimized/feature-2.webp"
               title={
                 <>
                   <b>F</b>ashion <b>T</b>echnology
@@ -211,6 +251,9 @@ const Features = () => {
         >
           <BentoCard
             src="/img/sci-tech.webp"
+            videoMp4="/videos/optimized/feature-1.mp4"
+            videoWebm="/videos/optimized/feature-1.webm"
+            poster="/videos/optimized/feature-1.webp"
             title={
               <>
                 <b>S</b>cience & <b>T</b>echnology
