@@ -264,13 +264,13 @@ export default function WorkshopPage({ params }) {
           {/* Right: Workshop Image */}
           <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10 bg-[#111]">
             <Image
-              src={`/img/workshops/ws${parseInt(workshopDetail.workshopId?.replace(/\D/g, '') || '1')}.png`}
+              src={`/img/workshops/${workshopDetail.workshopId}.png`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               alt={workshopDetail.workshopName}
               className="object-cover opacity-80 hover:scale-105 transition-transform duration-700"
               onError={(e) => {
-                e.target.src = '/img/workshops/ws1.png';
+                e.target.src = '/thumbnail/worksopthumb.png';
               }}
             />
             {/* Corner accent */}

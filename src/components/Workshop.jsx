@@ -9,22 +9,8 @@ import { TiLocationArrow, TiCalendar } from "react-icons/ti";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { is_venue_available } from "@/settings/featureFlags";
 
-const STATIC_IMAGES = [
-  "/img/workshops/ws1.png",
-  //"/img/gallery-1.webp",
-  "/img/workshops/ws2.png",
-  "/img/workshops/ws3.png",
-  "/img/workshops/ws4.png",
-  "/img/workshops/ws5.png",
-  "/img/workshops/ws6.png",
-  "/img/stones.webp",
-  "/img/workshops/ws8.png",
-  "/img/workshops/ws9.png",
-  "/img/workshops/ws10.png",
-  "/img/workshops/ws11.png",
-  "/img/workshops/ws12.png",
-  "/img/contact-2.webp",
-];
+// Workshop image fallback
+const WORKSHOP_FALLBACK_IMG = "/thumbnail/worksopthumb.png";
 
 // Premium stagger animation variants
 const containerVariants = {
@@ -192,6 +178,9 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
           alt={item.title}
           fill
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          onError={(e) => {
+            e.target.src = WORKSHOP_FALLBACK_IMG;
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
       </div>
@@ -418,7 +407,7 @@ const Workshop = () => {
             time: ws.time,
             startTime: ws.startTime,
             endTime: ws.endTime,
-            img: STATIC_IMAGES[index % STATIC_IMAGES.length], // Cycle through static images
+            img: `/img/workshops/${ws.workshopId}.png`, // Use workshop ID as image filename
           }));
           setWorkshops(mappedWorkshops);
         }
