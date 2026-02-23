@@ -163,8 +163,13 @@ export default function PaperPage({ params }) {
     }, []);
 
     const isRegisteredForPaper = () => {
-        if (!user || !user.registeredPapers) return false;
-        return user.registeredPapers.some(p => p.paperId === id);
+        // Check from user.registeredPapers
+        if (user?.registeredPapers?.some(p => p.paperId === id)) return true;
+        // Check from fetched userPaperDetails
+        if (userPaperDetails && Array.isArray(userPaperDetails)) {
+            return userPaperDetails.some(p => p.paperId === id || p.paper_id === id || p._id === id);
+        }
+        return false;
     };
 
     const getMappedPaperDetail = () => {
@@ -190,8 +195,6 @@ export default function PaperPage({ params }) {
         if (!isAuthenticated) {
             const callbackUrl = encodeURIComponent(`/portal/paper/${id}`);
             router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
-        } else if (!generalPayment) {
-            router.push("/fee-payment");
         } else {
             try {
                 await eventService.registerPaper(id);

@@ -131,7 +131,7 @@ export const eventService = {
     // Get papers registered by the logged-in user
     getUserPapers: async () => {
         const response = await api.get('/api/events/user/paper');
-        //console.log(response.data);
+        console.log(response.data);
         return response.data;
 
     }
