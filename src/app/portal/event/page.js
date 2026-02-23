@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaSoundcloud } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IoMdArrowBack } from "react-icons/io";
@@ -14,6 +14,22 @@ const TextFont = "Helonik";
 // Featured event IDs
 const GOLD_EVENT_IDS = ["EVNT34", "EVNT20", "EVNT09", "EVNT25", "EVNT32"];
 const PLATINUM_EVENT_IDS = ["EVNT40"];
+const ALL_FEATURED_IDS = [...GOLD_EVENT_IDS, ...PLATINUM_EVENT_IDS];
+
+const normalizeMongoDate = (d) => {
+  if (!d) return null;
+  if (typeof d === "string") return d;
+  if (typeof d === "object" && d.$date) return d.$date;
+  return null;
+};
+
+const toEventCard = (event) => ({
+  name: event.eventName || event.name,
+  id: event.eventId || event.id,
+  date: normalizeMongoDate(event.date) || "TBA",
+  category: event.category,
+  time: event.startTime || event.timing || event.time || "TBA",
+});
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -26,9 +42,14 @@ const EventList = () => {
 
   // Fetch events from eventService
   useEffect(() => {
+    let isMounted = true;
+
     const loadEvents = async () => {
       try {
-        setLoading(true);
+        if (isMounted) {
+          setLoading(true);
+        }
+
         const response = await eventService.getAllEvents();
 
         let eventsData = [];
@@ -40,105 +61,118 @@ const EventList = () => {
           eventsData = response.events;
         }
 
-        const normalizeMongoDate = (d) => {
-          if (!d) return null;
-          if (typeof d === "string") return d;
-          if (typeof d === "object" && d.$date) return d.$date;
-          return null;
-        };
+        const mappedEvents = eventsData
+          .map(toEventCard)
+          .sort((a, b) => a.name.localeCompare(b.name));
 
-        const mappedEvents = eventsData.map((event) => ({
-          name: event.eventName || event.name,
-          id: event.eventId || event.id,
-          date: normalizeMongoDate(event.date) || "TBA",
-          category: event.category,
-          time: event.startTime || event.timing || event.time || "TBA",
-        })).sort((a, b) => a.name.localeCompare(b.name));
+        const eventById = new Map(mappedEvents.map((event) => [event.id, event]));
+        const fromAllEventsGold = GOLD_EVENT_IDS.map((id) => eventById.get(id)).filter(Boolean);
+        const fromAllEventsPlatinum = PLATINUM_EVENT_IDS.map((id) => eventById.get(id)).filter(Boolean);
 
+        let finalGoldEvents = fromAllEventsGold;
+        let finalPlatinumEvents = fromAllEventsPlatinum;
+
+        const missingGoldIds = GOLD_EVENT_IDS.filter((id) => !eventById.has(id));
+        const missingPlatinumIds = PLATINUM_EVENT_IDS.filter((id) => !eventById.has(id));
+
+        if (missingGoldIds.length > 0 || missingPlatinumIds.length > 0) {
+          const [goldFallbacks, platinumFallbacks] = await Promise.all([
+            Promise.allSettled(missingGoldIds.map((id) => eventService.getEventById(id))),
+            Promise.allSettled(
+              missingPlatinumIds.map((id) => eventService.getEventById(id))
+            ),
+          ]);
+
+          const mappedGoldFallbacks = goldFallbacks
+            .filter((r) => r.status === "fulfilled")
+            .map((r) => toEventCard(r.value?.event || r.value));
+
+          const mappedPlatinumFallbacks = platinumFallbacks
+            .filter((r) => r.status === "fulfilled")
+            .map((r) => toEventCard(r.value?.event || r.value));
+
+          finalGoldEvents = [...fromAllEventsGold, ...mappedGoldFallbacks]
+            .filter((event, idx, arr) => idx === arr.findIndex((e) => e.id === event.id))
+            .sort((a, b) => GOLD_EVENT_IDS.indexOf(a.id) - GOLD_EVENT_IDS.indexOf(b.id));
+
+          finalPlatinumEvents = [...fromAllEventsPlatinum, ...mappedPlatinumFallbacks]
+            .filter((event, idx, arr) => idx === arr.findIndex((e) => e.id === event.id))
+            .sort(
+              (a, b) =>
+                PLATINUM_EVENT_IDS.indexOf(a.id) - PLATINUM_EVENT_IDS.indexOf(b.id)
+            );
+        }
+
+        if (!isMounted) return;
         setEvents(mappedEvents);
-
-        // Fetch featured events by ID
-        const fetchFeaturedEvents = async () => {
-          try {
-            // Fetch Gold events
-            const goldPromises = GOLD_EVENT_IDS.map(id => eventService.getEventById(id));
-            const goldResponses = await Promise.all(goldPromises);
-            const goldEvents = goldResponses.map(res => {
-              const event = res?.event || res;
-              return {
-                name: event.eventName || event.name,
-                id: event.eventId || event.id,
-                date: normalizeMongoDate(event.date) || "TBA",
-                category: event.category,
-                time: event.startTime || event.timing || event.time || "TBA",
-              };
-            });
-            setFeaturedGoldEvents(goldEvents);
-
-            // Fetch Platinum events
-            const platinumPromises = PLATINUM_EVENT_IDS.map(id => eventService.getEventById(id));
-            const platinumResponses = await Promise.all(platinumPromises);
-            const platinumEvents = platinumResponses.map(res => {
-              const event = res?.event || res;
-              return {
-                name: event.eventName || event.name,
-                id: event.eventId || event.id,
-                date: normalizeMongoDate(event.date) || "TBA",
-                category: event.category,
-                time: event.startTime || event.timing || event.time || "TBA",
-              };
-            });
-            setFeaturedPlatinumEvents(platinumEvents);
-          } catch (error) {
-            console.error("Error fetching featured events:", error);
-          }
-        };
-
-        fetchFeaturedEvents();
+        setFeaturedGoldEvents(finalGoldEvents);
+        setFeaturedPlatinumEvents(finalPlatinumEvents);
         setError(null);
       } catch (error) {
         console.error("Error loading events:", error);
+        if (!isMounted) return;
         setError("Failed to load events");
         setEvents([]);
+        setFeaturedGoldEvents([]);
+        setFeaturedPlatinumEvents([]);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadEvents();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const allFeaturedIds = [...GOLD_EVENT_IDS, ...PLATINUM_EVENT_IDS];
-  const filteredEvents = events.filter((event) => {
-    // Exclude Gold and Platinum events from regular categories
-    if (allFeaturedIds.includes(event.id)) return false;
+  const filteredEvents = useMemo(
+    () =>
+      events.filter((event) => {
+        // Exclude Gold and Platinum events from regular categories
+        if (ALL_FEATURED_IDS.includes(event.id)) return false;
 
-    return (
-      searchTerm === "" ||
-      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (event.category &&
-        event.category.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  });
-
-  const filteredPlatinumEvents = featuredPlatinumEvents.filter(
-    (event) =>
-      searchTerm === "" ||
-      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (event.category && event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+        return (
+          searchTerm === "" ||
+          event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (event.category &&
+            event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }),
+    [events, searchTerm]
   );
 
-  const filteredGoldEvents = featuredGoldEvents.filter(
-    (event) =>
-      searchTerm === "" ||
-      event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (event.category && event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredPlatinumEvents = useMemo(
+    () =>
+      featuredPlatinumEvents.filter(
+        (event) =>
+          searchTerm === "" ||
+          event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (event.category &&
+            event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+      ),
+    [featuredPlatinumEvents, searchTerm]
+  );
+
+  const filteredGoldEvents = useMemo(
+    () =>
+      featuredGoldEvents.filter(
+        (event) =>
+          searchTerm === "" ||
+          event.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.time.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (event.category &&
+            event.category.toLowerCase().includes(searchTerm.toLowerCase()))
+      ),
+    [featuredGoldEvents, searchTerm]
   );
   useEffect(() => {
     if (!searchParams || !searchParams.get("ctg")) return;
