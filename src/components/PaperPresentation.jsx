@@ -10,16 +10,12 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 
 const STATIC_IMAGES = [
-    "/img/papers/pp1.png",
-    "/img/papers/pp2.png",
-    "/img/papers/pp3.png",
-    "/img/papers/pp4.png",
-    "/img/papers/pp5.png",
-    "/img/papers/pp6.png",
-    "/img/papers/pp7.png",
-    "/img/papers/pp8.png",
-    "/img/papers/pp9.png",
-    "/img/papers/pp10.png",
+    "/img/papers/pp1.webp",
+    "/img/papers/pp2.webp",
+    "/img/papers/pp3.webp",
+    "/img/papers/pp4.webp",
+    "/img/papers/pp5.webp",
+    "/img/papers/pp6.webp",
 ];
 
 const slideVariants = {

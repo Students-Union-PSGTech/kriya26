@@ -153,7 +153,7 @@ const NavBarForMobile = () => {
               className="w-9 h-9 border border-[#333] rounded-full overflow-hidden"
             >
               <img
-                src={`/profile/${typeof window !== 'undefined' ? (localStorage.getItem('kriya_avatar') || '1') : '1'}.png`}
+                src={`/profile/${typeof window !== 'undefined' ? (localStorage.getItem('kriya_avatar') || '1') : '1'}.webp`}
                 alt="profile"
                 className="w-full h-full object-cover"
               />
@@ -309,3 +309,4 @@ const NavBarForMobile = () => {
 };
 
 export default NavBarForMobile;
+

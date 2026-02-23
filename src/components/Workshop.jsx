@@ -153,7 +153,7 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
       variants={cardStaggerVariants}
       onMouseEnter={!isMobile ? onHover : undefined}
       onMouseLeave={!isMobile ? onLeave : undefined}
-      className={`relative h-[380px] md:h-[420px] flex-shrink-0 cursor-pointer overflow-hidden rounded-2xl bg-neutral-900 border border-white/10 group`}
+      className={`relative h-[380px] md:h-[420px] shrink-0 cursor-pointer overflow-hidden rounded-2xl bg-neutral-900 border border-white/10 group`}
       style={{
         width: isMobile ? "100%" : (isHovered ? "800px" : (isSiblingHovered ? "280px" : "360px")),
         zIndex: isHovered ? 50 : 1,
@@ -182,7 +182,7 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
             e.target.src = WORKSHOP_FALLBACK_IMG;
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent" />
       </div>
 
       {/* Content Container */}
@@ -226,7 +226,7 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
               <TiLocationArrow className="relative z-10 text-xl group-hover/btn:-rotate-45 transition-transform duration-200" />
 
               {/* Sheen Effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-12" />
+              <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/60 to-transparent skew-x-12" />
             </button>
           </div>
         </div>
@@ -246,7 +246,7 @@ const WorkshopCard = ({ item, isHovered, isSiblingHovered, onHover, onLeave, ind
                 opacity: { duration: 0.2 },
                 filter: { duration: 0.2 }
               }}
-              className="w-[320px] flex-shrink-0 flex flex-col justify-end h-full relative z-10 pl-6 text-shadow"
+              className="w-[320px] shrink-0 flex flex-col justify-end h-full relative z-10 pl-6 text-shadow"
             >
               <div className="space-y-5 mb-2 p-2">
 
@@ -325,7 +325,7 @@ const NavButton = ({ direction, onClick, disabled }) => {
     >
       {/* Glow effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className="absolute inset-0 bg-linear-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
       />
 
       {/* Icon */}
@@ -397,7 +397,7 @@ const Workshop = () => {
             time: ws.time,
             startTime: ws.startTime,
             endTime: ws.endTime,
-            img: `/img/workshops/${ws.workshopId}.png`, // Use workshop ID as image filename
+            img: `/img/workshops/${ws.workshopId}.webp`, // Use workshop ID as image filename
           }));
           setWorkshops(mappedWorkshops);
         }
@@ -528,7 +528,7 @@ const Workshop = () => {
       {/* Ambient background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-blue-500/5 blur-3xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] rounded-full bg-linear-to-r from-blue-500/5 via-purple-500/5 to-blue-500/5 blur-3xl"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -651,3 +651,4 @@ const Workshop = () => {
 };
 
 export default Workshop;
+

@@ -7,12 +7,12 @@ import { eventService } from "../services/eventservice";
 import { is_venue_available } from "@/settings/featureFlags";
 
 const STATIC_IMAGES = [
-  "/img/flagship/fl1.png",
-  "/img/flagship/fl2.png",
-  "/img/flagship/fl3.png",
-  "/img/flagship/fl4.png",
-  "/img/flagship/fl5.png",
-  "/img/flagship/fl6.png",
+  "/img/flagship/fl1.webp",
+  "/img/flagship/fl2.webp",
+  "/img/flagship/fl3.webp",
+  "/img/flagship/fl4.webp",
+  "/img/flagship/fl5.webp",
+  "/img/flagship/fl6.webp",
 ];
 
 // Event IDs to fetch

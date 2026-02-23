@@ -130,7 +130,7 @@ const Features = () => {
           onClick={() => handleCategoryClick('core')}
         >
           <BentoCard
-            src="/img/core-eng.png"
+            src="/img/core-eng.webp"
             title={
               <>
                 <b>C</b>ore <b>E</b>ngineering
@@ -151,7 +151,7 @@ const Features = () => {
             onClick={() => handleCategoryClick('coding')}
           >
             <BentoCard
-              src="/img/coding.png"
+              src="/img/coding.webp"
               title={
                 <>
                   <b>C</b>oding
@@ -170,7 +170,7 @@ const Features = () => {
             onClick={() => handleCategoryClick('quiz')}
           >
             <BentoCard
-              src="/img/quiz.png"
+              src="/img/quiz.webp"
               title={
                 <>
                   <b>Q</b>uiz
@@ -190,7 +190,7 @@ const Features = () => {
             onClick={() => handleCategoryClick('fashion')}
           >
             <BentoCard
-              src="/img/ft.png"
+              src="/img/ft.webp"
               title={
                 <>
                   <b>F</b>ashion <b>T</b>echnology
@@ -210,7 +210,7 @@ const Features = () => {
           onClick={() => handleCategoryClick('science')}
         >
           <BentoCard
-            src="/img/sci-tech.png"
+            src="/img/sci-tech.webp"
             title={
               <>
                 <b>S</b>cience & <b>T</b>echnology

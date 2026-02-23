@@ -151,7 +151,7 @@ const WorkshopList = () => {
                                         iconImg={
                                             "https://cdn-icons-png.flaticon.com/512/3309/3309977.png"
                                         }
-                                        imgurl={`/img/workshops/${workshop.id}.png`}
+                                        imgurl={`/img/workshops/${workshop.id}.webp`}
                                         arrowCircleStart="from-[#121a43]"
                                         arrowCircleEnd="to-[#a21cd9]"
                                         topCurve="bg-[#010101]"
@@ -173,3 +173,4 @@ const WorkshopList = () => {
 };
 
 export default WorkshopList;
+

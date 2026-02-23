@@ -254,7 +254,7 @@ const NavBarForDesktop = () => {
           <div className="flex items-center justify-between p-2 rounded-xl bg-[#111] border border-[#222]">
             <Link href="/profile" className="flex items-center space-x-3 min-w-0">
               <img
-                src={`/profile/${typeof window !== 'undefined' ? (localStorage.getItem('kriya_avatar') || '1') : '1'}.png`}
+                src={`/profile/${typeof window !== 'undefined' ? (localStorage.getItem('kriya_avatar') || '1') : '1'}.webp`}
                 alt="avatar"
                 className="w-8 h-8 rounded-full border border-[#333] object-cover shrink-0"
               />
@@ -289,3 +289,4 @@ const NavBarForDesktop = () => {
 };
 
 export default NavBarForDesktop;
+

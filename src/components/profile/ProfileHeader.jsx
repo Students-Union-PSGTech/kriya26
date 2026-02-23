@@ -17,7 +17,7 @@ const PSG_COLLEGES = {
 const TOTAL_AVATARS = 8;
 const AVATAR_STORAGE_KEY = "kriya_avatar";
 
-const getAvatarPath = (num) => `/profile/${num}.png`;
+const getAvatarPath = (num) => `/profile/${num}.webp`;
 
 const getStoredAvatar = () => {
     if (typeof window === "undefined") return 1;
@@ -526,3 +526,4 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
 };
 
 export default ProfileHeader;
+

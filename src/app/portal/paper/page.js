@@ -7,6 +7,19 @@ import PixelSnow from "../../../components/PixelSnow/PixelSnow";
 import EventGrid from "../../../components/Event/EventGrid";
 import "../../../styles/Landing.css";
 
+const PAPER_IMAGES = [
+    "/img/papers/pp1.webp",
+    "/img/papers/pp2.webp",
+    "/img/papers/pp3.webp",
+    "/img/papers/pp4.webp",
+    "/img/papers/pp5.webp",
+    "/img/papers/pp6.webp",
+];
+
+const getPaperImage = (index) => {
+    return PAPER_IMAGES[index % PAPER_IMAGES.length];
+};
+
 const PaperList = () => {
     const [papers, setPapers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -151,7 +164,7 @@ const PaperList = () => {
                                         iconImg={
                                             "https://cdn-icons-png.flaticon.com/512/3309/3309977.png"
                                         }
-                                        imgurl={"/thumbnail/paperthumb.png"}
+                                        imgurl={getPaperImage(index)}
                                         arrowCircleStart="from-[#7C3AED]"
                                         arrowCircleEnd="to-[#4C1D95]"
                                         topCurve="bg-[#010101]"

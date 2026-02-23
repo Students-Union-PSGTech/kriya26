@@ -255,7 +255,7 @@ export default function WorkshopPage({ params }) {
           {/* Right: Workshop Image */}
           <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10 bg-[#111]">
             <Image
-              src={`/img/workshops/${workshopDetail.workshopId}.png`}
+              src={`/img/workshops/${workshopDetail.workshopId}.webp`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               alt={workshopDetail.workshopName}
@@ -333,7 +333,7 @@ export default function WorkshopPage({ params }) {
             background: `linear-gradient(90deg, ${accent.primary}10, transparent, ${accent.primary}10)`
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           <span className="text-lg relative z-10" style={{ textShadow: `0 0 20px ${accent.primary}80` }}>View Agenda & Details</span>
           <IoMdArrowBack className="group-hover:translate-x-1 transition-transform rotate-180 text-xl relative z-10" style={{ color: accent.primary }} />
         </button>
@@ -421,3 +421,4 @@ export default function WorkshopPage({ params }) {
     </div >
   );
 }
+

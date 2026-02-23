@@ -289,7 +289,7 @@ const NavBar = () => {
                   {typeof window !== 'undefined' && localStorage.getItem('kriya_avatar') ? (
                     <div className="w-8 h-8 md:w-9 md:h-9 rounded-full overflow-hidden border-2 border-white/30 group-hover:border-blue-400 transition-all relative">
                       <Image
-                        src={`/profile/${localStorage.getItem('kriya_avatar')}.png`}
+                        src={`/profile/${localStorage.getItem('kriya_avatar')}.webp`}
                         alt="Profile"
                         fill
                         sizes="36px"
@@ -354,3 +354,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
