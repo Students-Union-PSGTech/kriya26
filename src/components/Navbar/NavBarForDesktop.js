@@ -141,7 +141,7 @@ const NavBarForDesktop = () => {
             <button
               onClick={() =>
                 window.open(
-                  "https://www.youtube.com/watch?v=YeFJPRFhmCM",
+                  "https://www.youtube.com/watch?v=MNtgrMCUZTg&list=PL-3CDE5A0hSMnMnK2uJkKjeHNXwfCjEQ-",
                   "_blank",
                 )
               }

@@ -179,7 +179,7 @@ const NavBarForMobile = () => {
             {(!token || !userDetails) && (
               <button
                 type="button"
-                onClick={() => window.open("https://www.youtube.com/watch?v=YeFJPRFhmCM", "_blank")}
+                onClick={() => window.open("https://www.youtube.com/watch?v=MNtgrMCUZTg&list=PL-3CDE5A0hSMnMnK2uJkKjeHNXwfCjEQ-", "_blank")}
                 data-umami-event="how-to-register"
                 data-umami-event-source="mobile-nav"
                 className="w-full px-4 py-3 mb-6 text-xs font-black tracking-widest uppercase bg-white text-black rounded-lg shadow-lg hover:bg-gray-200 transition-all"
