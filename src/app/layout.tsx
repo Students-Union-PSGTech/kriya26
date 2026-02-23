@@ -5,7 +5,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Kriya 26 | PSG COLLEGE",
+  title: "Kriya 26 | PSGCT",
   description: "Event conducted By The Student Union at PSG College of Technology",
   icons: {
     icon: "/Logo/kriya.png",

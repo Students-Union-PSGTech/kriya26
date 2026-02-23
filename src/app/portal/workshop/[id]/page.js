@@ -4,7 +4,7 @@ import { useRouter, useParams } from "next/navigation";
 import { isPreRegistrationEnabled, is_venue_available } from "@/settings/featureFlags";
 import { useState, useRef, useEffect } from "react";
 import { eventService } from "../../../../services/eventservice";
-import ConfirmationModal from "@/components/ConfirmationModal";
+
 import Image from "next/image";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
@@ -43,8 +43,9 @@ export default function WorkshopPage({ params }) {
   const [userWorkshopDetails, setUserWorkshopDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [workshopDetail, setWorkshopDetail] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
+  const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false);
 
   // Use purple accent for all workshops for now
   const accent = WORKSHOP_ACCENT;
@@ -109,7 +110,7 @@ export default function WorkshopPage({ params }) {
       const callbackUrl = encodeURIComponent(`/portal/workshop/${id}`);
       router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
     } else if (!generalPayment) {
-      router.push("/fee-payment");
+      setIsPaymentOverlayOpen(true);
     } else {
       try {
         await eventService.registerWorkshop(id);
@@ -189,7 +190,7 @@ export default function WorkshopPage({ params }) {
             <button
               className="flex-1 md:flex-none px-3 py-2 md:px-7 md:py-3 font-bold uppercase tracking-wider text-[10px] md:text-sm transition-all duration-300 border"
               disabled={isRegisteredForWorkshop() || effectiveClosed}
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleRegister}
               style={{
                 background: isRegisteredForWorkshop() ? accent.primary : 'transparent',
                 color: isRegisteredForWorkshop() ? '#0a0a0a' : 'white',
@@ -396,15 +397,36 @@ export default function WorkshopPage({ params }) {
         )
       }
 
-      {/* ===== Registration Modal ===== */}
-      {
-        isModalOpen && (
-          <ConfirmationModal
-            onConfirm={handleRegister}
-            onCancel={() => setIsModalOpen(false)}
-          />
-        )
-      }
+      {/* ===== Payment Overlay ===== */}
+      {isPaymentOverlayOpen && (
+        <div className="absolute inset-0 top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-black bg-opacity-50">
+          <div className="flex-col items-center justify-center p-6 text-black bg-white rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-semibold">Payment Required</h2>
+            <p className="mt-2 text-sm">
+              Please select and pay the respective workshop fee amount to successfully register for{' '}
+              <span className="font-semibold">{workshopDetail.workshopName}</span>{' '}
+              workshop.
+            </p>
+            <div className="flex mt-4 space-x-3">
+              <button
+                className="px-4 py-2 text-black bg-gray-300 rounded-lg hover:bg-gray-400"
+                onClick={() => setIsPaymentOverlayOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
+                onClick={() => {
+                  setIsPaymentOverlayOpen(false);
+                  router.push('/fee-payment');
+                }}
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div >
   );
 }
