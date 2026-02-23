@@ -9,20 +9,18 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const hasCheckedAuth = useRef(false);
-    const isLoggedInThisSession = useRef(false);
 
-    const checkAuth = useCallback(async () => {
-        // Skip if user was just logged in this session
-        if (isLoggedInThisSession.current) {
-            setLoading(false);
-            return;
-        }
-
+    const checkAuth = useCallback(async ({ preserveUserOnError = false } = {}) => {
         try {
             const response = await authService.getProfile();
-            setUser(response.user);
+            const profileUser = response?.user || response || null;
+            setUser(profileUser);
+            return profileUser;
         } catch (error) {
-            setUser(null);
+            if (!preserveUserOnError) {
+                setUser(null);
+            }
+            return null;
         } finally {
             setLoading(false);
             hasCheckedAuth.current = true;
@@ -30,24 +28,30 @@ export function AuthProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        if (!hasCheckedAuth.current && !isLoggedInThisSession.current) {
+        if (!hasCheckedAuth.current) {
             checkAuth();
         }
     }, [checkAuth]);
 
     const login = async (credentials) => {
         const response = await authService.login(credentials);
-        isLoggedInThisSession.current = true;
-        setUser(response.user);
-        setLoading(false);
+        const loginUser = response?.user || null;
+        if (loginUser) {
+            setUser(loginUser);
+        }
+        setLoading(true);
+        await checkAuth({ preserveUserOnError: true });
         return response;
     };
 
     const googleLogin = async (data) => {
         const response = await authService.loginGoogle(data);
-        isLoggedInThisSession.current = true;
-        setUser(response.user);
-        setLoading(false);
+        const loginUser = response?.user || null;
+        if (loginUser) {
+            setUser(loginUser);
+        }
+        setLoading(true);
+        await checkAuth({ preserveUserOnError: true });
         return response;
     };
 
@@ -62,7 +66,6 @@ export function AuthProvider({ children }) {
                 localStorage.removeItem('kriya_auth_callback');
             }
             setUser(null);
-            isLoggedInThisSession.current = false;
             hasCheckedAuth.current = false;
         }
     };
