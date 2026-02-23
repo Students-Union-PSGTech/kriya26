@@ -257,7 +257,7 @@ const EventList = () => {
                 <b>PLATINUM EVENTS</b>
               </h1>
               <EventsGrid
-                imgurl="/thumbnail/platinumthumb.png"
+                imgurl="/thumbnail/platinumthumb.webp"
                 arrowCircleStart="from-[#9c8f86]"
                 arrowCircleEnd="to-[#d1c5bc]"
                 obj={filteredPlatinumEvents}
@@ -280,7 +280,7 @@ const EventList = () => {
                 <b>GOLD EVENTS</b>
               </h1>
               <EventsGrid
-                imgurl="/thumbnail/goldthumb.png"
+                imgurl="/thumbnail/goldthumb.webp"
                 arrowCircleStart="from-[#8B5523]"
                 arrowCircleEnd="to-[#F2CC3E]"
                 obj={filteredGoldEvents}
@@ -308,7 +308,7 @@ const EventList = () => {
                 <b>QUIZ</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/quizthumb.png"}
+                imgurl={"/thumbnail/quizthumb.webp"}
                 arrowCircleStart="from-[#121a43]"
                 arrowCircleEnd="to-[#a21cd9]"
                 obj={filteredEvents.filter((i) => i.category === "Quiz")}
@@ -336,7 +336,7 @@ const EventList = () => {
                 <b>CORE ENGINEERING</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/corethumb.png"}
+                imgurl={"/thumbnail/corethumb.webp"}
                 arrowCircleStart="from-[#121a43]"
                 arrowCircleEnd="to-[#58B0B0]"
                 obj={filteredEvents.filter(
@@ -364,7 +364,7 @@ const EventList = () => {
                 <b>CODING</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/codingthumb.png"}
+                imgurl={"/thumbnail/codingthumb.webp"}
                 arrowCircleStart="from-[#A76B40]"
                 arrowCircleEnd="to-[#D19872]"
                 obj={filteredEvents.filter((i) => i.category === "Coding")}
@@ -390,7 +390,7 @@ const EventList = () => {
                 <b>BOT</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/botthumb.jpg"}
+                imgurl={"/thumbnail/botthumb.webp"}
                 arrowCircleStart="from-[#D98165]"
                 arrowCircleEnd="to-[#5C2D47]"
                 obj={filteredEvents.filter((i) => i.category === "Bot")}
@@ -419,7 +419,7 @@ const EventList = () => {
                 <b>FASHION & TEXTILE</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/fashionthumb.png"}
+                imgurl={"/thumbnail/fashionthumb.webp"}
                 arrowCircleStart="from-[#9B1E55]"
                 arrowCircleEnd="to-[#5F0D2E]"
                 obj={filteredEvents.filter(
@@ -448,7 +448,7 @@ const EventList = () => {
                 <b>SCIENCE & TECHNOLOGY</b>
               </h1>
               <EventsGrid
-                imgurl={"/thumbnail/sciencethumb.png"}
+                imgurl={"/thumbnail/sciencethumb.webp"}
                 arrowCircleStart="from-[#5BBF7A]"
                 arrowCircleEnd="to-[#2E8050]"
                 obj={filteredEvents.filter((i) => i.category === "Science and Technology")}
@@ -472,7 +472,7 @@ const EventList = () => {
                         {category.toUpperCase()}
                       </h1>
                       <EventsGrid
-                        imgurl={"/thumbnail/goldthumb.png"}
+                        imgurl={"/thumbnail/goldthumb.webp"}
                         arrowCircleStart="from-purple-500"
                         arrowCircleEnd="to-pink-500"
                         obj={categoryEvents}
@@ -535,5 +535,6 @@ const EventsGrid = ({
     </div>
   );
 };
+
 
 
