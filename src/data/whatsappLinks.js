@@ -37,6 +37,22 @@ export const whatsappLinks = {
   "EVNT40": "https://chat.whatsapp.com/EDvS6BOS5IQ5Q6g2VdpQ5T?mode=gi_t",
   "EVNT06": "https://chat.whatsapp.com/HcmpuKgCmmMAew0mW5VemV?mode=gi_t",
   "EVNT46": "https://chat.whatsapp.com/LQcINI8Joe87DOy1OJozp1",
+  "WS01": "https://chat.whatsapp.com/JM5gplKA9pL1oTFraDKZfu?mode=gi_t",
+  "WS03": "https://chat.whatsapp.com/JZNAC7M2MjBD9jdgrmyKfK?mode=gi_t",
+  "WS04": "https://chat.whatsapp.com/DVb6QCEDqj5IlusXUb8aet?mode=gi_t",
+  "WS05": "https://chat.whatsapp.com/HH49GvGRRWGDr7BzqYN35y?mode=gi_t",
+  "WS06": "https://chat.whatsapp.com/FohMJrFDqcaK96Zdr2Xlbn?mode=gi_t",
+  "WS07": "https://chat.whatsapp.com/LSWxg6H6fGyA7SGvMdfSDY?mode=hq1tcla",
+  "WS09": "https://chat.whatsapp.com/LsJck1hzHAT8qgMlKPnwYF?mode=gi_t",
+  "WS12": "https://chat.whatsapp.com/DUcBydkkS1MCfT3Cxd9gfz?mode=gi_t",
+  "WS15": "https://chat.whatsapp.com/IBYRLFwaofrHPtARjdlF4c?mode=gi_t",
+  "WS16": "https://chat.whatsapp.com/L7Ddud5RbYIKpsYxvIHC3k?mode=gi_t",
+  "WS20": "https://chat.whatsapp.com/I6ESdQSCwo6BfiFtlvVfhF",
+  "PRP01": "https://chat.whatsapp.com/CTnHQJMLLyb3Ghd6m292le?mode=gi_t",
+  // "PRP03": "invalid",
+  "PRP06": "https://chat.whatsapp.com/L7bSyOW3nu0160yuPmMDQw?mode=gi_t",
+  "PRP09": "https://chat.whatsapp.com/KoD30hTSpQ6L5hjjAEZ3Xu?mode=gi_t",
+
   
   // Add more event IDs and their WhatsApp links here
 };
