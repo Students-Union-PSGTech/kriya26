@@ -105,7 +105,7 @@ export default function AuthContainer() {
                             autoComplete="current-password"
                             className="font-general"
                         />
-                        <div className="w-full flex justify-end !-mt-2">
+                        <div className="w-full flex justify-end -mt-2!">
                             <a
                                 href="#"
                                 onClick={(e) => {
@@ -179,21 +179,21 @@ export default function AuthContainer() {
                             Continue with Google
                         </button>
 
-                        <div className="divider !my-2">
+                        <div className="divider my-2!">
                             <span className="font-general">Or</span>
                         </div>
 
                         <button
                             type="button"
                             onClick={() => router.push('/auth?type=send-email')}
-                            className="group relative z-10 w-full cursor-pointer overflow-hidden rounded-full bg-blue-400 px-6 py-2 font-zentry font-semibold transition-all duration-300 transform hover:scale-105 mt-4 flex items-center justify-center gap-2 !mb-0"
+                            className="group relative z-10 w-full cursor-pointer overflow-hidden rounded-full bg-blue-400 px-6 py-2 font-zentry font-semibold transition-all duration-300 transform hover:scale-105 mt-4 flex items-center justify-center gap-2 mb-0!"
                         >
                             <TiLocationArrow className="w-4 h-4 group-hover:animate-bounce" />
-                            <span className="relative inline-flex overflow-hidden font-general text-xs uppercase !mb-0">
+                            <span className="relative inline-flex overflow-hidden font-general text-xs uppercase mb-0!">
                                 <div className="translate-y-0 skew-y-0 transition duration-500 group-hover:translate-y-[-160%] group-hover:skew-y-12">
                                     Register with Email
                                 </div>
-                                <div className="absolute top-0 left-0 h-full w-full translate-y-[164%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0 !mb-0">
+                                <div className="absolute top-0 left-0 h-full w-full translate-y-[164%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0 mb-0!">
                                     Register with Email
                                 </div>
                             </span>
@@ -203,7 +203,7 @@ export default function AuthContainer() {
                     <p className="mt-6 text-center text-sm text-gray-400 font-general">
                         Already have an account?{' '}
                         <span
-                            className="text-[#edff66] font-bold cursor-pointer hover:underline"
+                            className="text-yellow-300 font-bold cursor-pointer hover:underline"
                             onClick={() => {
                                 setIsActive(false);
                                 router.push('/auth?type=login');
