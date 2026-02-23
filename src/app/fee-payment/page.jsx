@@ -22,6 +22,7 @@ const instructions = [
 export default function FeePaymentPage() {
     const vantaRef = useRef(null);
     const [hasReadInstructions, setHasReadInstructions] = useState(false);
+    const [showVideoPopup, setShowVideoPopup] = useState(true);
     const [paymentRecords, setPaymentRecords] = useState([]);
     const [recordsSummary, setRecordsSummary] = useState({ totalRecords: 0, totalAmount: 0 });
     const [recordsLoading, setRecordsLoading] = useState(true);
@@ -157,6 +158,43 @@ export default function FeePaymentPage() {
     return (
         <div className="min-h-screen w-full bg-black text-white pt-28 pb-20 px-4 md:px-8 lg:px-12 relative">
             <Navbar />
+            {/* Payment help popup */}
+            {showVideoPopup && (
+                <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60">
+                    <div className="max-w-lg w-full mx-4 bg-zinc-900 border border-white/10 rounded-2xl p-6 shadow-2xl relative">
+                        <button
+                            onClick={() => setShowVideoPopup(false)}
+                            className="absolute top-3 right-3 text-gray-400 hover:text-white"
+                            aria-label="Close"
+                        >
+                            ✕
+                        </button>
+                        <h2 className="special-font text-xl md:text-2xl uppercase mb-3">
+                            <b>How to pay in the new portal</b>
+                        </h2>
+                        <p className="font-circular-web text-sm text-gray-200 mb-3">
+                            Please watch this short YouTube video before making your payment in the new payment portal.
+                        </p>
+                        <a
+                            href="https://youtu.be/MNtgrMCUZTg?si=tnUaYUgPS64KY2Us"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-lg bg-red-600 hover:bg-red-700 text-sm font-general uppercase tracking-wider"
+                        >
+                            Open YouTube guide
+                        </a>
+                        <div className="mt-2 bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-3">
+                            <p className="font-general text-xs uppercase tracking-wider text-yellow-400 mb-1">
+                                Very Important
+                            </p>
+                            <p className="font-circular-web text-sm text-yellow-100">
+                                Payments made for the <b>wrong participant type</b> (for example choosing the wrong college category)
+                                <b> strictly cannot be refunded, reused, or transferred</b>. Please choose your participant type carefully.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* Vanta Waves Background */}
             <div
                 ref={vantaRef}
@@ -209,9 +247,53 @@ export default function FeePaymentPage() {
                         </p>
                         <p className="font-circular-web text-sm text-yellow-200/80">
                             Successful payment does not mean successful registration.
-                            You must complete the event / workshop / paper presentation
+                            You must complete the event / paper presentation
                             registration separately after your payment has been verified.
                             No refunds will be provided once the payment has been made.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Video guide + participant type clarification */}
+                <div className="border border-white/10 bg-white/5 backdrop-blur-md rounded-xl p-6 md:p-8 space-y-4">
+                    <h2 className="special-font text-2xl md:text-3xl uppercase text-white">
+                        <b>How to use the payment portal</b>
+                    </h2>
+                    <p className="font-circular-web text-sm md:text-base text-gray-200">
+                        Please watch this video carefully before making your payment. It explains how to use the new payment
+                        portal and how to choose the correct participant type.
+                    </p>
+                    <div className="aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-black">
+                        <iframe
+                            src="https://www.youtube.com/embed/MNtgrMCUZTg"
+                            title="How to make payment in the new portal"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="w-full h-full"
+                        />
+                    </div>
+                    <div className="mt-2 bg-zinc-900/70 border border-white/10 rounded-lg p-4 space-y-2">
+                        <p className="font-general text-xs uppercase tracking-wider text-gray-300">
+                            Participant type and fee
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 font-circular-web text-sm md:text-base text-gray-200">
+                            <li>
+                                <b>PSG College of Technology students</b> must pay{" "}
+                                <span className="font-bold text-emerald-300">₹200</span> to access all events [General registration (PSG Tech)].
+                            </li>
+                            <li>
+                                <b>Students from all other colleges</b> must pay{" "}
+                                <span className="font-bold text-blue-300">₹250</span> to access all events [General registration (External)].
+                            </li>
+                            <li>
+                                <b>Workshop fee</b> is the same for every participant and{" "}
+                                <span className="font-bold text-blue-300">must be paid separately</span> to gain access to those workshops.
+                            </li>
+                        </ul>
+                        <p className="font-circular-web text-sm text-yellow-200/80 mt-1">
+                            Make sure you select the correct participant type in the payment portal. Payments made for the
+                            wrong participant type <b>cannot be refunded, reused, or transferred</b>.
                         </p>
                     </div>
                 </div>
