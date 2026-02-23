@@ -406,7 +406,7 @@ export default function Home({ params }) {
                 <>
                   <div>
                     <p className="text-xs uppercase tracking-widest mb-1.5 font-bold" style={{ color: accent.primary }}>Timing</p>
-                    <p className="text-white font-semibold text-lg">{eventDetail.timing || "TBA"}</p>
+                    <p className="text-white font-semibold text-lg">{eventDetail.startTime && eventDetail.endTime ? `${eventDetail.startTime} - ${eventDetail.endTime}` : "TBA"}</p>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-widest mb-1.5 font-bold" style={{ color: accent.primary }}>Venue</p>
