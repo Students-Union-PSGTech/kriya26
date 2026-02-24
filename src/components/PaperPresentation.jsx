@@ -270,8 +270,9 @@ const PaperPresentation = () => {
                     ))}
                 </div>
             </div>
-
-            <div className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-violet-600 hover:bg-violet-500 rounded-full flex items-center justify-center shadow-lg shadow-violet-500/50 cursor-pointer transition-all duration-300 hover:scale-110">{/* Mobile Layout */}
+            {/*The chat icon*/}  
+            {/*         
+            <div className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-violet-600 hover:bg-violet-500 rounded-full flex items-center justify-center shadow-lg shadow-violet-500/50 cursor-pointer transition-all duration-300 hover:scale-110">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -287,6 +288,7 @@ const PaperPresentation = () => {
                     />
                 </svg>
             </div>
+            */}
         </section>
     );
 };
