@@ -616,6 +616,10 @@ const colleges = [
   `Karunya Institute of Technology and Sciences, Coimbatore 641 114`,
   `Avinashilingam Institute for Home Science and Higher Education for Women, Coimbatore-641 043`,
   `Sri Sairam College of Engineering, Anekal, Bengaluru 562106`,
+  `Anna University – College of Engineering, Guindy (CEG)`,
+  `Anna University – Alagappa College of Technology (ACT)`,
+  `Anna University – Madras Institute of Technology (MIT), Chromepet`,
+  `Anna University – School of Architecture and Planning (SAP)`,
 ];
 
 colleges.sort();
