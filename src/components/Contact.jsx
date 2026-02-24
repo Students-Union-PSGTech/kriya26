@@ -174,13 +174,13 @@ const Contact = () => {
                     Icon={SiLinktree}
                     label="Linktree"
                 />
-                <ContactButton
+                {/* <ContactButton
                     href="/privacypolicy.html"
                     Icon={TbAlertOctagon}
                     label="Privacy Policy"
                 >
                     Privacy Policy
-                </ContactButton>
+                </ContactButton> */}
             </motion.div>
         </section >
     );
