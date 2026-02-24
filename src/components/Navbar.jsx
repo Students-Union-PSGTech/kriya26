@@ -141,6 +141,9 @@ const NavBar = () => {
     });
   }, [isNavVisible]);
 
+  const logoOnBlack = "/Logo/kriya.png";
+  const logoOnWhite = "/Logo/kriya26black.png";
+
   return (
     <div
       ref={navContainerRef}
@@ -232,7 +235,7 @@ const NavBar = () => {
             </Link>
             {/* Desktop: Kriya logo */}
             <Image
-              src={headerIsWhite ? "/Logo/kriya26black.png" : "/Logo/kriya.png"}
+              src={headerIsWhite ? logoOnWhite : logoOnBlack}
               alt="Kriya 2026 Logo"
               width={150}
               height={80}
@@ -241,7 +244,7 @@ const NavBar = () => {
                 headerIsWhite ? "drop-shadow-[0_0_10px_rgba(0,0,0,0.3)]" : "drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
               )}
               onError={(e) => {
-                if (headerIsWhite) e.target.src = "/Logo/kriya.png";
+                if (headerIsWhite) e.target.src = logoOnBlack;
               }}
             />
           </div>
