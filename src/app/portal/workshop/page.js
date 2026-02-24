@@ -135,7 +135,7 @@ const WorkshopList = () => {
                     <section className="relative flex flex-col items-center w-full px-4 md:px-6 pb-32 overflow-x-hidden h-fit lg:overflow-hidden font-poppins lg:px-8 lg:pb-40 lg:block">
                         <h1
                             className="special-font text-4xl lg:text-5xl tracking-wide font-black text-center pt-8 uppercase"
-                            style={{ color: "#98D0FF" }}
+                            style={{ color: "#B48EEB" }}
                         >
                             <b>WORKSHOPS</b>
                         </h1>
@@ -151,7 +151,7 @@ const WorkshopList = () => {
                                         iconImg={
                                             "https://cdn-icons-png.flaticon.com/512/3309/3309977.png"
                                         }
-                                        imgurl={`/img/workshops/${workshop.id}.webp`}
+                                        imgurl={"/thumbnail/worksopthumb.webp"}
                                         arrowCircleStart="from-[#121a43]"
                                         arrowCircleEnd="to-[#a21cd9]"
                                         topCurve="bg-[#010101]"
