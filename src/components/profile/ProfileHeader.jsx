@@ -113,7 +113,13 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setEditFormData(prev => ({ ...prev, [name]: value }));
+        if (name === 'phone') {
+            // Only allow digits, max 10
+            const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+            setEditFormData(prev => ({ ...prev, [name]: digitsOnly }));
+        } else {
+            setEditFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSaveProfile = async () => {
@@ -121,6 +127,7 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
 
         if (!editFormData.name.trim()) { setError("Name is required"); return; }
         if (!editFormData.phone.trim()) { setError("Phone is required"); return; }
+        if (!/^\d{10}$/.test(editFormData.phone)) { setError("Phone number must be exactly 10 digits"); return; }
         if (!editFormData.college) { setError("College is required"); return; }
         if (!editFormData.department.trim()) { setError("Department is required"); return; }
         if (!editFormData.year) { setError("Year is required"); return; }
@@ -423,9 +430,15 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
                                         name="phone"
                                         value={editFormData.phone}
                                         onChange={handleInputChange}
+                                        maxLength={10}
+                                        pattern="[0-9]*"
+                                        inputMode="numeric"
                                         className="w-full px-4 py-3 bg-white/5 border border-white/20 text-white rounded-lg outline-none focus:border-blue-400 transition-colors font-general"
-                                        placeholder="Enter your phone number"
+                                        placeholder="Enter 10-digit phone number"
                                     />
+                                    <p className="text-xs text-gray-500 mt-1 font-general">
+                                        {editFormData.phone.length}/10 digits
+                                    </p>
                                 </div>
 
                                 {/* College */}

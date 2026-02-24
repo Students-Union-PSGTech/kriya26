@@ -615,6 +615,7 @@ const colleges = [
   `Kalasalingam academy of research and education, Srivilliputhur`,
   `Karunya Institute of Technology and Sciences, Coimbatore 641 114`,
   `Avinashilingam Institute for Home Science and Higher Education for Women, Coimbatore-641 043`,
+  `Sri Sairam College of Engineering, Anekal, Bengaluru 562106`,
 ];
 
 colleges.sort();
