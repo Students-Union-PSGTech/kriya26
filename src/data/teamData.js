@@ -167,22 +167,22 @@ export const departments = [
       { name: "Yazhini", role: "Core Member", img: "/img/photography/Yazhini_Photography.webp" }
     ]
   },
-  {
-    title: "Video Editing Team",
-    members: [
-      // Leads
-      // { name: "1455", role: "Team Lead", img: "/img/video/1455.webp" },
-      // Coordinators
-      { name: "Aadhithya", role: "Team Coordinator", img: "/img/video/Aadhithya.webp" },
-      { name: "Sriya", role: "Team Coordinator", img: "/img/video/Sriya.webp" },
-      // { name: "1438", role: "Team Coordinator", img: "/img/video/1438.webp" },
-      // Core Members
-      // { name: "1168", role: "Core Member", img: "/img/video/1168.webp" },
-      // { name: "1339", role: "Core Member", img: "/img/video/1339.webp" },
-      // { name: "1459", role: "Core Member", img: "/img/video/1459.webp" },
-      // { name: "1498", role: "Core Member", img: "/img/video/1498.webp" }
-    ]
-  },
+  // {
+  //   title: "Video Editing Team",
+  //   members: [
+  //     // Leads
+  //     // { name: "1455", role: "Team Lead", img: "/img/video/1455.webp" },
+  //     // Coordinators
+  //     { name: "Aadhithya", role: "Team Coordinator", img: "/img/video/Aadhithya.webp" },
+  //     { name: "Sriya", role: "Team Coordinator", img: "/img/video/Sriya.webp" },
+  //     // { name: "1438", role: "Team Coordinator", img: "/img/video/1438.webp" },
+  //     // Core Members
+  //     // { name: "1168", role: "Core Member", img: "/img/video/1168.webp" },
+  //     // { name: "1339", role: "Core Member", img: "/img/video/1339.webp" },
+  //     // { name: "1459", role: "Core Member", img: "/img/video/1459.webp" },
+  //     // { name: "1498", role: "Core Member", img: "/img/video/1498.webp" }
+  //   ]
+  // },
   {
     title: "PR Team",
     members: [
