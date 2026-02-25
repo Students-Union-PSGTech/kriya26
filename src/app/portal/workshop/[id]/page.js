@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { eventService } from "../../../../services/eventservice";
 
 import Image from "next/image";
+
+const DEFAULT_YOUTUBE_URL = "https://youtu.be/jtAs-X8j_v4?si=ibyilg2MSt32OoJp";
 import EventDetailsModal from "@/components/EventDetailsModal";
 import { useAuth } from "@/context/AuthContext";
 import { useKillSwitch } from "@/hooks/useKillSwitch";
@@ -47,6 +49,10 @@ export default function WorkshopPage({ params }) {
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false);
 
+  // Netflix-style video hero state
+  const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
+  const [isMuted, setIsMuted] = useState(true);
+
   // Use purple accent for all workshops for now
   const accent = WORKSHOP_ACCENT;
   const { config: killSwitchConfig } = useKillSwitch();
@@ -58,6 +64,32 @@ export default function WorkshopPage({ params }) {
   const showWhatsApp =
     !killSwitchConfig?.whatsappDisabledAll &&
     !(Array.isArray(killSwitchConfig?.whatsappDisabledIds) && killSwitchConfig.whatsappDisabledIds.includes(String(id)));
+
+  // Extract YouTube video ID from any YouTube URL format
+  const getVideoId = () => {
+    const url = workshopDetail?.youtubeUrl || DEFAULT_YOUTUBE_URL;
+    if (url.includes("/embed/")) {
+      const match = url.match(/\/embed\/([^?&]+)/);
+      return match ? match[1] : null;
+    }
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+    return videoIdMatch ? videoIdMatch[1] : null;
+  };
+
+  // Build autoplay embed URL — toggling mute remounts the iframe via `key`
+  const getAutoplayUrl = (muted = true) => {
+    const vid = getVideoId();
+    if (!vid) return "";
+    const muteParam = muted ? "&mute=1" : "&mute=0";
+    return `https://www.youtube.com/embed/${vid}?autoplay=1${muteParam}&controls=1&loop=1&playlist=${vid}&rel=0&modestbranding=1`;
+  };
+
+  // Auto-transition from poster to video after 3s
+  useEffect(() => {
+    if (!workshopDetail) return;
+    const timer = setTimeout(() => setVideoPhase("video"), 3000);
+    return () => clearTimeout(timer);
+  }, [workshopDetail]);
 
   useEffect(() => {
     if (user) {
@@ -252,25 +284,90 @@ export default function WorkshopPage({ params }) {
             </div>
           </div>
 
-          {/* Right: Workshop Image */}
-          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] rounded-2xl overflow-hidden relative shadow-2xl flex items-center justify-center border border-white/10 bg-[#111]">
-            <Image
-              src={`/img/workshops/${workshopDetail.workshopId}.webp`}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              alt={workshopDetail.workshopName}
-              className="object-cover opacity-80 hover:scale-105 transition-transform duration-700"
-              onError={(e) => {
-                e.target.src = '/thumbnail/worksopthumb.png';
-              }}
-            />
-            {/* Corner accent */}
-            <div
-              className="absolute top-0 left-0 w-20 h-20 pointer-events-none"
-              style={{
-                background: `linear-gradient(135deg, ${accent.primary}20 0%, transparent 60%)`,
-              }}
-            />
+          {/* Right: Netflix-style Video Hero */}
+          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative">
+
+            {/* Video clipping container */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
+
+              {/* ── Layer 1: Poster (Kriya logo + gradient) ── */}
+              <div
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center transition-opacity duration-1000"
+                style={{
+                  opacity: videoPhase === "poster" ? 1 : 0,
+                  pointerEvents: videoPhase === "poster" ? "auto" : "none",
+                }}
+              >
+                {/* Dark cinematic background */}
+                <div
+                  className="absolute inset-0"
+                  style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #111 60%, #0a0a0a 100%)" }}
+                />
+                {/* Subtle category-colored glow */}
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `radial-gradient(ellipse at 50% 40%, ${accent.primary}22 0%, transparent 65%)` }}
+                />
+                {/* Kriya logo + workshop info */}
+                <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+                  <Image
+                    src="/Logo/kriya.png"
+                    alt="Kriya 26"
+                    width={220}
+                    height={80}
+                    className="object-contain opacity-90"
+                    priority
+                  />
+                  {/* Workshop name badge */}
+                  <div
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                    style={{ background: accent.bg, color: accent.primary, border: `1px solid ${accent.primary}40` }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    Workshop — {workshopDetail.workshopName}
+                  </div>
+                  {/* Loading hint */}
+                  <div className="flex items-center gap-2 text-white/40 text-xs">
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                    <span className="uppercase tracking-widest font-mono">Preview loading…</span>
+                    <div
+                      className="w-4 h-[2px] rounded animate-pulse"
+                      style={{ background: accent.primary }}
+                    />
+                  </div>
+                </div>
+                {/* Bottom gradient fade into video */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-24"
+                  style={{ background: "linear-gradient(to top, #000, transparent)" }}
+                />
+              </div>
+
+              {/* ── Layer 2: YouTube Autoplay iframe ── */}
+              <iframe
+                key={`yt-${isMuted}`}
+                className="absolute inset-0 w-full h-full transition-opacity duration-1000"
+                style={{ opacity: videoPhase === "video" ? 1 : 0, touchAction: "manipulation" }}
+                src={getAutoplayUrl(isMuted)}
+                title="Workshop Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+
+              {/* ── Corner accent ── */}
+              <div
+                className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-10"
+                style={{ background: `linear-gradient(135deg, ${accent.primary}25 0%, transparent 60%)` }}
+              />
+            </div>
+
           </div>
         </div>
 
