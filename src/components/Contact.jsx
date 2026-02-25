@@ -94,18 +94,28 @@ const Contact = () => {
 
                         <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Secretary (Women)</h5>
                         <ContactItem name="Naveena V" phone="+91 90258 39933" />
+
+                        <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Secretary (Science)</h5>
+                        <ContactItem name="Kavindra S" phone="+91 81389 81258" />
                     </motion.div>
 
                     <motion.div variants={itemVariants} className="w-full lg:w-56 flex flex-col items-center lg:items-start">
-                        <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Secretary (Science)</h5>
-                        <ContactItem name="Kavindra S" phone="+91 81389 81258" />
-
-                        {/* <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mt-8 mb-2">Event Support</h5>
+                        <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Event Support</h5>
                         <ContactItem
-                            name="Arunaa S"
-                            phone="+91 88258 51781"
+                            name="Ashwin Ravichandran"
+                            phone="+91 84380 91897"
                             className="mt-2 whitespace-nowrap"
-                        /> */}
+                        />
+                        <ContactItem
+                            name="Barani"
+                            phone="+91 97874 38210"
+                            className="mt-6 whitespace-nowrap"
+                        />
+                        <ContactItem
+                            name="Jagan"
+                            phone="+91 63821 67900"
+                            className="mt-6 whitespace-nowrap"
+                        />
                     </motion.div>
 
                     {/* <div className="w-full lg:w-56 flex flex-col items-center lg:items-start">
