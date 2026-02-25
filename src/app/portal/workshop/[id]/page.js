@@ -250,42 +250,18 @@ export default function WorkshopPage({ params }) {
       {/* ===== Main Content ===== */}
       <div className="flex flex-col flex-1 w-full px-4 md:px-8 py-8 gap-6 relative z-10">
 
-        {/* Hero Section: Name + Description */}
-        <div className="flex flex-col lg:flex-row w-full gap-8">
-          {/* Left: Workshop Info */}
-          <div className="w-full lg:w-1/2 flex flex-col gap-6">
-
-
-
+        {/* Hero Section: Name → Video → Description (mobile) | Left+Right (desktop) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-8">
+          {/* Name — order-1 on mobile, top-left on desktop */}
+          <div className="order-1 lg:col-start-1 lg:row-start-1 flex flex-col gap-4">
             {/* Workshop Name */}
             <h1 className="special-font text-3xl md:text-5xl lg:text-6xl font-black font-poppins text-white leading-none uppercase tracking-wider">
               <b>{workshopDetail.workshopName}</b>
             </h1>
-
-            {/* Description */}
-            <div className="text-base md:text-lg text-white/70 leading-relaxed mt-2 whitespace-pre-wrap text-justify">
-              {workshopDetail.description}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4 mt-4">
-              {/* WhatsApp Button - Only show if user is registered and not killed */}
-              {isRegisteredForWorkshop() && showWhatsApp && (
-                <a
-                  href={getWhatsAppLink(id)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-2.5 md:px-8 md:py-3 bg-[#25D366] text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-[#20BA5A] transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
-                >
-                  <IoLogoWhatsapp className="text-lg" />
-                  WhatsApp Group
-                </a>
-              )}
-            </div>
           </div>
 
-          {/* Right: Netflix-style Video Hero */}
-          <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative">
+          {/* Video — order-2 on mobile, right column spanning rows on desktop */}
+          <div className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 h-[350px] md:h-[400px] lg:h-[480px] relative">
 
             {/* Video clipping container */}
             <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
@@ -368,6 +344,30 @@ export default function WorkshopPage({ params }) {
               />
             </div>
 
+          </div>
+
+          {/* Description + Actions — order-3 on mobile, bottom-left on desktop */}
+          <div className="order-3 lg:col-start-1 lg:row-start-2 flex flex-col gap-4">
+            {/* Description */}
+            <div className="text-base md:text-lg text-white/70 leading-relaxed whitespace-pre-wrap text-justify">
+              {workshopDetail.description}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 mt-2">
+              {/* WhatsApp Button - Only show if user is registered and not killed */}
+              {isRegisteredForWorkshop() && showWhatsApp && (
+                <a
+                  href={getWhatsAppLink(id)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-2.5 md:px-8 md:py-3 bg-[#25D366] text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-[#20BA5A] transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
+                >
+                  <IoLogoWhatsapp className="text-lg" />
+                  WhatsApp Group
+                </a>
+              )}
+            </div>
           </div>
         </div>
 

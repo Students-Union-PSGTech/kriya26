@@ -270,10 +270,10 @@ export default function PaperPage({ params }) {
             {/* ===== Main Content ===== */}
             <div className="flex flex-col flex-1 w-full px-4 md:px-8 py-8 gap-10 relative z-10">
 
-                {/* Hero Section: Name + Description | YouTube */}
-                <div className="flex flex-col lg:flex-row w-full gap-8">
-                    {/* Left: Paper Info — on mobile appears below the video */}
-                    <div className="w-full lg:w-1/2 flex flex-col gap-6 order-2 lg:order-1">
+                {/* Hero Section: Name → Video → Description (mobile) | Left+Right (desktop) */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-8">
+                    {/* Name + Badge — order-1 on mobile, top-left on desktop */}
+                    <div className="order-1 lg:col-start-1 lg:row-start-1 flex flex-col gap-4">
                         {/* Category Badge */}
                         <div
                             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full w-fit text-xs font-bold uppercase tracking-widest"
@@ -297,57 +297,10 @@ export default function PaperPage({ params }) {
                                 {paperDetail.tagline}
                             </p>
                         )}
-
-                        {/* Theme / Description */}
-                        <div className="text-base md:text-lg text-white/70 leading-relaxed mt-2 text-justify">
-                            {paperDetail.theme?.split('\\n').map((line, i, arr) => (
-                                <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-                            ))}
-                        </div>
-
-                        {/* Topic */}
-                        {paperDetail.topic && (
-                            <div className="glass-card-light p-4 mt-2">
-                                <p className="text-xs uppercase tracking-widest mb-2 font-bold" style={{ color: accent.primary }}>Topics</p>
-                                <div className="text-white/70 text-sm md:text-base leading-relaxed">
-                                    {paperDetail.topic.split(/\\n|\n/).map((line, i, arr) => (
-                                        <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-wrap gap-4 mt-4">
-                            {/* WhatsApp Button - Only show if user is registered and not killed */}
-                            {isRegisteredForPaper() && showWhatsApp && (
-                                <a
-                                    href={getWhatsAppLink(id)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-6 py-2.5 md:px-8 md:py-3 bg-[#25D366] text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-[#20BA5A] transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
-                                >
-                                    <IoLogoWhatsapp className="text-lg" />
-                                    WhatsApp Group
-                                </a>
-                            )}
-
-                            {/* Email contact - only after registration */}
-                            {paperDetail.eventMail && isRegisteredForPaper() && (
-                                <a
-                                    href={`mailto:${paperDetail.eventMail}`}
-                                    className="px-6 py-2.5 md:px-8 md:py-3 border text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-white/10 transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
-                                    style={{ borderColor: accent.primary }}
-                                >
-                                    <SiGmail className="text-lg" />
-                                    Email
-                                </a>
-                            )}
-                        </div>
                     </div>
 
-                    {/* Right: Netflix-style Video Hero — wrapper holds video box + mute button */}
-                    <div className="w-full lg:w-1/2 h-[350px] md:h-[400px] lg:h-[480px] relative order-1 lg:order-2">
+                    {/* Video — order-2 on mobile, right column spanning rows on desktop */}
+                    <div className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 h-[350px] md:h-[400px] lg:h-[480px] relative">
 
                         {/* Video clipping container — overflow-hidden ONLY contains poster + iframe */}
                         <div className="absolute inset-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black">
@@ -418,7 +371,56 @@ export default function PaperPage({ params }) {
                             />
                         </div>
 
+                    </div>
 
+                    {/* Description + Topics + Actions — order-3 on mobile, bottom-left on desktop */}
+                    <div className="order-3 lg:col-start-1 lg:row-start-2 flex flex-col gap-4">
+                        {/* Theme / Description */}
+                        <div className="text-base md:text-lg text-white/70 leading-relaxed text-justify">
+                            {paperDetail.theme?.split('\\n').map((line, i, arr) => (
+                                <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                            ))}
+                        </div>
+
+                        {/* Topic */}
+                        {paperDetail.topic && (
+                            <div className="glass-card-light p-4 mt-2">
+                                <p className="text-xs uppercase tracking-widest mb-2 font-bold" style={{ color: accent.primary }}>Topics</p>
+                                <div className="text-white/70 text-sm md:text-base leading-relaxed">
+                                    {paperDetail.topic.split(/\\n|\n/).map((line, i, arr) => (
+                                        <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-wrap gap-4 mt-2">
+                            {/* WhatsApp Button - Only show if user is registered and not killed */}
+                            {isRegisteredForPaper() && showWhatsApp && (
+                                <a
+                                    href={getWhatsAppLink(id)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-6 py-2.5 md:px-8 md:py-3 bg-[#25D366] text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-[#20BA5A] transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
+                                >
+                                    <IoLogoWhatsapp className="text-lg" />
+                                    WhatsApp Group
+                                </a>
+                            )}
+
+                            {/* Email contact - only after registration */}
+                            {paperDetail.eventMail && isRegisteredForPaper() && (
+                                <a
+                                    href={`mailto:${paperDetail.eventMail}`}
+                                    className="px-6 py-2.5 md:px-8 md:py-3 border text-white font-bold uppercase tracking-wider text-xs md:text-sm hover:bg-white/10 transition-all duration-300 w-fit flex items-center gap-2 rounded-sm"
+                                    style={{ borderColor: accent.primary }}
+                                >
+                                    <SiGmail className="text-lg" />
+                                    Email
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
 
