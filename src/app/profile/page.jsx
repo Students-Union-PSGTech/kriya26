@@ -262,6 +262,7 @@ function ProfilePageContent() {
         (user.email.toLowerCase().endsWith('@psgtech.ac.in')) : false;
 
     const isIdCardUploaded = Boolean(user?.idCardUrl);
+    const isBonafideUploaded = Boolean(user?.bonafideUrl);
     const isGeneralFeePaid = Boolean(user?.generalFeePaid);
 
     // Read tab from query parameter
@@ -287,7 +288,7 @@ function ProfilePageContent() {
             return;
         }
 
-        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
+        if (!isPreRegistrationEnabled && (!isIdCardUploaded || !isBonafideUploaded) && !dismissedPopups.uploadIdCard) {
             setActivePopup("uploadIdCard");
             return;
         }
@@ -304,7 +305,7 @@ function ProfilePageContent() {
         }
 
         setActivePopup(null);
-    }, [isLoading, isAuthenticated, isIdCardUploaded, isGeneralFeePaid, dismissedPopups, waitingForIdUpload]);
+    }, [isLoading, isAuthenticated, isIdCardUploaded, isBonafideUploaded, isGeneralFeePaid, dismissedPopups, waitingForIdUpload]);
 
     // Don't render anything if not authenticated (redirect will happen)
     if (!authLoading && !isAuthenticated) {
@@ -722,11 +723,11 @@ function ProfilePageContent() {
                 <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-md rounded-2xl border border-white/15 bg-black/90 p-6 text-white shadow-2xl">
                         <h3 className="special-font text-3xl uppercase leading-[0.9]">
-                            {activePopup === "uploadIdCard" ? <b>Upload ID Card</b> : <b>Pay General Fee</b>}
+                            {activePopup === "uploadIdCard" ? <b>Upload Documents</b> : <b>Pay General Fee</b>}
                         </h3>
                         <p className="mt-3 font-circular-web text-sm text-gray-300">
                             {activePopup === "uploadIdCard"
-                                ? "Please upload your college ID card to continue with registrations."
+                                ? "Please upload your college ID card and bonafide certificate to continue with registrations."
                                 : "Please complete your general fee payment to unlock event registrations."}
                         </p>
                         <div className="mt-6 flex gap-3">

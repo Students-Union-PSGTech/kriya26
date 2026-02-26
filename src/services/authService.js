@@ -91,4 +91,22 @@ export const authService = {
         });
         return response;
     },
+
+    // Upload bonafide certificate (multipart/form-data)
+    uploadBonafide: async (file) => {
+        const formData = new FormData();
+        formData.append('bonafide', file);
+        const response = await api.post('/api/auth/user/bonafide', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response.data;
+    },
+
+    // View uploaded bonafide certificate file as blob
+    getBonafideFile: async (bonafideUrl) => {
+        const response = await api.get(`/api/auth/files/${bonafideUrl}`, {
+            responseType: 'blob',
+        });
+        return response;
+    },
 };
