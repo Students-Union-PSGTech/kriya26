@@ -124,7 +124,9 @@ export const departments = [
       { name: "Shakthi Abinaya V", role: "Core Member", img: "/img/erm/SHAKTHI_ABINAYA_V_ERM.webp" },
       { name: "Sharmisthaa K", role: "Core Member", img: "/img/erm/SHARMISTHAA_K_ERM.webp" },
       { name: "Thellothama UB", role: "Core Member", img: "/img/erm/THELLOTHAMA_UB_ERM.webp" },
-      { name: "Wincent Rajkumar Muruganantham", role: "Core Member", img: "/img/erm/WINCENT_RAJKUMAR_MURUGANANTHAM_ERM.webp" }
+      { name: "Wincent Rajkumar Muruganantham", role: "Core Member", img: "/img/erm/WINCENT_RAJKUMAR_MURUGANANTHAM_ERM.webp" },
+      {name: "Ganesh Shakthi", role: "Core Member", img: "/img/erm/GANESH_SHAKTHI_ERM.webp"},
+      {name: "Jayantan", role: "Core Member", img: "/img/erm/JAYANTAN_ERM.webp"}
     ]
   },
   {

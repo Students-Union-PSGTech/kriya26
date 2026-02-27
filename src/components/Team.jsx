@@ -31,7 +31,7 @@ const SmallTeamCard = ({ img, name, role }) => {
             </div>
 
             {/* Name and Role Below - Fixed Height Container */}
-            <div className="text-center w-full min-h-[44px] flex flex-col items-center justify-start">
+            <div className="text-center w-full min-h-11 flex flex-col items-center justify-start">
                 {role && (
                     <span className="inline-block mb-1 px-2 py-0.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wide bg-blue-100 text-blue-600 rounded-full border border-blue-200">
                         {role}
