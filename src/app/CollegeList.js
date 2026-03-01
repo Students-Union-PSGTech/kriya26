@@ -620,6 +620,7 @@ const colleges = [
   `Anna University – Alagappa College of Technology (ACT)`,
   `Anna University – Madras Institute of Technology (MIT), Chromepet`,
   `Anna University – School of Architecture and Planning (SAP)`,
+  `Sri Sairam Engineering College, Chennai`,
 ];
 
 colleges.sort();
