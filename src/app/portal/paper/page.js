@@ -86,19 +86,19 @@ const PaperList = () => {
                 paper.category.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    const toTitleCase = (phrase) => {
-        const wordsToIgnore = ["of", "in", "for", "and", "a", "an", "or"];
-        const wordsToCapitalize = ["it", "cad"];
-        return phrase
-            .toLowerCase()
-            .split(" ")
-            .map((word) => {
-                if (wordsToIgnore.includes(word)) return word;
-                if (wordsToCapitalize.includes(word)) return word.toUpperCase();
-                return word.charAt(0).toUpperCase() + word.slice(1);
-            })
-            .join(" ");
-    };
+    // const toTitleCase = (phrase) => {
+    //     const wordsToIgnore = ["of", "in", "for", "and", "a", "an", "or"];
+    //     const wordsToCapitalize = ["it", "cad"];
+    //     return phrase
+    //         .toLowerCase()
+    //         .split(" ")
+    //         .map((word) => {
+    //             if (wordsToIgnore.includes(word)) return word;
+    //             if (wordsToCapitalize.includes(word)) return word.toUpperCase();
+    //             return word.charAt(0).toUpperCase() + word.slice(1);
+    //         })
+    //         .join(" ");
+    // };
 
     return (
         <div className="w-full h-screen py-12 pt-24 overflow-y-scroll font-poppins lg:pt-12">
@@ -157,7 +157,7 @@ const PaperList = () => {
                                 filteredPapers.map((paper, index) => (
                                     <EventGrid
                                         key={index}
-                                        title={toTitleCase(paper.name)}
+                                        title={paper.name}
                                         description={""}
                                         date={paper.date}
                                         time={paper.time}

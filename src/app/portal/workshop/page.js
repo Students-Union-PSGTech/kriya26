@@ -73,19 +73,19 @@ const WorkshopList = () => {
                 workshop.category.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    const toTitleCase = (phrase) => {
-        const wordsToIgnore = ["of", "in", "for", "and", "a", "an", "or"];
-        const wordsToCapitalize = ["it", "cad"];
-        return phrase
-            .toLowerCase()
-            .split(" ")
-            .map((word) => {
-                if (wordsToIgnore.includes(word)) return word;
-                if (wordsToCapitalize.includes(word)) return word.toUpperCase();
-                return word.charAt(0).toUpperCase() + word.slice(1);
-            })
-            .join(" ");
-    };
+    // const toTitleCase = (phrase) => {
+    //     const wordsToIgnore = ["of", "in", "for", "and", "a", "an", "or"];
+    //     const wordsToCapitalize = ["it", "cad", "ai", "llm"];
+    //     return phrase
+    //         .toLowerCase()
+    //         .split(" ")
+    //         .map((word) => {
+    //             if (wordsToIgnore.includes(word)) return word;
+    //             if (wordsToCapitalize.includes(word)) return word.toUpperCase();
+    //             return word.charAt(0).toUpperCase() + word.slice(1);
+    //         })
+    //         .join(" ");
+    // };
 
     return (
         <div className="w-full h-screen py-12 pt-24 overflow-y-scroll font-poppins lg:pt-12">
@@ -144,7 +144,7 @@ const WorkshopList = () => {
                                 filteredWorkshops.map((workshop, index) => (
                                     <EventGrid
                                         key={index}
-                                        title={toTitleCase(workshop.name)}
+                                        title={workshop.name}
                                         description={""}
                                         date={workshop.date}
                                         time={workshop.time}
