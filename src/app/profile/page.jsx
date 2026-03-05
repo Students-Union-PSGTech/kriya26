@@ -262,7 +262,6 @@ function ProfilePageContent() {
         (user.email.toLowerCase().endsWith('@psgtech.ac.in')) : false;
 
     const isIdCardUploaded = Boolean(user?.idCardUrl);
-    const isBonafideUploaded = Boolean(user?.bonafideUrl);
     const isGeneralFeePaid = Boolean(user?.generalFeePaid);
 
     // Read tab from query parameter
@@ -288,7 +287,7 @@ function ProfilePageContent() {
             return;
         }
 
-        if (!isPreRegistrationEnabled && (!isIdCardUploaded || !isBonafideUploaded) && !dismissedPopups.uploadIdCard) {
+        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
             setActivePopup("uploadIdCard");
             return;
         }
@@ -305,7 +304,7 @@ function ProfilePageContent() {
         }
 
         setActivePopup(null);
-    }, [isLoading, isAuthenticated, isIdCardUploaded, isBonafideUploaded, isGeneralFeePaid, dismissedPopups, waitingForIdUpload]);
+    }, [isLoading, isAuthenticated, isIdCardUploaded, isGeneralFeePaid, dismissedPopups, waitingForIdUpload]);
 
     // Don't render anything if not authenticated (redirect will happen)
     if (!authLoading && !isAuthenticated) {
@@ -639,6 +638,25 @@ function ProfilePageContent() {
                                 <IdCardSection ref={idCardSectionRef} user={user} onRefresh={refreshUser} />
                             </section>
 
+                            {/* Bonafide Hardcopy Reminder */}
+                            <section>
+                                <div className="border border-amber-400/30 bg-amber-500/10 backdrop-blur-md rounded-xl p-5">
+                                    <div className="flex items-start gap-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5">
+                                            <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.499-2.599 4.499H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.004ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <h3 className="special-font text-xl uppercase text-amber-300 mb-1">
+                                                <b>Important Notice</b>
+                                            </h3>
+                                            <p className="font-circular-web text-sm text-amber-200/90">
+                                                Bringing the hardcopy of your <strong className="text-white">Bonafide Certificate</strong> on the day of the event is <strong className="text-white">mandatory</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
                             {/* Row 3: QR Code + My Workshops (Side by Side) */}
                             <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                                 {/* QR Code Section (Left) */}
@@ -723,11 +741,11 @@ function ProfilePageContent() {
                 <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-md rounded-2xl border border-white/15 bg-black/90 p-6 text-white shadow-2xl">
                         <h3 className="special-font text-3xl uppercase leading-[0.9]">
-                            {activePopup === "uploadIdCard" ? <b>Upload Documents</b> : <b>Pay General Fee</b>}
+                            {activePopup === "uploadIdCard" ? <b>Upload ID Card</b> : <b>Pay General Fee</b>}
                         </h3>
                         <p className="mt-3 font-circular-web text-sm text-gray-300">
                             {activePopup === "uploadIdCard"
-                                ? "Please upload your college ID card and bonafide certificate to continue with registrations."
+                                ? "Please upload your college ID card to continue with registrations."
                                 : "Please complete your general fee payment to unlock event registrations."}
                         </p>
                         <div className="mt-6 flex gap-3">
