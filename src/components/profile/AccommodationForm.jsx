@@ -110,6 +110,8 @@ export default function AccommodationForm({ user }) {
         }
     };
 
+    const selectClasses = "w-full rounded-lg border border-white/15 bg-white/5 px-4 py-3 font-circular-web text-sm text-white focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400/50 transition-colors appearance-none cursor-pointer [color-scheme:dark]";
+
     const supportSection = (
         <div className="mt-4 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md p-5">
             <h3 className="font-general text-xs text-gray-400 uppercase tracking-wider mb-3">Accommodation Support</h3>

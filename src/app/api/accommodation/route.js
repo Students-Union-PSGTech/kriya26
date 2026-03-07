@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 
 const SHEET_NAME = "Sheet1";
 
+console.log("[Accommodation API] GOOGLE_SHEET_ID loaded:", !!process.env.GOOGLE_SHEET_ID);
+console.log("[Accommodation API] GOOGLE_SERVICE_ACCOUNT_KEY loaded:", !!process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
+
 function getAuth() {
     const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY);
     const auth = new google.auth.GoogleAuth({
