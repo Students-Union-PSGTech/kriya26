@@ -7,6 +7,7 @@ import { useWindowScroll } from "react-use";
 import { useEffect, useRef, useState } from "react";
 import { TiHome } from "react-icons/ti";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const navItems = [
   {
@@ -61,6 +62,14 @@ const NavBar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showLogo, setShowLogo] = useState(true);
   const pathname = usePathname();
+  const { user, isAuthenticated } = useAuth();
+
+  // Show accommodation link only for logged-in non-PSG students
+  const showAccommodation = isAuthenticated && !Boolean(user?.isPSGStudent);
+
+  const allNavItems = showAccommodation
+    ? [...navItems, { label: "Accommodation", link: "/profile?tab=accommodation" }]
+    : navItems;
 
   // Toggle mobile menu
   const toggleMobileMenu = () => {
@@ -244,19 +253,21 @@ const NavBar = () => {
               </span>
             </Link>
             {/* Desktop: Kriya logo */}
-            <Image
-              src={headerIsWhite ? logoOnWhite : logoOnBlack}
-              alt="Kriya 2026 Logo"
-              width={150}
-              height={80}
-              className={clsx(
-                "hidden md:block h-14 lg:h-16 w-auto object-contain transition-transform hover:scale-105 max-w-full",
-                headerIsWhite ? "drop-shadow-[0_0_10px_rgba(0,0,0,0.3)]" : "drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-              )}
-              onError={(e) => {
-                if (headerIsWhite) e.target.src = logoOnBlack;
-              }}
-            />
+            <Link href="/" className="hidden md:block">
+              <Image
+                src={headerIsWhite ? logoOnWhite : logoOnBlack}
+                alt="Kriya 2026 Logo"
+                width={150}
+                height={80}
+                className={clsx(
+                  "h-14 lg:h-16 w-auto object-contain transition-transform hover:scale-105 max-w-full",
+                  headerIsWhite ? "drop-shadow-[0_0_10px_rgba(0,0,0,0.3)]" : "drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+                )}
+                onError={(e) => {
+                  if (headerIsWhite) e.target.src = logoOnBlack;
+                }}
+              />
+            </Link>
           </div>
 
           {/* RIGHT: Navigation + Profile (Desktop) / Profile (Mobile) */}
@@ -264,7 +275,7 @@ const NavBar = () => {
 
             {/* Desktop Navigation Links - Hide on medium screens, show on large screens */}
             <nav className="hidden lg:flex items-center gap-3 xl:gap-6">
-              {navItems.filter(item => !item.mobileOnly).map((item, index) => (
+              {allNavItems.filter(item => !item.mobileOnly).map((item, index) => (
                 <a
                   key={index}
                   href={`${item.link}`}
@@ -344,7 +355,7 @@ const NavBar = () => {
           headerIsWhite ? "bg-white/95 border-black/10" : "bg-black/95 border-white/10"
         )}>
           <nav className="flex flex-col p-6 gap-4">
-            {navItems.map((item, index) => (
+            {allNavItems.map((item, index) => (
               <a
                 key={index}
                 href={item.link}

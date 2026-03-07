@@ -364,7 +364,7 @@ function ProfilePageContent() {
                         <div className="flex items-center border-b border-white/10 mb-2 overflow-x-auto scrollbar-hide">
                             <div className="flex gap-1 min-w-max">
                                 <button
-                                    onClick={() => setActiveTab("profile")}
+                                    onClick={() => { setActiveTab("profile"); router.replace('/profile', { scroll: false }); }}
                                     className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "profile"
                                         ? "text-white border-b-2 border-blue-500"
                                         : "text-gray-500 hover:text-gray-300"
@@ -374,7 +374,7 @@ function ProfilePageContent() {
                                 </button>
                                 {!isPSGStudent && (
                                     <button
-                                        onClick={() => setActiveTab("accommodation")}
+                                        onClick={() => { setActiveTab("accommodation"); router.replace('/profile?tab=accommodation', { scroll: false }); }}
                                         className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "accommodation"
                                             ? "text-white border-b-2 border-blue-500"
                                             : "text-gray-500 hover:text-gray-300"
@@ -452,7 +452,7 @@ function ProfilePageContent() {
                     <div className="flex items-center border-b border-white/10 mb-2 overflow-x-auto scrollbar-hide">
                         <div className="flex gap-1 min-w-max">
                             <button
-                                onClick={() => setActiveTab("profile")}
+                                onClick={() => { setActiveTab("profile"); router.replace('/profile', { scroll: false }); }}
                                 className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "profile"
                                     ? "text-white border-b-2 border-blue-500"
                                     : "text-gray-500 hover:text-gray-300"
@@ -462,7 +462,7 @@ function ProfilePageContent() {
                             </button>
                             {!isPSGStudent && (
                                 <button
-                                    onClick={() => setActiveTab("accommodation")}
+                                    onClick={() => { setActiveTab("accommodation"); router.replace('/profile?tab=accommodation', { scroll: false }); }}
                                     className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "accommodation"
                                         ? "text-white border-b-2 border-blue-500"
                                         : "text-gray-500 hover:text-gray-300"
