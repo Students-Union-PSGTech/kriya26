@@ -9,6 +9,7 @@ import QRCodeSection from "@/components/profile/QRCodeSection";
 import EventTicket from "@/components/profile/EventTicket";
 import ScrollableContainer from "@/components/profile/ScrollableContainer";
 import IdCardSection from "@/components/profile/IdCardSection";
+import AccommodationForm from "@/components/profile/AccommodationForm";
 import { useAuth } from "@/context/AuthContext";
 import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { eventService } from "@/services/eventservice";
@@ -257,9 +258,8 @@ function ProfilePageContent() {
     // Filter paper presentations
     const hasPaperPresentations = papers.length > 0;
 
-    // Check if user is from PSG colleges based on email (no accommodation needed)
-    const isPSGStudent = user?.email ?
-        (user.email.toLowerCase().endsWith('@psgtech.ac.in')) : false;
+    // Check if user is from PSG colleges (no accommodation needed)
+    const isPSGStudent = Boolean(user?.isPSGStudent);
 
     const isIdCardUploaded = Boolean(user?.idCardUrl);
     const isGeneralFeePaid = Boolean(user?.generalFeePaid);
@@ -287,18 +287,18 @@ function ProfilePageContent() {
             return;
         }
 
-        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
-            setActivePopup("uploadIdCard");
+        if (!isPreRegistrationEnabled && !isGeneralFeePaid && !dismissedPopups.payGeneralFee) {
+            setActivePopup("payGeneralFee");
             return;
         }
 
-        // Don't show payment popup while user is in the middle of uploading their ID card
+        // Don't show ID card popup while user is in the middle of uploading their ID card
         if (waitingForIdUpload) return;
 
-        if (!isPreRegistrationEnabled && !isGeneralFeePaid && !dismissedPopups.payGeneralFee) {
-            // Delay the payment reminder so it doesn't appear immediately after the ID card popup
+        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
+            // Delay the ID card reminder so it doesn't appear immediately after the payment popup
             const timer = setTimeout(() => {
-                setActivePopup("payGeneralFee");
+                setActivePopup("uploadIdCard");
             }, 2500);
             return () => clearTimeout(timer);
         }
@@ -384,14 +384,12 @@ function ProfilePageContent() {
                                     </button>
                                 )}
                             </div>
-                            {!isGeneralFeePaid && (
-                                <button
-                                    onClick={() => router.push('/fee-payment')}
-                                    className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
-                                >
-                                    Pay Now
-                                </button>
-                            )}
+                            <button
+                                onClick={() => router.push('/fee-payment')}
+                                className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
+                            >
+                                Pay Now
+                            </button>
                         </div>
 
                         {activeTab === "profile" && (
@@ -423,12 +421,7 @@ function ProfilePageContent() {
                         )}
 
                         {!isPSGStudent && activeTab === "accommodation" && (
-                            <section className="min-h-[400px] flex items-center justify-center border border-white/10 rounded-xl bg-white/5 backdrop-blur-md">
-                                <div className="text-center">
-                                    <h2 className="font-zentry text-4xl text-white uppercase mb-4">Accommodation</h2>
-                                    <p className="font-circular-web text-gray-400">Coming Soon</p>
-                                </div>
-                            </section>
+                            <AccommodationForm user={user} />
                         )}
                     </div>
                 )}
@@ -479,14 +472,12 @@ function ProfilePageContent() {
                                 </button>
                             )}
                         </div>
-                        {!isGeneralFeePaid && (
-                            <button
-                                onClick={() => router.push('/fee-payment')}
-                                className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
-                            >
-                                Pay Now
-                            </button>
-                        )}
+                        <button
+                            onClick={() => router.push('/fee-payment')}
+                            className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
+                        >
+                            Pay Now
+                        </button>
                     </div>
 
                     {activeTab === "profile" && (
@@ -726,12 +717,7 @@ function ProfilePageContent() {
                     )}
 
                     {!isPSGStudent && activeTab === "accommodation" && (
-                        <section className="min-h-[400px] flex items-center justify-center border border-white/10 rounded-xl bg-white/5 backdrop-blur-md">
-                            <div className="text-center">
-                                <h2 className="font-zentry text-4xl text-white uppercase mb-4">Accommodation</h2>
-                                <p className="font-circular-web text-gray-400">Coming Soon</p>
-                            </div>
-                        </section>
+                        <AccommodationForm user={user} />
                     )}
 
                 </div>

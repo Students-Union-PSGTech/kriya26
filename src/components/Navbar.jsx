@@ -14,12 +14,22 @@ const navItems = [
     link: "/portal/event"
   },
   {
+    label: "Workshops",
+    link: "/portal/workshop",
+    mobileOnly: true
+  },
+  {
+    label: "Paper Presentation",
+    link: "/portal/paper",
+    mobileOnly: true
+  },
+  {
     label: "Campus Map",
     link: "https://kriya26-campusmap.vercel.app"
   },
   {
     label: "Contact",
-    link: "#contact"
+    link: "/#contact"
   }
 ]
 
@@ -254,7 +264,7 @@ const NavBar = () => {
 
             {/* Desktop Navigation Links - Hide on medium screens, show on large screens */}
             <nav className="hidden lg:flex items-center gap-3 xl:gap-6">
-              {navItems.map((item, index) => (
+              {navItems.filter(item => !item.mobileOnly).map((item, index) => (
                 <a
                   key={index}
                   href={`${item.link}`}

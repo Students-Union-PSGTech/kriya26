@@ -151,9 +151,11 @@ export default function Home() {
         <Location />
       </LazyLoad>
 
-      <LazyLoad height="min-h-[50vh]">
-        <Contact />
-      </LazyLoad>
+      <div id="contact">
+        <LazyLoad height="min-h-[50vh]">
+          <Contact />
+        </LazyLoad>
+      </div>
     </main>
   );
 }

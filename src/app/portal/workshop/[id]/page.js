@@ -141,16 +141,8 @@ export default function WorkshopPage({ params }) {
     if (!isAuthenticated) {
       const callbackUrl = encodeURIComponent(`/portal/workshop/${id}`);
       router.push(`/auth?type=register&callbackUrl=${callbackUrl}`);
-    } else if (!generalPayment) {
-      setIsPaymentOverlayOpen(true);
     } else {
-      try {
-        await eventService.registerWorkshop(id);
-        window.location.reload();
-      } catch (error) {
-        console.error("Error registering for workshop:", error);
-        alert("Failed to register for workshop. Please try again.");
-      }
+      setIsPaymentOverlayOpen(true);
     }
   };
 
@@ -491,9 +483,9 @@ export default function WorkshopPage({ params }) {
           <div className="flex-col items-center justify-center p-6 text-black bg-white rounded-lg shadow-lg w-80">
             <h2 className="text-lg font-semibold">Payment Required</h2>
             <p className="mt-2 text-sm">
-              Please select and pay the respective workshop fee amount to successfully register for{' '}
-              <span className="font-semibold">{workshopDetail.workshopName}</span>{' '}
-              workshop.
+              Payment for the respective workshop will automatically register you for{' '}
+              <span className="font-semibold">{workshopDetail.workshopName}</span>.
+              Please select and pay the workshop fee to complete your registration.
             </p>
             <div className="flex mt-4 space-x-3">
               <button
