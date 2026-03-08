@@ -144,6 +144,20 @@ const Contact = () => {
                         />
                     </motion.div>
 
+                    <motion.div variants={itemVariants} className="w-full lg:w-56 flex flex-col items-center lg:items-start">
+                        <h5 className="text-xs tracking-widest font-general uppercase text-blue-400 font-bold mb-2">Accommodation support</h5>
+                        <ContactItem
+                            name="Siddharth"
+                            phone="+91 95319 67544"
+                            className="whitespace-nowrap"
+                        />
+                        <ContactItem
+                            name="Kanishka"
+                            phone="+91 88384 01957"
+                            className="mt-6 whitespace-nowrap"
+                        />
+                    </motion.div>
+
                 </motion.div>
             </div>
 
@@ -180,7 +194,7 @@ const Contact = () => {
                     label="helpdesk.kriya@psgtech.ac.in"
                 />
                 <ContactButton
-                    href="https://linktr.ee/su.psgtech"
+                    href="https://linktr.ee/su_psgtech"
                     Icon={SiLinktree}
                     label="Linktree"
                 />
