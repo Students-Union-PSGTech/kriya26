@@ -6,7 +6,7 @@ import Button from "../Button";
 import { TiEdit } from "react-icons/ti";
 import { IoLogOut, IoClose, IoCamera, IoCheckmarkCircle } from "react-icons/io5";
 import { authService } from "@/services/authService";
-import colleges from "@/app/CollegeList";
+import staticColleges from "@/app/CollegeList";
 
 // PSG Colleges that require specific email domains
 const PSG_COLLEGES = {
@@ -36,6 +36,11 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [isSaving, setIsSaving] = React.useState(false);
     const [error, setError] = React.useState("");
+    
+    // State for merged college list
+    const [colleges, setColleges] = React.useState([...staticColleges]);
+    const [loadingColleges, setLoadingColleges] = React.useState(true);
+    
     const [editFormData, setEditFormData] = React.useState({
         name: user?.name || "",
         phone: user?.phone || "",
@@ -78,6 +83,53 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
             });
         }
     }, [user]);
+
+    // Fetch colleges from backend and merge with static list
+    React.useEffect(() => {
+        const fetchAndMergeColleges = async () => {
+            try {
+                setLoadingColleges(true);
+                
+                // Fetch colleges from backend API
+                const response = await authService.getAllColleges();
+                
+                if (response.colleges && Array.isArray(response.colleges)) {
+                    const backendColleges = response.colleges.map(college => college.name);
+                    
+                    // Merge and remove duplicates (case-insensitive)
+                    const collegeMap = new Map();
+                    
+                    // Add static colleges first
+                    staticColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Add backend colleges (only if not already present)
+                    backendColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Convert to sorted array
+                    const mergedColleges = Array.from(collegeMap.values()).sort();
+                    setColleges(mergedColleges);
+                }
+            } catch (error) {
+                console.warn('Failed to fetch colleges from backend, using static list:', error);
+                // Keep static colleges if backend fails
+                setColleges([...staticColleges]);
+            } finally {
+                setLoadingColleges(false);
+            }
+        };
+
+        fetchAndMergeColleges();
+    }, []);
 
     // --- Avatar Chooser Modal ---
     const openAvatarModal = () => {

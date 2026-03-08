@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { TiLocationArrow } from "react-icons/ti";
 import Button from '@/components/Button';
-import colleges from '@/app/CollegeList';
+import staticColleges from '@/app/CollegeList';
 
 // PSG Colleges that require specific email domains
 const PSG_COLLEGES = {
@@ -17,6 +17,10 @@ export default function RegisterComponent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const source = searchParams.get('source');
+
+    // State for merged college list
+    const [colleges, setColleges] = useState([...staticColleges]);
+    const [loadingColleges, setLoadingColleges] = useState(true);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -83,6 +87,53 @@ export default function RegisterComponent() {
             }
         }
     }, [formData.email]);
+
+    // Fetch colleges from backend and merge with static list
+    useEffect(() => {
+        const fetchAndMergeColleges = async () => {
+            try {
+                setLoadingColleges(true);
+                
+                // Fetch colleges from backend API
+                const response = await authService.getAllColleges();
+                
+                if (response.colleges && Array.isArray(response.colleges)) {
+                    const backendColleges = response.colleges.map(college => college.name);
+                    
+                    // Merge and remove duplicates (case-insensitive)
+                    const collegeMap = new Map();
+                    
+                    // Add static colleges first
+                    staticColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Add backend colleges (only if not already present)
+                    backendColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Convert to sorted array
+                    const mergedColleges = Array.from(collegeMap.values()).sort();
+                    setColleges(mergedColleges);
+                }
+            } catch (error) {
+                console.warn('Failed to fetch colleges from backend, using static list:', error);
+                // Keep static colleges if backend fails
+                setColleges([...staticColleges]);
+            } finally {
+                setLoadingColleges(false);
+            }
+        };
+
+        fetchAndMergeColleges();
+    }, []);
 
     // Check if the selected college is a PSG college and validate email domain
     const validatePSGEmail = () => {

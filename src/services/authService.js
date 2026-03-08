@@ -109,4 +109,30 @@ export const authService = {
         });
         return response;
     },
+
+    // College Management APIs
+    
+    // Get all colleges
+    getAllColleges: async () => {
+        const response = await api.get('/api/auth/colleges');
+        return response.data;
+    },
+
+    // Add a single college
+    addCollege: async (collegeName) => {
+        const response = await api.post('/api/auth/colleges', { name: collegeName });
+        return response.data;
+    },
+
+    // Delete a college by ID
+    deleteCollege: async (collegeId) => {
+        const response = await api.delete(`/api/auth/colleges/${collegeId}`);
+        return response.data;
+    },
+
+    // Bulk insert colleges
+    bulkInsertColleges: async (collegeNames) => {
+        const response = await api.post('/api/auth/colleges/bulk', { colleges: collegeNames });
+        return response.data;
+    },
 };
