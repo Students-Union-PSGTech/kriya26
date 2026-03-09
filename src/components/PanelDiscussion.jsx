@@ -12,7 +12,7 @@ const TIME = "3:30 PM – 4:30 PM";
 const speakers = [
   {
     id: 1,
-    name: "Mohammed Y Safirulla",
+    name: "Shri Mohammed Y Safirulla, IAS",
     role: "Director, IndiaAI Mission",
     company: "Ministry of Electronics and Information Technology, Government of India",
     works: null,
@@ -20,7 +20,7 @@ const speakers = [
   },
   {
     id: 2,
-    name: "Arun Kumar",
+    name: "Mr. Arun Kumar A",
     role: "Co-founder & Director",
     company: "Shamla Tech Solutions",
     works: "Pioneering Web3 Evolution in Blockchain, AI and Metaverse.",
@@ -28,11 +28,11 @@ const speakers = [
   },
   {
     id: 3,
-    name: "TBA",
-    role: "To Be Announced",
-    company: "To Be Announced",
+    name: "Mr Pranav Shankar Ramalingam",
+    role: "QA Analyst 2",
+    company: "OFSS Bengaluru",
     works: null,
-    avatar: null,
+    avatar: "/img/speakers/PranavShankarRamalingam.jpeg",
   },
 ];
 
