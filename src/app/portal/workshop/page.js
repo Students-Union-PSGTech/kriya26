@@ -35,6 +35,8 @@ const WorkshopList = () => {
                     return null;
                 };
 
+                const blockedWorkshopIds = ['WS09', 'WS04', 'WS12', 'WS15', 'WS06'];
+
                 const mappedWorkshops = workshopsData
                     .map((workshop) => ({
                         name: workshop.workshopName || workshop.eventName || workshop.name,
@@ -43,6 +45,7 @@ const WorkshopList = () => {
                         category: workshop.category || "Workshop",
                         time: workshop.startTime || workshop.timing || workshop.time || "TBA",
                     }))
+                    .filter(workshop => !blockedWorkshopIds.includes(workshop.id))
                     .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
                 setWorkshops(mappedWorkshops);
