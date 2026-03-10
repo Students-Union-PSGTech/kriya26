@@ -38,6 +38,9 @@ export default function RegisterComponent() {
         googleId: ''
     });
 
+    const [customCollege, setCustomCollege] = useState('');
+    const [isCustomCollege, setIsCustomCollege] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showEmailOverlay, setShowEmailOverlay] = useState(false);
@@ -148,13 +151,27 @@ export default function RegisterComponent() {
     };
 
     const handleChange = (e) => {
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-        if (e.target.name === 'college') {
+        const { name, value } = e.target;
+        
+        if (name === 'college') {
             setShowEmailOverlay(false);
+            if (value === 'OTHERS') {
+                setIsCustomCollege(true);
+                setFormData(prev => ({ ...prev, college: '' }));
+            } else {
+                setIsCustomCollege(false);
+                setCustomCollege('');
+                setFormData(prev => ({ ...prev, [name]: value }));
+            }
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleCustomCollegeChange = (e) => {
+        const value = e.target.value;
+        setCustomCollege(value);
+        setFormData(prev => ({ ...prev, college: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -368,9 +385,9 @@ export default function RegisterComponent() {
                             <select
                                 id="college"
                                 name="college"
-                                value={formData.college}
+                                value={isCustomCollege ? 'OTHERS' : formData.college}
                                 onChange={handleChange}
-                                required
+                                required={!isCustomCollege}
                                 disabled={isPSGEmail()}
                                 className={`w-full h-12 px-4 py-3 bg-white/5 border border-white/20 text-white rounded-none outline-none focus:border-blue-400 transition-colors appearance-none font-general text-[10px] ${isPSGEmail() ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
@@ -380,7 +397,21 @@ export default function RegisterComponent() {
                                         {college}
                                     </option>
                                 ))}
+                                <option value="OTHERS" className="bg-black font-bold">Others (Type your college name)</option>
                             </select>
+                            
+                            {isCustomCollege && (
+                                <div className="mt-3">
+                                    <input
+                                        type="text"
+                                        value={customCollege}
+                                        onChange={handleCustomCollegeChange}
+                                        placeholder="Enter your college name"
+                                        required
+                                        className="w-full h-12 px-4 py-3 bg-white/5 border border-blue-400 text-white rounded-none outline-none focus:border-blue-300 transition-colors font-general text-sm"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

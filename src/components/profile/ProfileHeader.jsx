@@ -41,6 +41,10 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
     const [colleges, setColleges] = React.useState([...staticColleges]);
     const [loadingColleges, setLoadingColleges] = React.useState(true);
     
+    // State for custom college input
+    const [customCollege, setCustomCollege] = React.useState("");
+    const [isCustomCollege, setIsCustomCollege] = React.useState(false);
+    
     const [editFormData, setEditFormData] = React.useState({
         name: user?.name || "",
         phone: user?.phone || "",
@@ -149,6 +153,18 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
         setIsEditModalOpen(true);
         setEditAvatar(avatarNumber);
         setError("");
+        
+        // Check if current college is in the list
+        const currentCollege = user?.college || "";
+        const isCollegeInList = colleges.some(col => col === currentCollege);
+        
+        if (currentCollege && !isCollegeInList) {
+            setIsCustomCollege(true);
+            setCustomCollege(currentCollege);
+        } else {
+            setIsCustomCollege(false);
+            setCustomCollege("");
+        }
     };
 
     const handleCloseModal = () => {
@@ -161,6 +177,8 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
             department: user?.department || "",
             year: user?.year || ""
         });
+        setIsCustomCollege(false);
+        setCustomCollege("");
     };
 
     const handleInputChange = (e) => {
@@ -169,9 +187,24 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
             // Only allow digits, max 10
             const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
             setEditFormData(prev => ({ ...prev, [name]: digitsOnly }));
+        } else if (name === 'college') {
+            if (value === 'OTHERS') {
+                setIsCustomCollege(true);
+                setEditFormData(prev => ({ ...prev, college: '' }));
+            } else {
+                setIsCustomCollege(false);
+                setCustomCollege('');
+                setEditFormData(prev => ({ ...prev, [name]: value }));
+            }
         } else {
             setEditFormData(prev => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleCustomCollegeChange = (e) => {
+        const value = e.target.value;
+        setCustomCollege(value);
+        setEditFormData(prev => ({ ...prev, college: value }));
     };
 
     const handleSaveProfile = async () => {
@@ -500,7 +533,7 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
                                     </label>
                                     <select
                                         name="college"
-                                        value={editFormData.college}
+                                        value={isCustomCollege ? 'OTHERS' : editFormData.college}
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-3 bg-white/5 border border-white/20 text-white rounded-lg outline-none focus:border-blue-400 transition-colors font-general appearance-none cursor-pointer text-sm"
                                     >
@@ -510,7 +543,21 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
                                                 {col}
                                             </option>
                                         ))}
+                                        <option value="OTHERS" className="bg-gray-900 text-sm font-bold">Others (Type your college name)</option>
                                     </select>
+                                    
+                                    {isCustomCollege && (
+                                        <div className="mt-3">
+                                            <input
+                                                type="text"
+                                                value={customCollege}
+                                                onChange={handleCustomCollegeChange}
+                                                placeholder="Enter your college name"
+                                                required
+                                                className="w-full px-4 py-3 bg-white/5 border border-blue-400 text-white rounded-lg outline-none focus:border-blue-300 transition-colors font-general text-sm"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Department */}
