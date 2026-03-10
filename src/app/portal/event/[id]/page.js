@@ -64,6 +64,14 @@ export default function Home({ params }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
   const [isPaymentOverlayOpen, setIsPaymentOverlayOpen] = useState(false);
+  const [showPaymentReminder, setShowPaymentReminder] = useState(false);
+
+  // Auto-show payment reminder when logged in but general fee not paid
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && user && !user.generalFeePaid && !user.isPaid && !isPreRegistrationEnabled) {
+      setShowPaymentReminder(true);
+    }
+  }, [authLoading, isAuthenticated, user]);
 
   // Netflix-style video hero state
   const [videoPhase, setVideoPhase] = useState("poster"); // 'poster' | 'video'
@@ -522,6 +530,34 @@ export default function Home({ params }) {
               <button
                 className="px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
                 onClick={() => router.push('/fee-payment')}
+              >
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== Payment Reminder Overlay (auto-shown for logged-in unpaid users) ===== */}
+      {showPaymentReminder && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-white/15 bg-black/90 p-6 text-white shadow-2xl">
+            <h3 className="special-font text-3xl uppercase leading-[0.9]">
+              <b>Pay General Fee</b>
+            </h3>
+            <p className="mt-3 font-circular-web text-sm text-gray-300">
+              Please complete your general fee payment to unlock event registrations.
+            </p>
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => setShowPaymentReminder(false)}
+                className="flex-1 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 font-general text-xs uppercase tracking-wider text-white hover:bg-white/10 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => { setShowPaymentReminder(false); router.push('/fee-payment'); }}
+                className="flex-1 rounded-lg border border-blue-400 bg-blue-500 px-4 py-2.5 font-general text-xs uppercase tracking-wider text-white hover:bg-blue-600 transition-colors"
               >
                 Pay Now
               </button>
