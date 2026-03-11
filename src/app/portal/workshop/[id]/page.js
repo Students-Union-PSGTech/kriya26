@@ -120,6 +120,13 @@ export default function WorkshopPage({ params }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Block specific workshop IDs
+        const blockedWorkshopIds = ['WS09', 'WS04', 'WS12', 'WS15', 'WS06'];
+        if (blockedWorkshopIds.includes(id)) {
+          router.push('/portal/workshop');
+          return;
+        }
+
         const res1 = await eventService.getWorkshopById(id);
         const workshopData = res1?.workshop || res1;
         setWorkshopDetail(workshopData);
@@ -128,7 +135,7 @@ export default function WorkshopPage({ params }) {
       }
     };
     fetchData();
-  }, [id]);
+  }, [id, router]);
 
   const isRegisteredForWorkshop = () => {
     if (!userWorkshopDetails || !Array.isArray(userWorkshopDetails)) return false;
