@@ -50,7 +50,7 @@ export const departments = [
       { name: "S Sri Sakthi", role: "Coordinator", img: "/img/ambience/S_Sri_Sakthi_Ambience..webp" },
       { name: "Kanishka A C", role: "Coordinator", img: "/img/ambience/kanishka_A_C_Ambience.webp" },
       { name: "Inbatamilan", role: "Core Team", img: "/img/ambience/Inbatamilan_Ambience.webp" },
-      { name: "Pavithra", role: "Core Team", img: "/img/ambience/Pavithra_Ambience.webp" },
+      { name: "Priyadarshini", role: "Core Team", img: "/img/ambience/Pavithra_Ambience.webp" },
       { name: "Pooja Sri", role: "Core Team", img: "/img/ambience/Pooja_Sri_Ambience.webp" },
       { name: "Pravesha", role: "Core Team", img: "/img/ambience/Pravesha_Ambience.webp" },
       { name: "Rashmitha Pre", role: "Core Team", img: "/img/ambience/Rashmitha_Pre_Ambience.webp" },
