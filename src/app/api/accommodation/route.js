@@ -59,7 +59,7 @@ export async function GET(request) {
                         city: rows[i][6] || "",
                         address: rows[i][7] || "",
                         year: rows[i][8] || "",
-                        sharing: rows[i][9] || "",
+                        email: rows[i][9] || "",
                     },
                 });
             }
@@ -80,9 +80,9 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { uniqueId, name, phone, college, year, fromDate, toDate, city, address, sharing } = body;
+        const { uniqueId, name, email, phone, college, year, fromDate, toDate, city, address } = body;
 
-        if (!uniqueId || !fromDate || !toDate || !city || !address || !sharing) {
+        if (!uniqueId || !fromDate || !toDate || !city || !address) {
             return NextResponse.json(
                 { success: false, message: "All fields are required" },
                 { status: 400 }
@@ -109,13 +109,13 @@ export async function POST(request) {
             }
         }
 
-        // Append new row: Kriya ID | Name | Phone | College | From date | To date | City | Residential address | year | Sharing
+        // Append new row: Kriya ID | Name | Phone | College | From date | To date | City | Residential address | year | Email
         await sheets.spreadsheets.values.append({
             spreadsheetId,
             range: `${SHEET_NAME}!A:J`,
             valueInputOption: "USER_ENTERED",
             requestBody: {
-                values: [[uniqueId, name, phone, college, fromDate, toDate, city, address, year, sharing]],
+                values: [[uniqueId, name, phone, college, fromDate, toDate, city, address, year, email]],
             },
         });
 

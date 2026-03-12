@@ -8,18 +8,12 @@ const DATE_OPTIONS = [
     { value: "15th March", label: "15th March 2026" },
 ];
 
-const SHARING_OPTIONS = [
-    { value: "Single", label: "Single Sharing" },
-    { value: "Double", label: "Double Sharing" },
-];
-
 export default function AccommodationForm({ user }) {
     const [formData, setFormData] = useState({
         address: "",
         city: "",
         fromDate: "",
         toDate: "",
-        sharing: "",
     });
     const [loading, setLoading] = useState(false);
     const [checking, setChecking] = useState(true);
@@ -58,7 +52,7 @@ export default function AccommodationForm({ user }) {
         e.preventDefault();
         setMessage(null);
 
-        if (!formData.address || !formData.city || !formData.fromDate || !formData.toDate || !formData.sharing) {
+        if (!formData.address || !formData.city || !formData.fromDate || !formData.toDate) {
             setMessage({ type: "error", text: "All fields are required." });
             return;
         }
@@ -78,6 +72,7 @@ export default function AccommodationForm({ user }) {
                 body: JSON.stringify({
                     uniqueId: user.uniqueId,
                     name: user.name,
+                    email: user.email,
                     phone: user.phone,
                     college: user.college,
                     year: user.year,
@@ -85,7 +80,6 @@ export default function AccommodationForm({ user }) {
                     toDate: formData.toDate,
                     city: formData.city,
                     address: formData.address,
-                    sharing: formData.sharing,
                 }),
             });
             const data = await res.json();
@@ -98,7 +92,6 @@ export default function AccommodationForm({ user }) {
                     toDate: formData.toDate,
                     city: formData.city,
                     address: formData.address,
-                    sharing: formData.sharing,
                 });
             } else {
                 setMessage({ type: "error", text: data.message || "Registration failed." });
@@ -183,10 +176,6 @@ export default function AccommodationForm({ user }) {
                         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
                             <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">City</p>
                             <p className="font-circular-web text-white">{registeredData?.city || "—"}</p>
-                        </div>
-                        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-                            <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">Sharing Preference</p>
-                            <p className="font-circular-web text-white">{registeredData?.sharing || "—"}</p>
                         </div>
                         <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:col-span-2">
                             <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">Residential Address</p>
@@ -278,33 +267,6 @@ export default function AccommodationForm({ user }) {
                                     <option key={opt.value} value={opt.value} className="bg-gray-900">{opt.label}</option>
                                 ))}
                             </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block font-general text-xs text-gray-400 uppercase tracking-wider mb-2">
-                            Sharing Preference
-                        </label>
-                        <div className="flex gap-4">
-                            {SHARING_OPTIONS.map((opt) => (
-                                <label
-                                    key={opt.value}
-                                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border cursor-pointer transition-all duration-200 ${formData.sharing === opt.value
-                                        ? "border-blue-400 bg-blue-500/20 text-white"
-                                        : "border-white/15 bg-white/5 text-gray-400 hover:border-white/30 hover:text-white"
-                                        }`}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="sharing"
-                                        value={opt.value}
-                                        checked={formData.sharing === opt.value}
-                                        onChange={handleChange}
-                                        className="sr-only"
-                                    />
-                                    <span className="font-circular-web text-sm">{opt.label}</span>
-                                </label>
-                            ))}
                         </div>
                     </div>
 
