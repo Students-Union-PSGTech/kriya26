@@ -14,6 +14,7 @@ export default function AccommodationForm({ user }) {
         city: "",
         fromDate: "",
         toDate: "",
+        gender: "",
     });
     const [loading, setLoading] = useState(false);
     const [checking, setChecking] = useState(true);
@@ -52,7 +53,7 @@ export default function AccommodationForm({ user }) {
         e.preventDefault();
         setMessage(null);
 
-        if (!formData.address || !formData.city || !formData.fromDate || !formData.toDate) {
+        if (!formData.address || !formData.city || !formData.fromDate || !formData.toDate || !formData.gender) {
             setMessage({ type: "error", text: "All fields are required." });
             return;
         }
@@ -80,6 +81,7 @@ export default function AccommodationForm({ user }) {
                     toDate: formData.toDate,
                     city: formData.city,
                     address: formData.address,
+                    gender: formData.gender,
                 }),
             });
             const data = await res.json();
@@ -92,6 +94,7 @@ export default function AccommodationForm({ user }) {
                     toDate: formData.toDate,
                     city: formData.city,
                     address: formData.address,
+                    gender: formData.gender,
                 });
             } else {
                 setMessage({ type: "error", text: data.message || "Registration failed." });
@@ -176,6 +179,10 @@ export default function AccommodationForm({ user }) {
                         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
                             <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">City</p>
                             <p className="font-circular-web text-white">{registeredData?.city || "—"}</p>
+                        </div>
+                        <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                            <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">Gender</p>
+                            <p className="font-circular-web text-white">{registeredData?.gender || "—"}</p>
                         </div>
                         <div className="rounded-lg border border-white/10 bg-white/5 p-4 sm:col-span-2">
                             <p className="font-general text-xs text-gray-500 uppercase tracking-wider mb-1">Residential Address</p>
@@ -268,6 +275,22 @@ export default function AccommodationForm({ user }) {
                                 ))}
                             </select>
                         </div>
+                    </div>
+
+                    <div>
+                        <label className="block font-general text-xs text-gray-400 uppercase tracking-wider mb-2">
+                            Gender
+                        </label>
+                        <select
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            className={selectClasses}
+                        >
+                            <option value="" disabled>Select gender</option>
+                            <option value="Male" className="bg-gray-900">Male</option>
+                            <option value="Female" className="bg-gray-900">Female</option>
+                        </select>
                     </div>
 
                     <button

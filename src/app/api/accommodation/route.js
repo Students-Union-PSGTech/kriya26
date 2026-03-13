@@ -39,7 +39,7 @@ export async function GET(request) {
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: `${SHEET_NAME}!A:J`,
+            range: `${SHEET_NAME}!A:K`,
         });
 
         const rows = response.data.values || [];
@@ -60,6 +60,7 @@ export async function GET(request) {
                         address: rows[i][7] || "",
                         year: rows[i][8] || "",
                         email: rows[i][9] || "",
+                        gender: rows[i][10] || "",
                     },
                 });
             }
@@ -80,9 +81,9 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { uniqueId, name, email, phone, college, year, fromDate, toDate, city, address } = body;
+        const { uniqueId, name, email, phone, college, year, fromDate, toDate, city, address, gender } = body;
 
-        if (!uniqueId || !fromDate || !toDate || !city || !address) {
+        if (!uniqueId || !fromDate || !toDate || !city || !address || !gender) {
             return NextResponse.json(
                 { success: false, message: "All fields are required" },
                 { status: 400 }
@@ -109,13 +110,13 @@ export async function POST(request) {
             }
         }
 
-        // Append new row: Kriya ID | Name | Phone | College | From date | To date | City | Residential address | year | Email
+        // Append new row: Kriya ID | Name | Phone | College | From date | To date | City | Residential address | year | Email | Gender
         await sheets.spreadsheets.values.append({
             spreadsheetId,
-            range: `${SHEET_NAME}!A:J`,
+            range: `${SHEET_NAME}!A:K`,
             valueInputOption: "USER_ENTERED",
             requestBody: {
-                values: [[uniqueId, name, phone, college, fromDate, toDate, city, address, year, email]],
+                values: [[uniqueId, name, phone, college, fromDate, toDate, city, address, year, email, gender]],
             },
         });
 
