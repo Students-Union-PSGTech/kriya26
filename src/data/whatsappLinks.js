@@ -26,7 +26,7 @@ export const whatsappLinks = {
   "EVNT24": "https://chat.whatsapp.com/GBa6lVwjVsOGnMbxONyTYw?mode=gi_t",
   "EVNT25": "https://chat.whatsapp.com/E11yZa7HJGzKwRth5H3xJ9?mode=gi_t",
   "EVNT27": "https://chat.whatsapp.com/Ht5zU2hZOJX8O2YoHTurXI?mode=gi_t",
-  "EVNT28": "https://chat.whatsapp.com/E4IYhledTQ263LizgmTmIh?mode=gi_t",
+  "EVNT28": "https://chat.whatsapp.com/KL6n3zpH4DVHY5BtDGpS6I?mode=hqctswa",
   "EVNT30": "https://chat.whatsapp.com/JpaBmaUoURbJGhWIXdPtH7?mode=gi_t",
   "EVNT31": "https://chat.whatsapp.com/JrgtiU1y8MHAf2huTHfsk0?mode=gi_t",
   "EVNT32": "https://chat.whatsapp.com/E4IYhledTQ263LizgmTmIh?mode=gi_t",
@@ -53,7 +53,7 @@ export const whatsappLinks = {
   "PRP06": "https://chat.whatsapp.com/L7bSyOW3nu0160yuPmMDQw?mode=gi_t",
   "PRP09": "https://chat.whatsapp.com/KoD30hTSpQ6L5hjjAEZ3Xu?mode=gi_t",
 
-  
+
   // Add more event IDs and their WhatsApp links here
 };
 
