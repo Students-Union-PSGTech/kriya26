@@ -243,6 +243,11 @@ export default function RegisterComponent() {
                 <p className="text-gray-400 text-[10px] font-general tracking-[0.2em] uppercase">
                     {formData.source === 'google' ? 'COLLECTING_AUTH_DATA' : 'CREATE_NEW_ACCOUNT'}
                 </p>
+                <div className="mt-4 p-2 bg-red-900/10 border border-red-500/20 rounded max-w-md mx-auto">
+                    <p className="text-red-400 text-sm font-general font-medium">
+                        Note: Non PSG Msc students are not allowed for this event
+                    </p>
+                </div>
             </div>
 
             {error && (

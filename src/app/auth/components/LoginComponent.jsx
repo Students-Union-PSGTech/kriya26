@@ -46,7 +46,11 @@ export default function LoginComponent() {
     return (
         <div className="w-full max-w-md">
             <div className="bg-black/80 backdrop-blur-md shadow-xl rounded-lg p-8 border border-white/10">
-                <h2 className="text-2xl font-bold text-center text-[#dfdff2] mb-6 font-general">Welcome Back</h2>
+                <h2 className="text-2xl font-bold text-center text-[#dfdff2] mb-2 font-general">Welcome Back</h2>
+
+                <p className="text-center text-red-400 text-sm mb-6 font-general font-medium px-4 py-2 bg-red-900/10 border border-red-500/20 rounded">
+                    Note: Non PSG Msc students are not allowed for this event
+                </p>
 
                 {error && (
                     <div className="bg-red-900/20 border border-red-500/50 text-red-300 px-4 py-3 rounded mb-4">
