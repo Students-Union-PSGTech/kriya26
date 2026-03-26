@@ -14,9 +14,9 @@ const EventTicket = ({ event }) => {
             setIsDownloading(true);
             let blob;
             if (event.itemType === 'paper') {
-                blob = await eventService.downloadPaperCertificate(event.id);
+                blob = await eventService.downloadPaperCertificate(event.paperId || event.id);
             } else if (event.itemType === 'event') {
-                blob = await eventService.downloadCertificate(event.id);
+                blob = await eventService.downloadCertificate(event.eventId || event.id);
             } else {
                 return;
             }

@@ -29,6 +29,9 @@ const getCategoryColor = (category, itemType) => {
 // Transform API event to EventTicket format
 const transformEvent = (item, itemType) => ({
     id: item._id || item.eventId || item.workshopId || item.paperId,
+    eventId: item.eventId,
+    paperId: item.paperId,
+    workshopId: item.workshopId,
     title: item.eventName || item.workshopName || item.name || 'Unnamed Event',
     category: item.category || (itemType === 'workshop' ? 'Workshop' : itemType === 'paper' ? 'Paper' : 'Event'),
     date: item.date ? new Date(item.date).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'TBA',
