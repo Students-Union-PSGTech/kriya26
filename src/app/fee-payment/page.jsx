@@ -29,7 +29,8 @@ export default function FeePaymentPage() {
     const [checkingPayment, setCheckingPayment] = useState(false);
     const [statusMessage, setStatusMessage] = useState(null);
     const router = useRouter();
-    const { isAuthenticated, loading: authLoading } = useAuth();
+    const { isAuthenticated, loading: authLoading, user } = useAuth();
+    const [showPayConfirm, setShowPayConfirm] = useState(false);
     const { config: killSwitchConfig } = useKillSwitch();
     const paymentActionsDisabled = killSwitchConfig?.paymentActionsDisabled ?? false;
 
@@ -145,6 +146,11 @@ export default function FeePaymentPage() {
     };
 
     const handlePayNow = () => {
+        setShowPayConfirm(true);
+    };
+
+    const proceedToPayment = () => {
+        setShowPayConfirm(false);
         if (PAYMENT_URL) {
             window.open(PAYMENT_URL, "_blank", "noopener,noreferrer");
         }
@@ -191,6 +197,73 @@ export default function FeePaymentPage() {
                                 Payments made for the <b>wrong participant type</b> (for example choosing the wrong college category)
                                 <b> strictly cannot be refunded, reused, or transferred</b>. Please choose your participant type carefully.
                             </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Pay Now confirmation overlay */}
+            {showPayConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+                    <div className="max-w-md w-full mx-4 bg-zinc-900 border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+                        <button
+                            onClick={() => setShowPayConfirm(false)}
+                            className="absolute top-3 right-3 text-gray-400 hover:text-white transition-colors"
+                            aria-label="Close"
+                        >
+                            ✕
+                        </button>
+
+                        {/* Icon */}
+                        <div className="flex justify-center mb-4">
+                            <div className="w-14 h-14 rounded-full bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-blue-400">
+                                    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <h2 className="special-font text-xl md:text-2xl uppercase text-center mb-3">
+                            <b>Before you proceed</b>
+                        </h2>
+
+                        <p className="font-circular-web text-sm md:text-base text-gray-300 text-center leading-relaxed mb-4">
+                            You will be redirected to the <b className="text-white">PSG Institution Payment Portal</b>. To ensure your payment is linked to your Kriya account, please use the following phone number when filling out the payment form:
+                        </p>
+
+                        {/* Highlighted phone number */}
+                        <div className="bg-blue-500/10 border-2 border-blue-400/50 rounded-xl p-4 text-center mb-4">
+                            <p className="font-general text-xs uppercase tracking-wider text-blue-400 mb-1">
+                                Use this phone number
+                            </p>
+                            <p className="font-general text-2xl md:text-3xl text-white font-bold tracking-widest">
+                                {user?.phone || "—"}
+                            </p>
+                        </div>
+
+                        <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-3 mb-5">
+                            <p className="font-circular-web text-xs md:text-sm text-yellow-200/90 text-center">
+                                ⚠️ If a different phone number is used, your payment <b>will not</b> be reflected on your Kriya account.
+                            </p>
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                onClick={() => setShowPayConfirm(false)}
+                                className="flex-1 px-6 py-3 rounded-lg border border-white/10 bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white font-general text-sm uppercase tracking-wider transition-all cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={proceedToPayment}
+                                className="flex-1 px-6 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-general text-sm uppercase tracking-wider transition-all hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                            >
+                                Proceed to Pay
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                                    <path fillRule="evenodd" d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Zm7.25-.67-2.72 2.72a.75.75 0 0 1-1.06-1.06l2.72-2.72H8.75a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0V4.83Z" clipRule="evenodd" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -387,18 +387,21 @@ const Workshop = () => {
       try {
         const response = await axios.get("https://kriyabackend.psgtech.ac.in/api/events/workshops");
         if (response.data.success) {
-          const mappedWorkshops = response.data.workshops.map((ws, index) => ({
-            id: ws.workshopId,
-            title: ws.workshopName,
-            desc: ws.description,
-            club: ws.clubName,
-            hall: ws.hall,
-            date: ws.date,
-            time: ws.time,
-            startTime: ws.startTime,
-            endTime: ws.endTime,
-            img: `/img/workshops/${ws.workshopId}.webp`, // Use workshop ID as image filename
-          }));
+          const blockedWorkshopIds = ['WS09', 'WS04', 'WS12', 'WS15', 'WS06'];
+          const mappedWorkshops = response.data.workshops
+            .map((ws, index) => ({
+              id: ws.workshopId,
+              title: ws.workshopName,
+              desc: ws.description,
+              club: ws.clubName,
+              hall: ws.hall,
+              date: ws.date,
+              time: ws.time,
+              startTime: ws.startTime,
+              endTime: ws.endTime,
+              img: `/img/workshops/${ws.workshopId}.webp`, // Use workshop ID as image filename
+            }))
+            .filter(workshop => !blockedWorkshopIds.includes(workshop.id));
           setWorkshops(mappedWorkshops);
         }
       } catch (error) {

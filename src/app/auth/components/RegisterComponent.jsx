@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { TiLocationArrow } from "react-icons/ti";
 import Button from '@/components/Button';
-import colleges from '@/app/CollegeList';
+import staticColleges from '@/app/CollegeList';
 
 // PSG Colleges that require specific email domains
 const PSG_COLLEGES = {
@@ -17,6 +17,10 @@ export default function RegisterComponent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const source = searchParams.get('source');
+
+    // State for merged college list
+    const [colleges, setColleges] = useState([...staticColleges]);
+    const [loadingColleges, setLoadingColleges] = useState(true);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -33,6 +37,9 @@ export default function RegisterComponent() {
         source: source || 'email',
         googleId: ''
     });
+
+    const [customCollege, setCustomCollege] = useState('');
+    const [isCustomCollege, setIsCustomCollege] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -84,6 +91,53 @@ export default function RegisterComponent() {
         }
     }, [formData.email]);
 
+    // Fetch colleges from backend and merge with static list
+    useEffect(() => {
+        const fetchAndMergeColleges = async () => {
+            try {
+                setLoadingColleges(true);
+                
+                // Fetch colleges from backend API
+                const response = await authService.getAllColleges();
+                
+                if (response.colleges && Array.isArray(response.colleges)) {
+                    const backendColleges = response.colleges.map(college => college.name);
+                    
+                    // Merge and remove duplicates (case-insensitive)
+                    const collegeMap = new Map();
+                    
+                    // Add static colleges first
+                    staticColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Add backend colleges (only if not already present)
+                    backendColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Convert to sorted array
+                    const mergedColleges = Array.from(collegeMap.values()).sort();
+                    setColleges(mergedColleges);
+                }
+            } catch (error) {
+                console.warn('Failed to fetch colleges from backend, using static list:', error);
+                // Keep static colleges if backend fails
+                setColleges([...staticColleges]);
+            } finally {
+                setLoadingColleges(false);
+            }
+        };
+
+        fetchAndMergeColleges();
+    }, []);
+
     // Check if the selected college is a PSG college and validate email domain
     const validatePSGEmail = () => {
         const selectedCollege = formData.college;
@@ -97,13 +151,27 @@ export default function RegisterComponent() {
     };
 
     const handleChange = (e) => {
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-        if (e.target.name === 'college') {
+        const { name, value } = e.target;
+        
+        if (name === 'college') {
             setShowEmailOverlay(false);
+            if (value === 'OTHERS') {
+                setIsCustomCollege(true);
+                setFormData(prev => ({ ...prev, college: '' }));
+            } else {
+                setIsCustomCollege(false);
+                setCustomCollege('');
+                setFormData(prev => ({ ...prev, [name]: value }));
+            }
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleCustomCollegeChange = (e) => {
+        const value = e.target.value;
+        setCustomCollege(value);
+        setFormData(prev => ({ ...prev, college: value }));
     };
 
     const handleSubmit = async (e) => {
@@ -175,6 +243,11 @@ export default function RegisterComponent() {
                 <p className="text-gray-400 text-[10px] font-general tracking-[0.2em] uppercase">
                     {formData.source === 'google' ? 'COLLECTING_AUTH_DATA' : 'CREATE_NEW_ACCOUNT'}
                 </p>
+                <div className="mt-4 p-2 bg-red-900/10 border border-red-500/20 rounded max-w-md mx-auto">
+                    <p className="text-red-400 text-sm font-general font-medium">
+                        Note: Non PSG Msc students are not allowed for this event
+                    </p>
+                </div>
             </div>
 
             {error && (
@@ -317,9 +390,9 @@ export default function RegisterComponent() {
                             <select
                                 id="college"
                                 name="college"
-                                value={formData.college}
+                                value={isCustomCollege ? 'OTHERS' : formData.college}
                                 onChange={handleChange}
-                                required
+                                required={!isCustomCollege}
                                 disabled={isPSGEmail()}
                                 className={`w-full h-12 px-4 py-3 bg-white/5 border border-white/20 text-white rounded-none outline-none focus:border-blue-400 transition-colors appearance-none font-general text-[10px] ${isPSGEmail() ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
@@ -329,7 +402,21 @@ export default function RegisterComponent() {
                                         {college}
                                     </option>
                                 ))}
+                                <option value="OTHERS" className="bg-black font-bold">Others (Type your college name)</option>
                             </select>
+                            
+                            {isCustomCollege && (
+                                <div className="mt-3">
+                                    <input
+                                        type="text"
+                                        value={customCollege}
+                                        onChange={handleCustomCollegeChange}
+                                        placeholder="Enter your college name"
+                                        required
+                                        className="w-full h-12 px-4 py-3 bg-white/5 border border-blue-400 text-white rounded-none outline-none focus:border-blue-300 transition-colors font-general text-sm"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

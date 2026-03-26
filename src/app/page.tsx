@@ -11,7 +11,7 @@ import LazyLoad from "@/components/ui/LazyLoad";
 const loadStatsSection = () => import("@/components/StatsSection");
 const loadPrizePool = () => import("@/components/About");
 const loadFlagship = () => import("@/components/Story");
-
+const loadPanelDiscussion = () => import("@/components/PanelDiscussion")
 const loadEvents = () => import("@/components/Features");
 const loadWorkshops = () => import("@/components/Workshop");
 const loadPaperPresentation = () => import("@/components/PaperPresentation");
@@ -25,7 +25,7 @@ const loadContact = () => import("@/components/Contact");
 const StatsSection = dynamic(loadStatsSection);
 const PrizePool = dynamic(loadPrizePool);
 const Flagship = dynamic(loadFlagship);
-
+const PanelDiscussion = dynamic(loadPanelDiscussion);
 // Defer heavier, off-screen components
 const Events = dynamic(loadEvents);
 const Workshops = dynamic(loadWorkshops);
@@ -67,6 +67,7 @@ export default function Home() {
 
   useEffect(() => {
     const preloadSections = () => {
+      loadPanelDiscussion();
       loadStatsSection();
       loadPrizePool();
       loadFlagship();
@@ -113,6 +114,10 @@ export default function Home() {
         <StatsSection />
       </LazyLoad>
 
+      <LazyLoad height="min-h-[100vh]">
+        <PanelDiscussion />
+      </LazyLoad>
+
       <CountDown />
 
       <LazyLoad height="min-h-[100vh]">
@@ -151,9 +156,11 @@ export default function Home() {
         <Location />
       </LazyLoad>
 
-      <LazyLoad height="min-h-[50vh]">
-        <Contact />
-      </LazyLoad>
+      <div id="contact">
+        <LazyLoad height="min-h-[50vh]">
+          <Contact />
+        </LazyLoad>
+      </div>
     </main>
   );
 }

@@ -50,7 +50,7 @@ export const departments = [
       { name: "S Sri Sakthi", role: "Coordinator", img: "/img/ambience/S_Sri_Sakthi_Ambience..webp" },
       { name: "Kanishka A C", role: "Coordinator", img: "/img/ambience/kanishka_A_C_Ambience.webp" },
       { name: "Inbatamilan", role: "Core Team", img: "/img/ambience/Inbatamilan_Ambience.webp" },
-      { name: "Pavithra", role: "Core Team", img: "/img/ambience/Pavithra_Ambience.webp" },
+      { name: "Priyadarshini", role: "Core Team", img: "/img/ambience/Pavithra_Ambience.webp" },
       { name: "Pooja Sri", role: "Core Team", img: "/img/ambience/Pooja_Sri_Ambience.webp" },
       { name: "Pravesha", role: "Core Team", img: "/img/ambience/Pravesha_Ambience.webp" },
       { name: "Rashmitha Pre", role: "Core Team", img: "/img/ambience/Rashmitha_Pre_Ambience.webp" },
@@ -74,6 +74,9 @@ export const departments = [
       { name: "Harish", role: "Team Coordinator", img: "/img/design/Harish_Design.webp" },
       { name: "Hemessh", role: "Team Coordinator", img: "/img/design/Hemessh_Design.webp" },
       { name: "Ruthish", role: "Team Coordinator", img: "/img/design/Ruthish_Design.webp" },
+      { name: "Adhithya", role: "Team Coordinator", img: "/img/design/Adhithya_Design.webp" },
+      { name: "Velan", role: "Team Coordinator", img: "/img/design/Velan_Design.webp" },
+      { name: "Sridevi", role: "Team Coordinator", img: "/img/design/Sridevi_Design.webp" },
       { name: "Akshatha", role: "Core Team", img: "/img/design/Akshatha_Design.webp" },
       { name: "Dinesh", role: "Core Team", img: "/img/design/Dinesh_Design.webp" },
       { name: "Felishia", role: "Core Team", img: "/img/design/Felishia_Design.webp" },
@@ -124,7 +127,10 @@ export const departments = [
       { name: "Shakthi Abinaya V", role: "Core Member", img: "/img/erm/SHAKTHI_ABINAYA_V_ERM.webp" },
       { name: "Sharmisthaa K", role: "Core Member", img: "/img/erm/SHARMISTHAA_K_ERM.webp" },
       { name: "Thellothama UB", role: "Core Member", img: "/img/erm/THELLOTHAMA_UB_ERM.webp" },
-      { name: "Wincent Rajkumar Muruganantham", role: "Core Member", img: "/img/erm/WINCENT_RAJKUMAR_MURUGANANTHAM_ERM.webp" }
+      { name: "Wincent Rajkumar Muruganantham", role: "Core Member", img: "/img/erm/WINCENT_RAJKUMAR_MURUGANANTHAM_ERM.webp" },
+      {name: "Ganesh Shakthi", role: "Core Member", img: "/img/erm/GANESH_SHAKTHI_ERM.webp"},
+      {name: "Jayantan", role: "Core Member", img: "/img/erm/JAYANTAN_ERM.webp"},
+      {name: "Nimalan E", role: "Core Member", img: "/img/erm/NIMALAN_E_ERM.webp"}
     ]
   },
   {
@@ -167,22 +173,22 @@ export const departments = [
       { name: "Yazhini", role: "Core Member", img: "/img/photography/Yazhini_Photography.webp" }
     ]
   },
-  {
-    title: "Video Editing Team",
-    members: [
-      // Leads
-      // { name: "1455", role: "Team Lead", img: "/img/video/1455.webp" },
-      // Coordinators
-      { name: "Aadhithya", role: "Team Coordinator", img: "/img/video/Aadhithya.webp" },
-      { name: "Sriya", role: "Team Coordinator", img: "/img/video/Sriya.webp" },
-      // { name: "1438", role: "Team Coordinator", img: "/img/video/1438.webp" },
-      // Core Members
-      // { name: "1168", role: "Core Member", img: "/img/video/1168.webp" },
-      // { name: "1339", role: "Core Member", img: "/img/video/1339.webp" },
-      // { name: "1459", role: "Core Member", img: "/img/video/1459.webp" },
-      // { name: "1498", role: "Core Member", img: "/img/video/1498.webp" }
-    ]
-  },
+  // {
+  //   title: "Video Editing Team",
+  //   members: [
+  //     // Leads
+  //     // { name: "1455", role: "Team Lead", img: "/img/video/1455.webp" },
+  //     // Coordinators
+  //     { name: "Aadhithya", role: "Team Coordinator", img: "/img/video/Aadhithya.webp" },
+  //     { name: "Sriya", role: "Team Coordinator", img: "/img/video/Sriya.webp" },
+  //     // { name: "1438", role: "Team Coordinator", img: "/img/video/1438.webp" },
+  //     // Core Members
+  //     // { name: "1168", role: "Core Member", img: "/img/video/1168.webp" },
+  //     // { name: "1339", role: "Core Member", img: "/img/video/1339.webp" },
+  //     // { name: "1459", role: "Core Member", img: "/img/video/1459.webp" },
+  //     // { name: "1498", role: "Core Member", img: "/img/video/1498.webp" }
+  //   ]
+  // },
   {
     title: "PR Team",
     members: [

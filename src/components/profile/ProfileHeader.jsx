@@ -6,7 +6,7 @@ import Button from "../Button";
 import { TiEdit } from "react-icons/ti";
 import { IoLogOut, IoClose, IoCamera, IoCheckmarkCircle } from "react-icons/io5";
 import { authService } from "@/services/authService";
-import colleges from "@/app/CollegeList";
+import staticColleges from "@/app/CollegeList";
 
 // PSG Colleges that require specific email domains
 const PSG_COLLEGES = {
@@ -36,6 +36,15 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [isSaving, setIsSaving] = React.useState(false);
     const [error, setError] = React.useState("");
+    
+    // State for merged college list
+    const [colleges, setColleges] = React.useState([...staticColleges]);
+    const [loadingColleges, setLoadingColleges] = React.useState(true);
+    
+    // State for custom college input
+    const [customCollege, setCustomCollege] = React.useState("");
+    const [isCustomCollege, setIsCustomCollege] = React.useState(false);
+    
     const [editFormData, setEditFormData] = React.useState({
         name: user?.name || "",
         phone: user?.phone || "",
@@ -79,6 +88,53 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
         }
     }, [user]);
 
+    // Fetch colleges from backend and merge with static list
+    React.useEffect(() => {
+        const fetchAndMergeColleges = async () => {
+            try {
+                setLoadingColleges(true);
+                
+                // Fetch colleges from backend API
+                const response = await authService.getAllColleges();
+                
+                if (response.colleges && Array.isArray(response.colleges)) {
+                    const backendColleges = response.colleges.map(college => college.name);
+                    
+                    // Merge and remove duplicates (case-insensitive)
+                    const collegeMap = new Map();
+                    
+                    // Add static colleges first
+                    staticColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Add backend colleges (only if not already present)
+                    backendColleges.forEach(college => {
+                        const key = college.trim().toLowerCase();
+                        if (!collegeMap.has(key)) {
+                            collegeMap.set(key, college.trim());
+                        }
+                    });
+                    
+                    // Convert to sorted array
+                    const mergedColleges = Array.from(collegeMap.values()).sort();
+                    setColleges(mergedColleges);
+                }
+            } catch (error) {
+                console.warn('Failed to fetch colleges from backend, using static list:', error);
+                // Keep static colleges if backend fails
+                setColleges([...staticColleges]);
+            } finally {
+                setLoadingColleges(false);
+            }
+        };
+
+        fetchAndMergeColleges();
+    }, []);
+
     // --- Avatar Chooser Modal ---
     const openAvatarModal = () => {
         setPendingAvatar(avatarNumber);
@@ -97,6 +153,18 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
         setIsEditModalOpen(true);
         setEditAvatar(avatarNumber);
         setError("");
+        
+        // Check if current college is in the list
+        const currentCollege = user?.college || "";
+        const isCollegeInList = colleges.some(col => col === currentCollege);
+        
+        if (currentCollege && !isCollegeInList) {
+            setIsCustomCollege(true);
+            setCustomCollege(currentCollege);
+        } else {
+            setIsCustomCollege(false);
+            setCustomCollege("");
+        }
     };
 
     const handleCloseModal = () => {
@@ -109,6 +177,8 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
             department: user?.department || "",
             year: user?.year || ""
         });
+        setIsCustomCollege(false);
+        setCustomCollege("");
     };
 
     const handleInputChange = (e) => {
@@ -117,9 +187,24 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
             // Only allow digits, max 10
             const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
             setEditFormData(prev => ({ ...prev, [name]: digitsOnly }));
+        } else if (name === 'college') {
+            if (value === 'OTHERS') {
+                setIsCustomCollege(true);
+                setEditFormData(prev => ({ ...prev, college: '' }));
+            } else {
+                setIsCustomCollege(false);
+                setCustomCollege('');
+                setEditFormData(prev => ({ ...prev, [name]: value }));
+            }
         } else {
             setEditFormData(prev => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleCustomCollegeChange = (e) => {
+        const value = e.target.value;
+        setCustomCollege(value);
+        setEditFormData(prev => ({ ...prev, college: value }));
     };
 
     const handleSaveProfile = async () => {
@@ -448,7 +533,7 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
                                     </label>
                                     <select
                                         name="college"
-                                        value={editFormData.college}
+                                        value={isCustomCollege ? 'OTHERS' : editFormData.college}
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-3 bg-white/5 border border-white/20 text-white rounded-lg outline-none focus:border-blue-400 transition-colors font-general appearance-none cursor-pointer text-sm"
                                     >
@@ -458,7 +543,21 @@ const ProfileHeader = ({ user, onLogout, isLoggingOut, onProfileUpdate }) => {
                                                 {col}
                                             </option>
                                         ))}
+                                        <option value="OTHERS" className="bg-gray-900 text-sm font-bold">Others (Type your college name)</option>
                                     </select>
+                                    
+                                    {isCustomCollege && (
+                                        <div className="mt-3">
+                                            <input
+                                                type="text"
+                                                value={customCollege}
+                                                onChange={handleCustomCollegeChange}
+                                                placeholder="Enter your college name"
+                                                required
+                                                className="w-full px-4 py-3 bg-white/5 border border-blue-400 text-white rounded-lg outline-none focus:border-blue-300 transition-colors font-general text-sm"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Department */}

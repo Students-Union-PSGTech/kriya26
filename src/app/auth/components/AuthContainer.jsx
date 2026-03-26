@@ -80,6 +80,10 @@ export default function AuthContainer() {
                     <form onSubmit={handleLoginSubmit}>
                         <h1 className="font-zentry uppercase text-4xl mb-4">Sign In</h1>
 
+                        <p className="text-center text-red-400 text-sm mb-4 font-general font-medium px-4 py-2 bg-red-900/10 border border-red-500/20 rounded w-full">
+                            Note: Non PSG Msc students are not allowed for this event
+                        </p>
+
                         {error && !isActive && (
                             <div className="error-message">
                                 {error}
@@ -162,7 +166,11 @@ export default function AuthContainer() {
             <div className="form-container sign-up">
                 <form className="signup-content">
                     <h1 className="font-zentry uppercase text-4xl mb-4 text-center">Create Account</h1>
-                    <span className="font-general text-center mb-6">Choose your registration method</span>
+                    <span className="font-general text-center mb-4">Choose your registration method</span>
+                    
+                    <p className="text-center text-red-400 text-sm mb-6 font-general font-medium px-4 py-2 bg-red-900/10 border border-red-500/20 rounded w-full">
+                        Note: Non PSG Msc students are not allowed for this event
+                    </p>
 
                     <div className="w-full space-y-4 flex flex-col items-center">
                         <button

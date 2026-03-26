@@ -9,6 +9,7 @@ import QRCodeSection from "@/components/profile/QRCodeSection";
 import EventTicket from "@/components/profile/EventTicket";
 import ScrollableContainer from "@/components/profile/ScrollableContainer";
 import IdCardSection from "@/components/profile/IdCardSection";
+import AccommodationForm from "@/components/profile/AccommodationForm";
 import { useAuth } from "@/context/AuthContext";
 import { useKillSwitch } from "@/hooks/useKillSwitch";
 import { eventService } from "@/services/eventservice";
@@ -257,9 +258,8 @@ function ProfilePageContent() {
     // Filter paper presentations
     const hasPaperPresentations = papers.length > 0;
 
-    // Check if user is from PSG colleges based on email (no accommodation needed)
-    const isPSGStudent = user?.email ?
-        (user.email.toLowerCase().endsWith('@psgtech.ac.in')) : false;
+    // Check if user is from PSG colleges (no accommodation needed)
+    const isPSGStudent = Boolean(user?.isPSGStudent);
 
     const isIdCardUploaded = Boolean(user?.idCardUrl);
     const isGeneralFeePaid = Boolean(user?.generalFeePaid);
@@ -287,18 +287,18 @@ function ProfilePageContent() {
             return;
         }
 
-        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
-            setActivePopup("uploadIdCard");
+        if (!isPreRegistrationEnabled && !isGeneralFeePaid && !dismissedPopups.payGeneralFee) {
+            setActivePopup("payGeneralFee");
             return;
         }
 
-        // Don't show payment popup while user is in the middle of uploading their ID card
+        // Don't show ID card popup while user is in the middle of uploading their ID card
         if (waitingForIdUpload) return;
 
-        if (!isPreRegistrationEnabled && !isGeneralFeePaid && !dismissedPopups.payGeneralFee) {
-            // Delay the payment reminder so it doesn't appear immediately after the ID card popup
+        if (!isPreRegistrationEnabled && !isIdCardUploaded && !dismissedPopups.uploadIdCard) {
+            // Delay the ID card reminder so it doesn't appear immediately after the payment popup
             const timer = setTimeout(() => {
-                setActivePopup("payGeneralFee");
+                setActivePopup("uploadIdCard");
             }, 2500);
             return () => clearTimeout(timer);
         }
@@ -364,7 +364,7 @@ function ProfilePageContent() {
                         <div className="flex items-center border-b border-white/10 mb-2 overflow-x-auto scrollbar-hide">
                             <div className="flex gap-1 min-w-max">
                                 <button
-                                    onClick={() => setActiveTab("profile")}
+                                    onClick={() => { setActiveTab("profile"); router.replace('/profile', { scroll: false }); }}
                                     className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "profile"
                                         ? "text-white border-b-2 border-blue-500"
                                         : "text-gray-500 hover:text-gray-300"
@@ -374,7 +374,7 @@ function ProfilePageContent() {
                                 </button>
                                 {!isPSGStudent && (
                                     <button
-                                        onClick={() => setActiveTab("accommodation")}
+                                        onClick={() => { setActiveTab("accommodation"); router.replace('/profile?tab=accommodation', { scroll: false }); }}
                                         className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "accommodation"
                                             ? "text-white border-b-2 border-blue-500"
                                             : "text-gray-500 hover:text-gray-300"
@@ -384,14 +384,12 @@ function ProfilePageContent() {
                                     </button>
                                 )}
                             </div>
-                            {!isGeneralFeePaid && (
-                                <button
-                                    onClick={() => router.push('/fee-payment')}
-                                    className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
-                                >
-                                    Pay Now
-                                </button>
-                            )}
+                            <button
+                                onClick={() => router.push('/fee-payment')}
+                                className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
+                            >
+                                Pay Now
+                            </button>
                         </div>
 
                         {activeTab === "profile" && (
@@ -423,12 +421,7 @@ function ProfilePageContent() {
                         )}
 
                         {!isPSGStudent && activeTab === "accommodation" && (
-                            <section className="min-h-[400px] flex items-center justify-center border border-white/10 rounded-xl bg-white/5 backdrop-blur-md">
-                                <div className="text-center">
-                                    <h2 className="font-zentry text-4xl text-white uppercase mb-4">Accommodation</h2>
-                                    <p className="font-circular-web text-gray-400">Coming Soon</p>
-                                </div>
-                            </section>
+                            <AccommodationForm user={user} />
                         )}
                     </div>
                 )}
@@ -459,7 +452,7 @@ function ProfilePageContent() {
                     <div className="flex items-center border-b border-white/10 mb-2 overflow-x-auto scrollbar-hide">
                         <div className="flex gap-1 min-w-max">
                             <button
-                                onClick={() => setActiveTab("profile")}
+                                onClick={() => { setActiveTab("profile"); router.replace('/profile', { scroll: false }); }}
                                 className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "profile"
                                     ? "text-white border-b-2 border-blue-500"
                                     : "text-gray-500 hover:text-gray-300"
@@ -469,7 +462,7 @@ function ProfilePageContent() {
                             </button>
                             {!isPSGStudent && (
                                 <button
-                                    onClick={() => setActiveTab("accommodation")}
+                                    onClick={() => { setActiveTab("accommodation"); router.replace('/profile?tab=accommodation', { scroll: false }); }}
                                     className={`px-6 py-3 font-general text-sm uppercase tracking-wider transition-colors ${activeTab === "accommodation"
                                         ? "text-white border-b-2 border-blue-500"
                                         : "text-gray-500 hover:text-gray-300"
@@ -479,14 +472,12 @@ function ProfilePageContent() {
                                 </button>
                             )}
                         </div>
-                        {!isGeneralFeePaid && (
-                            <button
-                                onClick={() => router.push('/fee-payment')}
-                                className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
-                            >
-                                Pay Now
-                            </button>
-                        )}
+                        <button
+                            onClick={() => router.push('/fee-payment')}
+                            className="ml-auto px-5 py-2 font-general text-xs uppercase tracking-wider bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors whitespace-nowrap"
+                        >
+                            Pay Now
+                        </button>
                     </div>
 
                     {activeTab === "profile" && (
@@ -638,6 +629,25 @@ function ProfilePageContent() {
                                 <IdCardSection ref={idCardSectionRef} user={user} onRefresh={refreshUser} />
                             </section>
 
+                            {/* Bonafide Hardcopy Reminder */}
+                            <section>
+                                <div className="border border-amber-400/30 bg-amber-500/10 backdrop-blur-md rounded-xl p-5">
+                                    <div className="flex items-start gap-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-amber-400 flex-shrink-0 mt-0.5">
+                                            <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.499-2.599 4.499H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.004ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <h3 className="special-font text-xl uppercase text-amber-300 mb-1">
+                                                <b>Important Notice</b>
+                                            </h3>
+                                            <p className="font-circular-web text-sm text-amber-200/90">
+                                                Bringing the hardcopy of your <strong className="text-white">Bonafide Certificate</strong> on the day of the event is <strong className="text-white">mandatory</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
                             {/* Row 3: QR Code + My Workshops (Side by Side) */}
                             <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                                 {/* QR Code Section (Left) */}
@@ -707,12 +717,7 @@ function ProfilePageContent() {
                     )}
 
                     {!isPSGStudent && activeTab === "accommodation" && (
-                        <section className="min-h-[400px] flex items-center justify-center border border-white/10 rounded-xl bg-white/5 backdrop-blur-md">
-                            <div className="text-center">
-                                <h2 className="font-zentry text-4xl text-white uppercase mb-4">Accommodation</h2>
-                                <p className="font-circular-web text-gray-400">Coming Soon</p>
-                            </div>
-                        </section>
+                        <AccommodationForm user={user} />
                     )}
 
                 </div>

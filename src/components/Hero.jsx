@@ -8,13 +8,37 @@ import { TiLocationArrow, TiUser } from "react-icons/ti";
 import { FaEnvelope, FaLinkedin, FaInstagram } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { eventService } from "@/services/eventservice";
 
 import Button from "./Button";
 import { isPreRegistrationEnabled } from "@/settings/featureFlags";
 
 const Hero = ({ preloaderComplete = true }) => {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const [showNotPaidBadge, setShowNotPaidBadge] = useState(false);
+
+  // Check if user hasn't paid and has no workshops
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      setShowNotPaidBadge(false);
+      return;
+    }
+    if (user.generalFeePaid || user.isPaid) {
+      setShowNotPaidBadge(false);
+      return;
+    }
+    // Not paid — check workshops
+    eventService.getUserWorkshops()
+      .then((res) => {
+        let workshops = [];
+        if (Array.isArray(res)) workshops = res;
+        else if (res?.workshops && Array.isArray(res.workshops)) workshops = res.workshops;
+        else if (res?.data && Array.isArray(res.data)) workshops = res.data;
+        setShowNotPaidBadge(workshops.length === 0);
+      })
+      .catch(() => setShowNotPaidBadge(true));
+  }, [isAuthenticated, user]);
   const vantaRef = useRef(null);
 
   useEffect(() => {
@@ -196,12 +220,19 @@ const Hero = ({ preloaderComplete = true }) => {
           </div>
 
           <div className="pointer-events-auto flex flex-col sm:flex-row gap-4 justify-center items-stretch w-[80%] mx-auto">
-            <Button
-              title={isAuthenticated ? "MY PROFILE" : (isPreRegistrationEnabled ? "PRE-REGISTER NOW" : "REGISTER NOW")}
-              containerClass="bg-blue-400 hover:bg-purple-700 flex-center gap-2 px-4 py-3 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full"
-              leftIcon={isAuthenticated ? <TiUser className="w-4 h-4" /> : <TiLocationArrow className="w-4 h-4" />}
-              onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
-            />
+            <div className="relative w-full">
+              <Button
+                title={isAuthenticated ? "MY PROFILE" : (isPreRegistrationEnabled ? "PRE-REGISTER NOW" : "REGISTER NOW")}
+                containerClass="bg-blue-400 hover:bg-purple-700 flex-center gap-2 px-4 py-3 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 w-full"
+                leftIcon={isAuthenticated ? <TiUser className="w-4 h-4" /> : <TiLocationArrow className="w-4 h-4" />}
+                onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
+              />
+              {showNotPaidBadge && (
+                <span className="absolute -top-0.5 right-1 bg-red-500 text-white text-[6px] font-bold px-1 py-0.5 rounded-sm shadow-lg animate-pulse z-20 whitespace-nowrap">
+                  NOT PAID
+                </span>
+              )}
+            </div>
             <Button
               title="EXPLORE EVENTS"
               containerClass="border-2 border-white/40 hover:bg-white/10 flex-center gap-2 px-4 py-3 rounded-full font-zentry font-semibold transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm pointer-events-auto w-full"
@@ -296,13 +327,20 @@ const Hero = ({ preloaderComplete = true }) => {
 
               {/* Buttons */}
               <div className="flex-center gap-6">
-                <Button
-                  title={isAuthenticated ? "MY PROFILE" : (isPreRegistrationEnabled ? "PRE-REGISTER NOW" : "REGISTER NOW")}
-                  titleClass="font-bold"
-                  containerClass="bg-blue-400 font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
-                  leftIcon={isAuthenticated ? <TiUser className="w-5 h-5" /> : <TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
-                  onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
-                />
+                <div className="relative">
+                  <Button
+                    title={isAuthenticated ? "MY PROFILE" : (isPreRegistrationEnabled ? "PRE-REGISTER NOW" : "REGISTER NOW")}
+                    titleClass="font-bold"
+                    containerClass="bg-blue-400 font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"
+                    leftIcon={isAuthenticated ? <TiUser className="w-5 h-5" /> : <TiLocationArrow className="w-5 h-5 group-hover:animate-bounce" />}
+                    onClick={() => router.push(isAuthenticated ? '/profile' : '/auth')}
+                  />
+                  {showNotPaidBadge && (
+                    <span className="absolute top-0.5 right-2 bg-red-500 text-white text-[6px] font-bold px-1 py-0.5 rounded-sm shadow-lg animate-pulse z-20 whitespace-nowrap">
+                      NOT PAID
+                    </span>
+                  )}
+                </div>
                 <Button
                   title="EXPLORE EVENTS"
                   containerClass="bg-white font-bold flex-center gap-2 px-8 py-4 rounded-xl font-zentry text-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 pointer-events-auto"

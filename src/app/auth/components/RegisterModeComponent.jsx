@@ -13,7 +13,11 @@ export default function RegisterModeComponent() {
         <div className="w-full max-w-md">
             <div className="bg-black/80 backdrop-blur-md shadow-xl rounded-lg p-8 border border-white/10">
                 <h2 className="text-2xl font-bold text-center text-[#dfdff2] mb-2 font-general">Create Account</h2>
-                <p className="text-center text-gray-400 mb-6 font-general">Choose your registration method</p>
+                <p className="text-center text-gray-400 mb-4 font-general">Choose your registration method</p>
+
+                <p className="text-center text-red-400 text-sm mb-6 font-general font-medium px-4 py-2 bg-red-900/10 border border-red-500/20 rounded">
+                    Note: Non PSG Msc students are not allowed for this event
+                </p>
 
                 <div className="space-y-4">
                     <button
