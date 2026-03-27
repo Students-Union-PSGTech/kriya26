@@ -32,7 +32,24 @@ const EventTicket = ({ event }) => {
             window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Error downloading certificate:", error);
-            alert("Failed to download certificate. Please try again later.");
+            
+            let errorMessage = "Failed to download certificate. Please try again later.";
+            
+            // Handle error from Blob response (common with responseType: 'blob')
+            if (error.response?.data instanceof Blob) {
+                try {
+                    const text = await error.response.data.text();
+                    const data = JSON.parse(text);
+                    if (data.message) errorMessage = data.message;
+                } catch (e) {
+                    // Fallback to default if parsing fails
+                }
+            } else if (error.response?.data?.message) {
+                // Handle standard JSON error response
+                errorMessage = error.response.data.message;
+            }
+            
+            alert(errorMessage);
         } finally {
             setIsDownloading(false);
         }
